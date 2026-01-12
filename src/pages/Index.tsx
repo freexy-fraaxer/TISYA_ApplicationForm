@@ -1,11 +1,13 @@
 import { useState } from "react";
-import ParticleBackground from "@/components/ParticleBackground";
+import WaveBackground from "@/components/WaveBackground";
 import HomePage from "@/components/HomePage";
 import RoleSelection from "@/components/RoleSelection";
 import OperatorsForm from "@/components/OperatorsForm";
+import MemberForm from "@/components/MemberForm";
+import CollaboratorForm from "@/components/CollaboratorForm";
 import { AnimatePresence, motion } from "framer-motion";
 
-type Screen = "home" | "roles" | "operators";
+type Screen = "home" | "operators" | "members" | "collaborator";
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
@@ -24,9 +26,14 @@ const Index = () => {
     setCurrentScreen("operators");
   };
 
-  const handleBackFromForm = () => {
-    setCurrentScreen("home");
-    setShowRoleSelection(true);
+  const handleSelectMembers = () => {
+    setShowRoleSelection(false);
+    setCurrentScreen("members");
+  };
+
+  const handleSelectCollaborator = () => {
+    setShowRoleSelection(false);
+    setCurrentScreen("collaborator");
   };
 
   const handleBackToHome = () => {
@@ -37,7 +44,7 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated Background */}
-      <ParticleBackground />
+      <WaveBackground />
 
       {/* Main Content */}
       <AnimatePresence mode="wait">
@@ -64,6 +71,30 @@ const Index = () => {
             <OperatorsForm onBack={handleBackToHome} />
           </motion.div>
         )}
+
+        {currentScreen === "members" && (
+          <motion.div
+            key="members"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.4 }}
+          >
+            <MemberForm onBack={handleBackToHome} />
+          </motion.div>
+        )}
+
+        {currentScreen === "collaborator" && (
+          <motion.div
+            key="collaborator"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.4 }}
+          >
+            <CollaboratorForm onBack={handleBackToHome} />
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Role Selection Overlay */}
@@ -71,6 +102,8 @@ const Index = () => {
         isOpen={showRoleSelection}
         onClose={handleCloseRoles}
         onSelectOperators={handleSelectOperators}
+        onSelectMembers={handleSelectMembers}
+        onSelectCollaborator={handleSelectCollaborator}
       />
     </div>
   );

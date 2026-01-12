@@ -4,12 +4,14 @@ import HeroButton from "../HeroButton";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import tisyaLogo from "@/assets/tisya-logo.png";
 
-interface SuccessScreenProps {
+interface FormSuccessScreenProps {
   applicationId: string;
+  title: string;
+  subtitle: string;
   onBack: () => void;
 }
 
-const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
+const FormSuccessScreen = ({ applicationId, title, subtitle, onBack }: FormSuccessScreenProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
       <GlassCard
@@ -33,7 +35,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
         {/* Logo */}
         <motion.img
           src={tisyaLogo}
-          alt="TİSYA Logo"
+          alt="TISYA Logo"
           className="h-12 w-auto mx-auto mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -47,7 +49,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          Application Submitted
+          {title}
         </motion.h2>
 
         <motion.p
@@ -56,7 +58,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          Welcome to the Alliance, Operator. We'll be in touch soon.
+          {subtitle}
         </motion.p>
 
         {/* Application ID */}
@@ -67,7 +69,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           transition={{ delay: 0.6 }}
         >
           <span className="text-xs text-muted-foreground uppercase tracking-wider">
-            Application ID
+            Reference ID
           </span>
           <p className="text-lg font-mono text-primary font-semibold">
             {applicationId}
@@ -90,4 +92,4 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
   );
 };
 
-export default SuccessScreen;
+export default FormSuccessScreen;
