@@ -6,14 +6,11 @@ interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectOperators: () => void;
+  onSelectMembers: () => void;
+  onSelectCollaborator: () => void;
 }
 
-const RoleSelection = ({ isOpen, onClose, onSelectOperators }: RoleSelectionProps) => {
-  const handleComingSoon = (role: string) => {
-    // Could show a toast or modal
-    console.log(`${role} coming soon`);
-  };
-
+const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator }: RoleSelectionProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -83,7 +80,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators }: RoleSelectionProp
                   label="Members"
                   description="Join the community, get access to resources & events."
                   icon={<Users />}
-                  onClick={() => handleComingSoon("Pathfinders")}
+                  onClick={onSelectMembers}
                 />
               </motion.div>
 
@@ -108,9 +105,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators }: RoleSelectionProp
               >
                 <RoleCard
                   title="Collaborator"
-                  description="Partner with TİSYA for events, initiatives, and opportunities."
+                  description="Partner with TISYA for events, initiatives, and opportunities."
                   icon={<Handshake />}
-                  onClick={() => handleComingSoon("Collaborator")}
+                  onClick={onSelectCollaborator}
                 />
               </motion.div>
 
