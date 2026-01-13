@@ -30,11 +30,13 @@ const interestZones = [
 
 const motivationOptions = ["Learn", "Meet people", "Grow", "Explore"];
 
+// Gen-Z dynamic vibe labels
 const getVibeLabel = (value: number): string => {
-  if (value <= 25) return "Observer";
-  if (value <= 50) return "Balanced";
-  if (value <= 75) return "Social";
-  return "Connector";
+  if (value <= 20) return "Charging solo";
+  if (value <= 40) return "Low-key observer";
+  if (value <= 60) return "Social but selective";
+  if (value <= 80) return "Main character energy";
+  return "Runs the room";
 };
 
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
@@ -121,7 +123,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         </div>
       </div>
 
-      {/* Community Vibe Slider */}
+      {/* Community Vibe Slider with Gen-Z labels */}
       <div className="space-y-4">
         <Label className="text-sm font-medium">
           How social are you in communities?
