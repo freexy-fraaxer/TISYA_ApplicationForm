@@ -89,7 +89,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Your schedule & story ✨
+          Your schedule & story
         </h2>
         <p className="text-muted-foreground">
           Help us match you to the right team
@@ -241,8 +241,8 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <Label className="text-sm font-medium">
           Anything else you want us to know?
         </Label>
-        <Textarea
-          placeholder="Fun fact, hidden talent, or anything you want us to know 👋"
+          <Textarea
+            placeholder="Fun fact, hidden talent, or anything you want us to know"
           value={formData.extra_notes}
           onChange={(e) => {
             if (e.target.value.length <= 300) {

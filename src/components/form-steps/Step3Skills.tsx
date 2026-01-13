@@ -2,6 +2,7 @@ import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+import { motion } from "framer-motion";
 
 interface Step3Props {
   formData: FormData;
@@ -26,6 +27,31 @@ const skills = [
   "Willing to learn",
 ];
 
+// Gen-Z dynamic labels for personality sliders
+const getIntrovertExtrovertLabel = (value: number): string => {
+  if (value <= 20) return "Charging solo";
+  if (value <= 40) return "Low-key observer";
+  if (value <= 60) return "Social but selective";
+  if (value <= 80) return "Main character energy";
+  return "Runs the room";
+};
+
+const getPlannerSpontaneousLabel = (value: number): string => {
+  if (value <= 20) return "Needs a checklist";
+  if (value <= 40) return "Plans... kinda";
+  if (value <= 60) return "Vibes and adapts";
+  if (value <= 80) return "Goes with the flow";
+  return "Thrives in chaos";
+};
+
+const getBehindFrontLabel = (value: number): string => {
+  if (value <= 20) return "Silent operator";
+  if (value <= 40) return "Support role vibes";
+  if (value <= 60) return "Comfortable presenting";
+  if (value <= 80) return "Stage-ready";
+  return "On stage, mic on";
+};
+
 const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
   const toggleSkill = (skill: string) => {
     const current = formData.skills;
@@ -34,12 +60,6 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
     } else {
       updateFormData({ skills: [...current, skill] });
     }
-  };
-
-  const getSliderLabel = (value: number, leftLabel: string, rightLabel: string) => {
-    if (value < 35) return leftLabel;
-    if (value > 65) return rightLabel;
-    return "Balanced";
   };
 
   return (
@@ -76,7 +96,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         </div>
       </div>
 
-      {/* Personality Sliders */}
+      {/* Personality Sliders with Gen-Z labels */}
       <div className="space-y-6 pt-4">
         <Label className="text-sm font-medium">Personality Traits</Label>
 
@@ -84,13 +104,6 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Introvert</span>
-            <span className="text-primary font-medium">
-              {getSliderLabel(
-                formData.slider_introvert_extrovert,
-                "Introvert",
-                "Extrovert"
-              )}
-            </span>
             <span className="text-muted-foreground">Extrovert</span>
           </div>
           <Slider
@@ -102,19 +115,22 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             step={1}
             className="w-full"
           />
+          <div className="text-center">
+            <motion.span
+              key={getIntrovertExtrovertLabel(formData.slider_introvert_extrovert)}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-sm font-medium text-primary"
+            >
+              {getIntrovertExtrovertLabel(formData.slider_introvert_extrovert)}
+            </motion.span>
+          </div>
         </div>
 
         {/* Planner/Spontaneous */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Planner</span>
-            <span className="text-primary font-medium">
-              {getSliderLabel(
-                formData.slider_planner_spontaneous,
-                "Planner",
-                "Spontaneous"
-              )}
-            </span>
             <span className="text-muted-foreground">Spontaneous</span>
           </div>
           <Slider
@@ -126,19 +142,22 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             step={1}
             className="w-full"
           />
+          <div className="text-center">
+            <motion.span
+              key={getPlannerSpontaneousLabel(formData.slider_planner_spontaneous)}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-sm font-medium text-primary"
+            >
+              {getPlannerSpontaneousLabel(formData.slider_planner_spontaneous)}
+            </motion.span>
+          </div>
         </div>
 
         {/* Behind-the-scenes/Front-facing */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Behind-the-scenes</span>
-            <span className="text-primary font-medium">
-              {getSliderLabel(
-                formData.slider_behind_front,
-                "Behind-the-scenes",
-                "Front-facing"
-              )}
-            </span>
             <span className="text-muted-foreground">Front-facing</span>
           </div>
           <Slider
@@ -150,6 +169,16 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             step={1}
             className="w-full"
           />
+          <div className="text-center">
+            <motion.span
+              key={getBehindFrontLabel(formData.slider_behind_front)}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-sm font-medium text-primary"
+            >
+              {getBehindFrontLabel(formData.slider_behind_front)}
+            </motion.span>
+          </div>
         </div>
       </div>
     </div>
