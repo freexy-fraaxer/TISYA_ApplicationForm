@@ -74,10 +74,10 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - 2x2 on desktop, stacked on mobile */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 max-w-3xl mx-auto px-4">
+            {/* Role Cards Grid - 2x2 on both mobile and desktop */}
+            <div className="grid grid-cols-2 gap-3 md:gap-5 max-w-3xl mx-auto px-2 md:px-4">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
@@ -85,52 +85,52 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   title="Pathfinders"
                   label="Member"
                   description="Join the community, get access to resources and events."
-                  icon={<Users className="w-6 h-6" />}
+                  icon={<Users className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={pathfinderBg}
                   onClick={onSelectMembers}
                 />
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.25 }}
               >
                 <RoleCard
                   title="Operators"
                   label="Volunteer"
                   description="Help build programs, media, tech, and community."
-                  icon={<Wrench className="w-6 h-6" />}
+                  icon={<Wrench className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={operatorBg}
                   onClick={onSelectOperators}
                 />
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.3 }}
               >
                 <RoleCard
                   title="Collaborator"
                   label="Partner"
                   description="Partner with TISYA for events, initiatives, and opportunities."
-                  icon={<Handshake className="w-6 h-6" />}
+                  icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
                   onClick={onSelectCollaborator}
                 />
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.35 }}
               >
                 <RoleCard
                   title="Intern"
                   label="Intern"
                   description="Internship roles opening soon."
-                  icon={<GraduationCap className="w-6 h-6" />}
+                  icon={<GraduationCap className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={internBg}
                   disabled
                   comingSoon
