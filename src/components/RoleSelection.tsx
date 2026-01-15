@@ -2,6 +2,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import RoleCard from "./RoleCard";
 import { Users, Wrench, Handshake, GraduationCap, X, ArrowLeft } from "lucide-react";
 
+// Import role card background images
+import pathfinderBg from "@/assets/role-pathfinder.png";
+import operatorBg from "@/assets/role-operator.png";
+import collaboratorBg from "@/assets/role-collaborator.png";
+import internBg from "@/assets/role-intern.png";
+
 interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,7 +29,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-background/90 backdrop-blur-xl"
+            className="absolute inset-0 bg-background/95 backdrop-blur-xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -32,7 +38,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
 
           {/* Content */}
           <motion.div
-            className="relative z-10 w-full max-w-5xl py-8"
+            className="relative z-10 w-full max-w-4xl py-6"
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -49,9 +55,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             </motion.button>
 
             {/* Header */}
-            <div className="text-center mb-10">
+            <div className="text-center mb-8">
               <motion.h2
-                className="text-3xl md:text-5xl font-bold text-foreground mb-3 glow-text"
+                className="text-3xl md:text-4xl font-bold text-foreground mb-2 glow-text"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -59,7 +65,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 Choose your role
               </motion.h2>
               <motion.p
-                className="text-muted-foreground text-lg"
+                className="text-muted-foreground text-base"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -69,7 +75,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             </div>
 
             {/* Role Cards Grid - 2x2 on desktop, stacked on mobile */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 max-w-4xl mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 max-w-3xl mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -77,9 +83,10 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               >
                 <RoleCard
                   title="Pathfinders"
-                  label="Members"
-                  description="Join the community, get access to resources & events."
-                  icon={<Users className="w-7 h-7" />}
+                  label="Member"
+                  description="Join the community, get access to resources and events."
+                  icon={<Users className="w-6 h-6" />}
+                  backgroundImage={pathfinderBg}
                   onClick={onSelectMembers}
                 />
               </motion.div>
@@ -91,9 +98,10 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               >
                 <RoleCard
                   title="Operators"
-                  label="Volunteers"
+                  label="Volunteer"
                   description="Help build programs, media, tech, and community."
-                  icon={<Wrench className="w-7 h-7" />}
+                  icon={<Wrench className="w-6 h-6" />}
+                  backgroundImage={operatorBg}
                   onClick={onSelectOperators}
                 />
               </motion.div>
@@ -105,8 +113,10 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               >
                 <RoleCard
                   title="Collaborator"
+                  label="Partner"
                   description="Partner with TISYA for events, initiatives, and opportunities."
-                  icon={<Handshake className="w-7 h-7" />}
+                  icon={<Handshake className="w-6 h-6" />}
+                  backgroundImage={collaboratorBg}
                   onClick={onSelectCollaborator}
                 />
               </motion.div>
@@ -118,8 +128,10 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               >
                 <RoleCard
                   title="Intern"
+                  label="Intern"
                   description="Internship roles opening soon."
-                  icon={<GraduationCap className="w-7 h-7" />}
+                  icon={<GraduationCap className="w-6 h-6" />}
+                  backgroundImage={internBg}
                   disabled
                   comingSoon
                 />
@@ -128,7 +140,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
 
             {/* Back button */}
             <motion.button
-              className="mt-10 mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+              className="mt-8 mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

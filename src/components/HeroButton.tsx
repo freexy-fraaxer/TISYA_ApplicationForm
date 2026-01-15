@@ -21,9 +21,22 @@ const HeroButton = ({
   const baseStyles = "relative font-semibold rounded-xl transition-all duration-300 overflow-hidden";
   
   const variants = {
-    primary: "bg-primary text-primary-foreground glow-button",
-    secondary: "bg-secondary text-secondary-foreground border border-border hover:border-primary/50",
-    ghost: "bg-transparent text-foreground hover:bg-secondary/50",
+    primary: cn(
+      "bg-primary text-primary-foreground",
+      "shadow-[0_0_20px_rgba(56,189,248,0.3)]",
+      "hover:shadow-[0_0_30px_rgba(56,189,248,0.5)]",
+      "border border-primary/50"
+    ),
+    secondary: cn(
+      "bg-secondary text-secondary-foreground",
+      "border border-border hover:border-primary/50",
+      "hover:shadow-[0_0_20px_rgba(56,189,248,0.15)]"
+    ),
+    ghost: cn(
+      "bg-transparent text-foreground",
+      "hover:bg-secondary/50",
+      "hover:text-primary"
+    ),
   };
 
   const sizes = {
@@ -37,21 +50,34 @@ const HeroButton = ({
       className={cn(baseStyles, variants[variant], sizes[size], className)}
       onClick={onClick}
       disabled={disabled}
-      whileHover={{ scale: disabled ? 1 : 1.03 }}
+      whileHover={{ 
+        scale: disabled ? 1 : 1.03,
+        y: disabled ? 0 : -2,
+      }}
       whileTap={{ scale: disabled ? 1 : 0.97 }}
+      transition={{ duration: 0.2 }}
     >
-      {/* Ripple effect overlay */}
+      {/* Animated glow pulse for primary buttons */}
+      {variant === "primary" && !disabled && (
+        <motion.span
+          className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
+          animate={{
+            x: ["-100%", "100%"],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatDelay: 2,
+            ease: "easeInOut",
+          }}
+        />
+      )}
+
+      {/* Hover glow effect */}
       <motion.span
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
-        animate={!disabled ? {
-          translateX: ["100%", "-100%"],
-        } : {}}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          repeatDelay: 3,
-          ease: "easeInOut",
-        }}
+        className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0"
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
       />
       
       <span className="relative z-10 flex items-center justify-center gap-2">
