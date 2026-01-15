@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 interface RoleCardProps {
   title: string;
   label?: string;
   description: string;
   icon: React.ReactNode;
+  backgroundImage?: string;
   disabled?: boolean;
   comingSoon?: boolean;
   onClick?: () => void;
@@ -17,171 +19,148 @@ const RoleCard = ({
   label,
   description,
   icon,
+  backgroundImage,
   disabled = false,
   comingSoon = false,
   onClick,
 }: RoleCardProps) => {
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (disabled) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateXValue = ((y - centerY) / centerY) * -6;
-    const rotateYValue = ((x - centerX) / centerX) * 6;
-    
-    setRotateX(rotateXValue);
-    setRotateY(rotateYValue);
-  };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
       className={cn(
         "relative group cursor-pointer overflow-hidden",
         "rounded-2xl border border-white/10",
-        "bg-gradient-to-b from-white/[0.08] to-white/[0.02]",
-        "backdrop-blur-xl",
-        "aspect-[3/4] min-h-[320px]",
+        "h-[280px] md:h-[320px]",
         "transition-all duration-500",
-        !disabled && "hover:border-primary/40 hover:shadow-[0_0_40px_rgba(56,189,248,0.15)]",
-        disabled && "cursor-not-allowed opacity-60 grayscale",
+        !disabled && "hover:border-primary/50 hover:shadow-[0_0_50px_rgba(56,189,248,0.2)]",
+        disabled && "cursor-not-allowed grayscale-[60%] opacity-70",
       )}
-      style={{
-        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-        transformStyle: "preserve-3d",
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       onClick={!disabled ? onClick : undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       whileHover={!disabled ? { y: -8, scale: 1.02 } : {}}
       whileTap={!disabled ? { scale: 0.98 } : {}}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Coming Soon Ribbon - wrapped around top-right corner */}
+      {/* Coming Soon Ribbon - wrapped around top edge */}
       {comingSoon && (
-        <div className="absolute -right-[35px] top-[25px] z-20 rotate-45">
-          <div className="bg-primary px-10 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg">
-            Coming Soon
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-30">
+          <div className="relative">
+            <div className="bg-primary px-6 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg rounded-b-lg">
+              Coming Soon
+            </div>
+            {/* Ribbon sides */}
+            <div className="absolute -left-2 top-0 w-2 h-full bg-primary/70 -skew-x-12 rounded-bl-sm" />
+            <div className="absolute -right-2 top-0 w-2 h-full bg-primary/70 skew-x-12 rounded-br-sm" />
           </div>
         </div>
       )}
 
-      {/* Card animated background - flowing gradient */}
-      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+      {/* Background Image Layer */}
+      {backgroundImage && (
         <motion.div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 80% 50% at 50% 120%, hsl(210 80% 40% / 0.15) 0%, transparent 60%),
-              radial-gradient(ellipse 60% 40% at 50% -20%, hsl(200 90% 50% / 0.1) 0%, transparent 50%)
-            `,
-          }}
+          className="absolute inset-0 z-0"
           animate={{
-            opacity: [0.5, 0.8, 0.5],
+            scale: isHovered && !disabled ? 1.1 : 1,
           }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        
-        {/* Flowing wave inside card */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-30"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          viewBox="0 0 200 300"
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <defs>
-            <linearGradient id={`cardWave-${title}`} x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="hsl(210, 80%, 50%)" stopOpacity="0" />
-              <stop offset="50%" stopColor="hsl(200, 90%, 55%)" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="hsl(210, 80%, 50%)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <motion.path
-            d="M0,250 Q50,230 100,250 T200,250 L200,300 L0,300 Z"
-            fill={`url(#cardWave-${title})`}
-            animate={{
-              d: [
-                "M0,250 Q50,230 100,250 T200,250 L200,300 L0,300 Z",
-                "M0,260 Q50,280 100,260 T200,260 L200,300 L0,300 Z",
-                "M0,250 Q50,230 100,250 T200,250 L200,300 L0,300 Z",
-              ],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+          <img
+            src={backgroundImage}
+            alt=""
+            className="w-full h-full object-cover"
           />
-        </svg>
-      </div>
+        </motion.div>
+      )}
+
+      {/* Dark gradient overlay for readability */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-t from-background via-background/80 to-background/40" />
+      
+      {/* Vignette effect */}
+      <div className="absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background)/0.6)_100%)]" />
 
       {/* Hover glow effect */}
       <motion.div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 z-[3] pointer-events-none transition-opacity duration-500"
         style={{
-          background: `radial-gradient(circle at ${50 + rotateY * 5}% ${50 + rotateX * 5}%, hsl(var(--primary) / 0.2) 0%, transparent 50%)`,
+          background: `radial-gradient(circle at 50% 100%, hsl(var(--primary) / 0.25) 0%, transparent 60%)`,
+          opacity: isHovered && !disabled ? 1 : 0,
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col p-6">
-        {/* Icon */}
-        <motion.div 
-          className="w-16 h-16 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-auto group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300"
-          whileHover={{ scale: 1.05 }}
-        >
-          <div className="text-primary text-2xl">
-            {icon}
-          </div>
-        </motion.div>
+      <div className="relative z-10 h-full flex flex-col p-5 md:p-6">
+        {/* Top section: Icon + Label */}
+        <div className="flex items-start justify-between">
+          {/* Icon with gradient glow */}
+          <motion.div 
+            className={cn(
+              "w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center",
+              "bg-gradient-to-br from-primary/20 to-cyan-500/10",
+              "border border-primary/30",
+              "shadow-[0_0_20px_rgba(56,189,248,0.2)]",
+              "transition-all duration-300",
+              !disabled && "group-hover:shadow-[0_0_30px_rgba(56,189,248,0.4)] group-hover:border-primary/50"
+            )}
+            animate={{
+              scale: isHovered && !disabled ? 1.1 : 1,
+              rotate: isHovered && !disabled ? 5 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="text-primary drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
+              {icon}
+            </div>
+          </motion.div>
 
-        {/* Text Content - Bottom aligned */}
-        <div className="mt-auto space-y-3">
-          {/* Label */}
+          {/* Role tag */}
           {label && (
-            <span className="inline-block text-[10px] font-semibold text-primary uppercase tracking-[0.2em] bg-primary/10 px-2 py-1 rounded">
+            <span className={cn(
+              "text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1.5 rounded-full",
+              "bg-primary/10 border border-primary/20 text-primary",
+              "backdrop-blur-sm"
+            )}>
               {label}
             </span>
           )}
-          
+        </div>
+
+        {/* Bottom section: Title, Description, Action */}
+        <div className="mt-auto space-y-2">
           {/* Title */}
-          <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+          <h3 className={cn(
+            "text-xl md:text-2xl font-bold text-foreground transition-colors duration-300",
+            !disabled && "group-hover:text-primary"
+          )}>
             {title}
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-muted-foreground/90 leading-relaxed line-clamp-2">
             {description}
           </p>
 
-          {/* Arrow indicator */}
+          {/* Action hint */}
           {!disabled && (
             <motion.div 
-              className="flex items-center text-primary text-sm font-medium pt-2 opacity-0 group-hover:opacity-100 transition-all duration-300"
-              initial={{ x: 0 }}
-              whileHover={{ x: 5 }}
+              className="flex items-center gap-2 text-primary text-sm font-medium pt-2"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ 
+                opacity: isHovered ? 1 : 0.6, 
+                x: isHovered ? 0 : -5 
+              }}
+              transition={{ duration: 0.3 }}
             >
-              <span>Get Started</span>
-              <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              <span>Start</span>
+              <motion.div
+                animate={{ x: isHovered ? 4 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ArrowRight className="w-4 h-4" />
+              </motion.div>
             </motion.div>
           )}
         </div>

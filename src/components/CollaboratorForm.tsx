@@ -3,11 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
+import FormProgressBar from "./shared/FormProgressBar";
 import CollabStep1OrgInfo from "./collaborator-form-steps/CollabStep1OrgInfo";
 import CollabStep2Type from "./collaborator-form-steps/CollabStep2Type";
 import CollabStep3Details from "./collaborator-form-steps/CollabStep3Details";
 import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import FormSuccessScreen from "./shared/FormSuccessScreen";
+
+const COLLAB_MICROCOPY = [
+  "Great start",
+  "Nice selections",
+  "Good details",
+  "Almost there",
+];
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -269,39 +277,25 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         </motion.button>
 
         {/* Progress Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-muted-foreground">
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span className="text-sm font-medium text-primary">
-              {Math.round(progress)}%
-            </span>
-          </div>
-          <div className="progress-bar">
-            <motion.div
-              className="progress-bar-fill"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-          {/* Step indicators */}
-          <div className="flex justify-between mt-4">
-            {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
-              <div
-                key={step}
-                className={`step-indicator ${
-                  step === currentStep
-                    ? "active"
-                    : step < currentStep
-                    ? "completed"
-                    : ""
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        <FormProgressBar
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          steps={
+            needsDetailsStep
+              ? [
+                  { label: "Organization" },
+                  { label: "Type" },
+                  { label: "Details" },
+                  { label: "Final" },
+                ]
+              : [
+                  { label: "Organization" },
+                  { label: "Type" },
+                  { label: "Final" },
+                ]
+          }
+          completedMicrocopy={COLLAB_MICROCOPY}
+        />
 
         {/* Hidden honeypot field */}
         <input

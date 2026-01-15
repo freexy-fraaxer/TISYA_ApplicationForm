@@ -3,12 +3,29 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
+import FormProgressBar from "./shared/FormProgressBar";
 import Step1Basics from "./form-steps/Step1Basics";
 import Step2ImpactZones from "./form-steps/Step2ImpactZones";
 import Step3Skills from "./form-steps/Step3Skills";
 import Step4Schedule from "./form-steps/Step4Schedule";
 import Step5Review from "./form-steps/Step5Review";
 import SuccessScreen from "./form-steps/SuccessScreen";
+
+const OPERATOR_STEPS = [
+  { label: "Basics" },
+  { label: "Impact Zones" },
+  { label: "Skills" },
+  { label: "Schedule" },
+  { label: "Review" },
+];
+
+const OPERATOR_MICROCOPY = [
+  "Looking good",
+  "Nice picks",
+  "Great insights",
+  "Almost done",
+  "Final stretch",
+];
 
 export interface FormData {
   // Step 1
@@ -241,39 +258,12 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         </motion.button>
 
         {/* Progress Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-muted-foreground">
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span className="text-sm font-medium text-primary">
-              {Math.round(progress)}%
-            </span>
-          </div>
-          <div className="progress-bar">
-            <motion.div
-              className="progress-bar-fill"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-          {/* Step indicators */}
-          <div className="flex justify-between mt-4">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`step-indicator ${
-                  step === currentStep
-                    ? "active"
-                    : step < currentStep
-                    ? "completed"
-                    : ""
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        <FormProgressBar
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          steps={OPERATOR_STEPS}
+          completedMicrocopy={OPERATOR_MICROCOPY}
+        />
 
         {/* Hidden honeypot field */}
         <input

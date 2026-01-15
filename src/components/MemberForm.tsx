@@ -3,11 +3,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
+import FormProgressBar from "./shared/FormProgressBar";
 import MemberStep1Basics from "./member-form-steps/MemberStep1Basics";
 import MemberStep2Interests from "./member-form-steps/MemberStep2Interests";
 import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import FormSuccessScreen from "./shared/FormSuccessScreen";
 
+const MEMBER_STEPS = [
+  { label: "Basics" },
+  { label: "Your Vibe" },
+  { label: "Final Touch" },
+];
+
+const MEMBER_MICROCOPY = [
+  "Nice to meet you",
+  "Great picks",
+  "Almost there",
+];
 export interface MemberFormData {
   // Step 1
   full_name: string;
@@ -182,39 +194,12 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         </motion.button>
 
         {/* Progress Section */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-muted-foreground">
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span className="text-sm font-medium text-primary">
-              {Math.round(progress)}%
-            </span>
-          </div>
-          <div className="progress-bar">
-            <motion.div
-              className="progress-bar-fill"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-          {/* Step indicators */}
-          <div className="flex justify-between mt-4">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className={`step-indicator ${
-                  step === currentStep
-                    ? "active"
-                    : step < currentStep
-                    ? "completed"
-                    : ""
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        <FormProgressBar
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          steps={MEMBER_STEPS}
+          completedMicrocopy={MEMBER_MICROCOPY}
+        />
 
         {/* Hidden honeypot field */}
         <input
