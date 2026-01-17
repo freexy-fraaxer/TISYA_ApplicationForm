@@ -44,6 +44,7 @@ export interface CollaboratorFormData {
   // Step 4 - Final Details
   preferred_timeline: string;
   budget_range: string;
+  success_definition: string;
   additional_notes: string;
   consent_data_storage: boolean;
 
@@ -72,6 +73,7 @@ const initialFormData: CollaboratorFormData = {
   timeline: "",
   preferred_timeline: "",
   budget_range: "",
+  success_definition: "",
   additional_notes: "",
   consent_data_storage: false,
   honeypot: "",
@@ -185,6 +187,7 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
       timeline: formData.timeline || "",
       preferred_timeline: formData.preferred_timeline || "",
       budget_range: formData.budget_range || "",
+      success_definition: formData.success_definition || "",
       additional_notes: formData.additional_notes || "",
       consent_data_storage: formData.consent_data_storage,
       honeypot: formData.honeypot,

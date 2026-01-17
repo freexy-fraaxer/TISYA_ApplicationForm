@@ -47,13 +47,21 @@ const FormProgressBar = ({
         </span>
       </div>
 
-      {/* Progress bar */}
-      <div className="progress-bar">
+      {/* Progress bar with pulse on step change */}
+      <div className="progress-bar relative overflow-hidden">
         <motion.div
           className="progress-bar-fill"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: "easeOut" }}
+        />
+        {/* Subtle pulse effect */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent"
+          initial={{ x: "-100%" }}
+          animate={{ x: "100%" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          key={`pulse-${currentStep}`}
         />
       </div>
 

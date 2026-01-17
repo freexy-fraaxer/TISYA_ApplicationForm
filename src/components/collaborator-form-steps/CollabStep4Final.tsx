@@ -2,6 +2,7 @@ import { CollaboratorFormData } from "../CollaboratorForm";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -9,7 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Clock, Wallet, FileText } from "lucide-react";
+import { Clock, Wallet, FileText, Target } from "lucide-react";
+import HelperText from "../shared/HelperText";
+import PreSubmitSummary from "../shared/PreSubmitSummary";
 
 interface Step4Props {
   formData: CollaboratorFormData;
@@ -43,6 +46,13 @@ const CollabStep4Final = ({ formData, updateFormData }: Step4Props) => {
         </h2>
         <p className="text-muted-foreground">Almost done</p>
       </div>
+
+      {/* Pre-submit Summary */}
+      <PreSubmitSummary
+        name={formData.contact_name}
+        role="Collaborator"
+        interests={formData.collab_type}
+      />
 
       {/* Preferred Timeline */}
       <div className="space-y-2">
@@ -90,12 +100,29 @@ const CollabStep4Final = ({ formData, updateFormData }: Step4Props) => {
         </Select>
       </div>
 
+      {/* Success Definition */}
+      <div className="space-y-2">
+        <Label htmlFor="success_definition" className="text-sm font-medium flex items-center gap-2">
+          <Target className="w-4 h-4 text-muted-foreground" />
+          What does success look like for you in this collaboration?
+        </Label>
+        <HelperText>Clear goals help us build better partnerships.</HelperText>
+        <Input
+          id="success_definition"
+          placeholder="e.g., Reach 500 attendees, launch a joint campaign..."
+          value={formData.success_definition || ""}
+          onChange={(e) => updateFormData({ success_definition: e.target.value })}
+          className="bg-secondary/50 border-border focus:border-primary"
+        />
+      </div>
+
       {/* Additional Notes */}
       <div className="space-y-2">
         <Label htmlFor="additional_notes" className="text-sm font-medium flex items-center gap-2">
           <FileText className="w-4 h-4 text-muted-foreground" />
           Additional Notes
         </Label>
+        <HelperText>2–3 lines is more than enough.</HelperText>
         <Textarea
           id="additional_notes"
           placeholder="Anything else you'd like us to know?"

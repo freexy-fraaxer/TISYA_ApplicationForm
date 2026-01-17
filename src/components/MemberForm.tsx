@@ -47,9 +47,9 @@ const initialFormData: MemberFormData = {
   email: "",
   nationality: "",
   university: "",
-  interest_zones: [],
-  community_vibe: 50,
-  motivation: [],
+  interest_zones: ["Community"], // Smart default: preselect 1 common option
+  community_vibe: 50, // Neutral default
+  motivation: ["Learn"], // Smart default: preselect 1 common option
   contact_channels: [],
   consent_data_storage: false,
   consent_updates: false,

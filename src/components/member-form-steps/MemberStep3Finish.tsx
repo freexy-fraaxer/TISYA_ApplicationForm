@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { Mail, MessageCircle, Instagram } from "lucide-react";
+import PreSubmitSummary from "../shared/PreSubmitSummary";
 
 interface Step3Props {
   formData: MemberFormData;
@@ -36,6 +37,13 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
           Just a few more things before you join
         </p>
       </div>
+
+      {/* Pre-submit Summary */}
+      <PreSubmitSummary
+        name={formData.full_name}
+        role="Pathfinder"
+        interests={formData.interest_zones}
+      />
 
       {/* Contact Channels */}
       <div className="space-y-3">
