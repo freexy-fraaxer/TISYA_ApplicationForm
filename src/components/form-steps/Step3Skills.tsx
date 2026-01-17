@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
+import HelperText from "../shared/HelperText";
 
 interface Step3Props {
   formData: FormData;
@@ -79,6 +80,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         <Label className="text-sm font-medium">
           Your Skills <span className="text-destructive">*</span>
         </Label>
+        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill) => (
             <button
@@ -103,8 +105,26 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         {/* Introvert/Extrovert */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Introvert</span>
-            <span className="text-muted-foreground">Extrovert</span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_introvert_extrovert <= 50 ? 1 : 0.5,
+                scale: formData.slider_introvert_extrovert <= 30 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Introvert
+            </motion.span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_introvert_extrovert >= 50 ? 1 : 0.5,
+                scale: formData.slider_introvert_extrovert >= 70 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Extrovert
+            </motion.span>
           </div>
           <Slider
             value={[formData.slider_introvert_extrovert]}
@@ -130,8 +150,26 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         {/* Planner/Spontaneous */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Planner</span>
-            <span className="text-muted-foreground">Spontaneous</span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_planner_spontaneous <= 50 ? 1 : 0.5,
+                scale: formData.slider_planner_spontaneous <= 30 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Planner
+            </motion.span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_planner_spontaneous >= 50 ? 1 : 0.5,
+                scale: formData.slider_planner_spontaneous >= 70 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Spontaneous
+            </motion.span>
           </div>
           <Slider
             value={[formData.slider_planner_spontaneous]}
@@ -157,8 +195,26 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
         {/* Behind-the-scenes/Front-facing */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Behind-the-scenes</span>
-            <span className="text-muted-foreground">Front-facing</span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_behind_front <= 50 ? 1 : 0.5,
+                scale: formData.slider_behind_front <= 30 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Behind-the-scenes
+            </motion.span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.slider_behind_front >= 50 ? 1 : 0.5,
+                scale: formData.slider_behind_front >= 70 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Front-facing
+            </motion.span>
           </div>
           <Slider
             value={[formData.slider_behind_front]}

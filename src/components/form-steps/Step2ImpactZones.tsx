@@ -11,6 +11,7 @@ import {
   Search,
   Settings,
 } from "lucide-react";
+import HelperText from "../shared/HelperText";
 
 interface Step2Props {
   formData: FormData;
@@ -149,6 +150,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
         <Label className="text-sm font-medium">
           Impact Zones <span className="text-destructive">*</span>
         </Label>
+        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {impactZones.map((zone, index) => {
             const Icon = zone.icon;

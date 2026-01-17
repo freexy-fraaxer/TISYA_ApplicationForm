@@ -12,6 +12,7 @@ import {
   Camera,
   FolderKanban,
 } from "lucide-react";
+import HelperText from "../shared/HelperText";
 
 interface Step2Props {
   formData: MemberFormData;
@@ -75,6 +76,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         <Label className="text-sm font-medium">
           What are you interested in? <span className="text-destructive">*</span>
         </Label>
+        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {interestZones.map((zone, index) => {
             const Icon = zone.icon;
@@ -128,10 +130,29 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         <Label className="text-sm font-medium">
           How social are you in communities?
         </Label>
+        <HelperText>Life happens, just be honest.</HelperText>
         <div className="space-y-3">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Quiet</span>
-            <span>Social</span>
+          <div className="flex justify-between text-xs">
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.community_vibe <= 50 ? 1 : 0.5,
+                scale: formData.community_vibe <= 30 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Quiet
+            </motion.span>
+            <motion.span
+              className="text-muted-foreground transition-all"
+              animate={{
+                opacity: formData.community_vibe >= 50 ? 1 : 0.5,
+                scale: formData.community_vibe >= 70 ? 1.05 : 1,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              Social
+            </motion.span>
           </div>
           <Slider
             value={[formData.community_vibe]}

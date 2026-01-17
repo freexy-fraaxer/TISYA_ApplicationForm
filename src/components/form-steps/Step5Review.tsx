@@ -2,6 +2,7 @@ import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import PreSubmitSummary from "../shared/PreSubmitSummary";
 
 interface Step5Props {
   formData: FormData;
@@ -20,6 +21,14 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
           Review your application and hit submit
         </p>
       </div>
+
+      {/* Pre-submit Summary */}
+      <PreSubmitSummary
+        name={formData.full_name}
+        role="Operator"
+        interests={formData.impact_zones}
+        preferredImpact={formData.preferred_impact}
+      />
 
       {/* Summary Card */}
       <div className="glass-card p-6 space-y-4">

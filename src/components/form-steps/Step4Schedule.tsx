@@ -4,7 +4,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Clock, Zap, Calendar, Compass } from "lucide-react";
+import { Clock, Zap, Calendar, Compass, Hammer, Users, HeartHandshake, Megaphone } from "lucide-react";
+import HelperText from "../shared/HelperText";
 
 interface Step4Props {
   formData: FormData;
@@ -36,6 +37,13 @@ const involvementLevels = [
     description: "Just getting started",
     icon: Clock,
   },
+];
+
+const impactStyles = [
+  { id: "Building things", label: "Building things", icon: Hammer },
+  { id: "Organizing and coordinating", label: "Organizing and coordinating", icon: Calendar },
+  { id: "Supporting behind the scenes", label: "Supporting behind the scenes", icon: HeartHandshake },
+  { id: "Leading and facilitating", label: "Leading and facilitating", icon: Megaphone },
 ];
 
 const workingStyles = [
@@ -141,11 +149,52 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </div>
       </div>
 
+      {/* Preferred Impact Style */}
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">
+          How do you prefer to make impact? <span className="text-destructive">*</span>
+        </Label>
+        <div className="grid grid-cols-2 gap-3">
+          {impactStyles.map((style) => {
+            const Icon = style.icon;
+            const isSelected = formData.preferred_impact === style.id;
+            return (
+              <motion.button
+                key={style.id}
+                type="button"
+                onClick={() => updateFormData({ preferred_impact: style.id })}
+                className={cn("zone-card text-left p-3", isSelected && "selected")}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon
+                    className={cn(
+                      "w-4 h-4 shrink-0",
+                      isSelected ? "text-primary" : "text-muted-foreground"
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      isSelected ? "text-primary" : "text-foreground"
+                    )}
+                  >
+                    {style.label}
+                  </span>
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Hours per week */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
           Hours per week <span className="text-destructive">*</span>
         </Label>
+        <HelperText>Life happens, just be honest.</HelperText>
         <div className="flex justify-between text-xs text-muted-foreground mb-2">
           {hoursLabels.map((label) => (
             <span key={label}>{label}</span>
@@ -241,8 +290,9 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <Label className="text-sm font-medium">
           Anything else you want us to know?
         </Label>
-          <Textarea
-            placeholder="Fun fact, hidden talent, or anything you want us to know"
+        <HelperText>2–3 lines is more than enough.</HelperText>
+        <Textarea
+          placeholder="Fun fact, hidden talent, or anything you want us to know"
           value={formData.extra_notes}
           onChange={(e) => {
             if (e.target.value.length <= 300) {

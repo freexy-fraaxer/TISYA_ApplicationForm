@@ -52,6 +52,7 @@ export interface FormData {
   slider_behind_front: number;
   
   // Step 4
+  preferred_impact: string;
   involvement_level: string;
   hours_per_week: number;
   working_style: string[];
@@ -79,13 +80,14 @@ const initialFormData: FormData = {
   gender: "",
   how_found_us: [],
   impact_zones: [],
-  motivation_tags: [],
+  motivation_tags: ["Community"], // Smart default: preselect 1 common option
   tech_tools: [],
   media_interests: [],
   skills: [],
   slider_introvert_extrovert: 50,
   slider_planner_spontaneous: 50,
   slider_behind_front: 50,
+  preferred_impact: "",
   involvement_level: "",
   hours_per_week: 3,
   working_style: [],
@@ -135,6 +137,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         return formData.skills.length > 0;
       case 4:
         return !!(
+          formData.preferred_impact &&
           formData.involvement_level &&
           formData.hours_per_week &&
           formData.volunteered_before !== null &&
@@ -188,6 +191,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
       slider_introvert_extrovert: formData.slider_introvert_extrovert,
       slider_planner_spontaneous: formData.slider_planner_spontaneous,
       slider_behind_front: formData.slider_behind_front,
+      preferred_impact: formData.preferred_impact,
       involvement_level: formData.involvement_level,
       hours_per_week: formData.hours_per_week,
       working_style: formData.working_style.join(", "),
