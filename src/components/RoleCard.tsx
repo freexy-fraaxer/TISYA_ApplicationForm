@@ -31,8 +31,8 @@ const RoleCard = ({
       className={cn(
         "relative overflow-hidden",
         "rounded-2xl border border-white/10",
-        // Mobile: square-ish cards, Desktop: taller vertical cards with reduced width
-        "h-[200px] md:h-[280px]",
+        // Fixed heights - smaller on mobile for 2-column grid
+        "h-[200px] md:h-[320px]",
         // Desktop-only hover effects via group
         !isMobile && "group",
         // Cursor styles
