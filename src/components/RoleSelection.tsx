@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import RoleCard from "./RoleCard";
 import { Users, Wrench, Handshake, GraduationCap, X, ArrowLeft } from "lucide-react";
@@ -17,11 +18,23 @@ interface RoleSelectionProps {
 }
 
 const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator }: RoleSelectionProps) => {
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -31,29 +44,37 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             willChange: 'opacity'
           }}
         >
-          {/* Backdrop - solid overlay for proper stacking */}
+          {/* Backdrop with blur and dark overlay */}
           <motion.div
-            className="fixed inset-0 bg-background/98 z-[101]"
+            className="fixed inset-0 z-[101]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             onClick={onClose}
-            style={{ willChange: 'opacity' }}
+            style={{ 
+              willChange: 'opacity',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              backgroundColor: 'rgba(5, 10, 20, 0.6)'
+            }}
           />
 
-          {/* Content - higher z-index to stay above backdrop */}
+          {/* Content container - no overflow, fits viewport */}
           <motion.div
-            className="relative z-[102] w-full max-w-4xl py-6 max-h-[90vh] overflow-y-auto"
+            className="relative z-[102] w-full max-w-4xl px-4 py-4 md:py-6 flex flex-col items-center"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            style={{ willChange: 'opacity, transform' }}
+            style={{ 
+              willChange: 'opacity, transform',
+              maxHeight: '90vh'
+            }}
           >
             {/* Close button */}
             <motion.button
-              className="absolute -top-2 right-0 md:right-4 p-2.5 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-colors duration-150 z-[103]"
+              className="absolute top-0 right-4 md:right-8 p-2.5 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-colors duration-150 z-[103]"
               onClick={onClose}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -62,30 +83,30 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             </motion.button>
 
             {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4 md:mb-6">
               <motion.h2
-                className="text-3xl md:text-4xl font-bold text-foreground mb-2 glow-text"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
+                className="text-2xl md:text-4xl font-bold text-foreground mb-1 md:mb-2 glow-text"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
                 Choose your role
               </motion.h2>
               <motion.p
-                className="text-muted-foreground text-base"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
+                className="text-muted-foreground text-sm md:text-base"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
                 Select a path to begin your journey.
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - 2x2 on both mobile and desktop */}
-            <div className="grid grid-cols-2 gap-3 md:gap-5 max-w-3xl mx-auto px-2 md:px-4">
+            {/* Role Cards Grid - fixed height cards to prevent overflow */}
+            <div className="grid grid-cols-2 gap-2 md:gap-5 max-w-3xl w-full px-1 md:px-4">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
                 <RoleCard
@@ -99,8 +120,8 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
               >
                 <RoleCard
@@ -114,8 +135,8 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
                 <RoleCard
@@ -129,8 +150,8 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
               >
                 <RoleCard
@@ -147,7 +168,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
 
             {/* Back button */}
             <motion.button
-              className="mt-8 mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
+              className="mt-4 md:mt-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -155,7 +176,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               whileHover={{ x: -5 }}
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to home</span>
+              <span className="text-sm md:text-base">Back to home</span>
             </motion.button>
           </motion.div>
         </motion.div>
