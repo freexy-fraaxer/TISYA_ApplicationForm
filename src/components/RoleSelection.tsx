@@ -21,35 +21,42 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
+          style={{ 
+            isolation: 'isolate',
+            willChange: 'opacity'
+          }}
         >
-          {/* Backdrop - removed heavy backdrop-blur for performance */}
+          {/* Backdrop - solid overlay for proper stacking */}
           <motion.div
-            className="absolute inset-0 bg-background/98"
+            className="fixed inset-0 bg-background/98 z-[101]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             onClick={onClose}
+            style={{ willChange: 'opacity' }}
           />
 
-          {/* Content */}
+          {/* Content - higher z-index to stay above backdrop */}
           <motion.div
-            className="relative z-10 w-full max-w-4xl py-6"
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="relative z-[102] w-full max-w-4xl py-6 max-h-[90vh] overflow-y-auto"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            style={{ willChange: 'opacity, transform' }}
           >
             {/* Close button */}
             <motion.button
-              className="absolute -top-2 right-0 md:right-4 p-2.5 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-all duration-200"
+              className="absolute -top-2 right-0 md:right-4 p-2.5 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-colors duration-150 z-[103]"
               onClick={onClose}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <X className="w-5 h-5" />
             </motion.button>

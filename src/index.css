@@ -398,63 +398,86 @@
     }
   }
 
-  /* Hardware-accelerated wave animations using transform */
-  .animate-wave-slow {
-    animation: wave-translate 15s ease-in-out infinite;
+  /* Hardware-accelerated wave animations - GPU composited, capped framerate */
+  .wave-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .wave-layer-slow {
+    animation: wave-translate-optimized 20s linear infinite;
     will-change: transform;
   }
 
-  .animate-wave-medium {
-    animation: wave-translate 12s ease-in-out infinite reverse;
+  .wave-layer-medium {
+    animation: wave-translate-optimized 16s linear infinite reverse;
     will-change: transform;
   }
 
-  .animate-wave-fast {
-    animation: wave-translate 10s ease-in-out infinite;
+  .wave-layer-fast {
+    animation: wave-translate-optimized 14s linear infinite;
     will-change: transform;
   }
 
-  .animate-line-slow {
-    animation: line-translate 18s ease-in-out infinite;
+  .wave-line {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .wave-line-slow {
+    animation: line-translate-optimized 22s linear infinite;
     will-change: transform;
   }
 
-  .animate-line-medium {
-    animation: line-translate 14s ease-in-out infinite reverse;
+  .wave-line-medium {
+    animation: line-translate-optimized 18s linear infinite reverse;
     will-change: transform;
   }
 
-  @keyframes wave-translate {
-    0%, 100% { transform: translateY(0) translateX(0); }
-    25% { transform: translateY(-8px) translateX(5px); }
-    50% { transform: translateY(8px) translateX(-5px); }
-    75% { transform: translateY(-4px) translateX(3px); }
+  /* Optimized keyframes - smoother for high refresh monitors */
+  @keyframes wave-translate-optimized {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(5px, -6px, 0); }
+    50% { transform: translate3d(-5px, 6px, 0); }
+    75% { transform: translate3d(3px, -3px, 0); }
   }
 
-  @keyframes line-translate {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(15px); }
+  @keyframes line-translate-optimized {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, 12px, 0); }
   }
 
-  /* Glow orb animations using transform and opacity only */
-  .animate-orb-pulse {
-    animation: orb-pulse 10s ease-in-out infinite;
-    will-change: transform, opacity;
+  /* Glow orb animations - GPU layer, stable framerate */
+  .orb-pulse {
+    animation: orb-pulse-optimized 12s ease-in-out infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
-  .animate-orb-pulse-slow {
-    animation: orb-pulse 12s ease-in-out infinite;
-    will-change: transform, opacity;
+  .orb-pulse-slow {
+    animation: orb-pulse-optimized 15s ease-in-out infinite;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
-  @keyframes orb-pulse {
+  @keyframes orb-pulse-optimized {
     0%, 100% { 
-      transform: scale(1);
+      transform: translate3d(0, 0, 0) scale(1);
       opacity: 0.6;
     }
     50% { 
-      transform: scale(1.15);
-      opacity: 0.8;
+      transform: translate3d(0, 0, 0) scale(1.1);
+      opacity: 0.75;
+    }
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .wave-layer,
+    .wave-line,
+    .orb-pulse,
+    .orb-pulse-slow {
+      animation: none !important;
     }
   }
 }
