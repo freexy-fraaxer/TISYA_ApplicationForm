@@ -27,9 +27,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Backdrop */}
+          {/* Backdrop - removed heavy backdrop-blur for performance */}
           <motion.div
-            className="absolute inset-0 bg-background/95 backdrop-blur-xl"
+            className="absolute inset-0 bg-background/98"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

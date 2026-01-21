@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -8,7 +9,8 @@ interface GlassCardProps extends HTMLMotionProps<"div"> {
   glow?: boolean;
 }
 
-const GlassCard = ({ 
+// Memoized to prevent unnecessary re-renders
+const GlassCard = memo(({ 
   children, 
   className, 
   hover = false, 
@@ -27,6 +29,8 @@ const GlassCard = ({
       {children}
     </motion.div>
   );
-};
+});
+
+GlassCard.displayName = 'GlassCard';
 
 export default GlassCard;
