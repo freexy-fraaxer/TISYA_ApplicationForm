@@ -44,13 +44,13 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             willChange: 'opacity'
           }}
         >
-          {/* Backdrop with blur and dark overlay */}
+          {/* Backdrop with blur and dark overlay - appears immediately */}
           <motion.div
             className="fixed inset-0 z-[101]"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.1 }}
             onClick={onClose}
             style={{ 
               willChange: 'opacity',
@@ -102,12 +102,12 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - fixed height cards to prevent overflow */}
-            <div className="grid grid-cols-2 gap-2 md:gap-5 max-w-3xl w-full px-1 md:px-4">
+            {/* Role Cards Grid - desktop: narrower cards with less horizontal gap */}
+            <div className="grid grid-cols-2 gap-2 md:gap-3 max-w-2xl w-full px-1 md:px-0">
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.2 }}
               >
                 <RoleCard
                   title="Pathfinders"
@@ -120,9 +120,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25 }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.12, duration: 0.2 }}
               >
                 <RoleCard
                   title="Operators"
@@ -135,9 +135,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.14, duration: 0.2 }}
               >
                 <RoleCard
                   title="Collaborator"
@@ -150,9 +150,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.35 }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.16, duration: 0.2 }}
               >
                 <RoleCard
                   title="Intern"
