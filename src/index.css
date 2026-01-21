@@ -111,28 +111,30 @@
 }
 
 @layer components {
-  /* Glassmorphism Card */
+  /* Glassmorphism Card - optimized for performance */
   .glass-card {
     @apply relative overflow-hidden rounded-2xl;
     background: hsl(var(--glass-bg));
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border: 1px solid hsl(var(--glass-border));
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    /* backdrop-filter only on desktop via media query */
+  }
+
+  @media (min-width: 768px) {
+    .glass-card {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+    @apply glass-card;
+    /* Use transform and opacity only for hardware acceleration */
+    transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
   }
 
   .glass-card-hover:hover {
     border-color: hsl(var(--primary) / 0.4);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      0 0 30px hsl(var(--primary) / 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
   }
 
@@ -393,6 +395,66 @@
     to {
       opacity: 1;
       transform: scale(1);
+    }
+  }
+
+  /* Hardware-accelerated wave animations using transform */
+  .animate-wave-slow {
+    animation: wave-translate 15s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-wave-medium {
+    animation: wave-translate 12s ease-in-out infinite reverse;
+    will-change: transform;
+  }
+
+  .animate-wave-fast {
+    animation: wave-translate 10s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-line-slow {
+    animation: line-translate 18s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-line-medium {
+    animation: line-translate 14s ease-in-out infinite reverse;
+    will-change: transform;
+  }
+
+  @keyframes wave-translate {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-8px) translateX(5px); }
+    50% { transform: translateY(8px) translateX(-5px); }
+    75% { transform: translateY(-4px) translateX(3px); }
+  }
+
+  @keyframes line-translate {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
+
+  /* Glow orb animations using transform and opacity only */
+  .animate-orb-pulse {
+    animation: orb-pulse 10s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .animate-orb-pulse-slow {
+    animation: orb-pulse 12s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes orb-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% { 
+      transform: scale(1.15);
+      opacity: 0.8;
     }
   }
 }

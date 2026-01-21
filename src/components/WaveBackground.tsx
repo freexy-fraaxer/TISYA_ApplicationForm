@@ -1,17 +1,22 @@
-import { motion } from "framer-motion";
+import { memo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-const WaveBackground = () => {
+// Memoized to prevent re-renders when parent state changes
+const WaveBackground = memo(() => {
+  const isMobile = useIsMobile();
+  
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Deep navy gradient background */}
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 will-change-transform">
+      {/* Deep navy gradient background - static, no animation */}
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,50%,6%)] via-[hsl(220,55%,10%)] to-[hsl(220,60%,4%)]" />
       
-      {/* Animated flowing waves */}
+      {/* Animated flowing waves - CSS only, hardware accelerated */}
       <svg
         className="absolute inset-0 w-full h-full"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
         viewBox="0 0 1440 800"
+        style={{ willChange: 'transform' }}
       >
         <defs>
           <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -31,164 +36,91 @@ const WaveBackground = () => {
           </linearGradient>
         </defs>
 
-        {/* Wave 1 - Slow, bottom */}
-        <motion.path
-          d="M0,700 C360,650 720,750 1080,700 C1260,675 1440,725 1440,725 L1440,800 L0,800 Z"
-          fill="url(#waveGradient1)"
-          animate={{
-            d: [
-              "M0,700 C360,650 720,750 1080,700 C1260,675 1440,725 1440,725 L1440,800 L0,800 Z",
-              "M0,720 C360,770 720,670 1080,720 C1260,745 1440,695 1440,695 L1440,800 L0,800 Z",
-              "M0,700 C360,650 720,750 1080,700 C1260,675 1440,725 1440,725 L1440,800 L0,800 Z",
-            ],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Wave 2 - Medium speed, middle-bottom */}
-        <motion.path
-          d="M0,650 C240,700 480,600 720,650 C960,700 1200,600 1440,650 L1440,800 L0,800 Z"
-          fill="url(#waveGradient2)"
-          animate={{
-            d: [
-              "M0,650 C240,700 480,600 720,650 C960,700 1200,600 1440,650 L1440,800 L0,800 Z",
-              "M0,670 C240,620 480,720 720,670 C960,620 1200,720 1440,670 L1440,800 L0,800 Z",
-              "M0,650 C240,700 480,600 720,650 C960,700 1200,600 1440,650 L1440,800 L0,800 Z",
-            ],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Wave 3 - Faster, middle */}
-        <motion.path
-          d="M0,550 C180,580 360,520 540,550 C720,580 900,520 1080,550 C1260,580 1440,520 1440,520 L1440,800 L0,800 Z"
-          fill="url(#waveGradient3)"
-          animate={{
-            d: [
-              "M0,550 C180,580 360,520 540,550 C720,580 900,520 1080,550 C1260,580 1440,520 1440,520 L1440,800 L0,800 Z",
-              "M0,530 C180,500 360,560 540,530 C720,500 900,560 1080,530 C1260,500 1440,560 1440,560 L1440,800 L0,800 Z",
-              "M0,550 C180,580 360,520 540,550 C720,580 900,520 1080,550 C1260,580 1440,520 1440,520 L1440,800 L0,800 Z",
-            ],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Upper flowing curve */}
-        <motion.path
-          d="M-100,300 Q360,250 720,300 T1540,300"
-          fill="none"
-          stroke="url(#waveGradient1)"
-          strokeWidth="2"
-          strokeOpacity="0.3"
-          animate={{
-            d: [
-              "M-100,300 Q360,250 720,300 T1540,300",
-              "M-100,320 Q360,370 720,320 T1540,320",
-              "M-100,300 Q360,250 720,300 T1540,300",
-            ],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Mid flowing curve */}
-        <motion.path
-          d="M-100,450 Q400,400 800,450 T1540,450"
-          fill="none"
-          stroke="url(#waveGradient2)"
-          strokeWidth="1.5"
-          strokeOpacity="0.25"
-          animate={{
-            d: [
-              "M-100,450 Q400,400 800,450 T1540,450",
-              "M-100,430 Q400,480 800,430 T1540,430",
-              "M-100,450 Q400,400 800,450 T1540,450",
-            ],
-          }}
-          transition={{
-            duration: 14,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Top accent curve */}
-        <motion.path
-          d="M-100,150 Q300,120 600,150 T1200,150 T1540,130"
-          fill="none"
-          stroke="url(#waveGradient3)"
-          strokeWidth="1"
-          strokeOpacity="0.2"
-          animate={{
-            d: [
-              "M-100,150 Q300,120 600,150 T1200,150 T1540,130",
-              "M-100,170 Q300,200 600,170 T1200,170 T1540,190",
-              "M-100,150 Q300,120 600,150 T1200,150 T1540,130",
-            ],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+        {/* Static waves on mobile, CSS animated on desktop - use transform for hardware acceleration */}
+        {!isMobile ? (
+          <>
+            {/* Wave layers using CSS animations with transform only */}
+            <g className="animate-wave-slow">
+              <path
+                d="M0,700 C360,650 720,750 1080,700 C1260,675 1440,725 1440,725 L1440,800 L0,800 Z"
+                fill="url(#waveGradient1)"
+              />
+            </g>
+            <g className="animate-wave-medium">
+              <path
+                d="M0,650 C240,700 480,600 720,650 C960,700 1200,600 1440,650 L1440,800 L0,800 Z"
+                fill="url(#waveGradient2)"
+              />
+            </g>
+            <g className="animate-wave-fast">
+              <path
+                d="M0,550 C180,580 360,520 540,550 C720,580 900,520 1080,550 C1260,580 1440,520 1440,520 L1440,800 L0,800 Z"
+                fill="url(#waveGradient3)"
+              />
+            </g>
+            {/* Subtle line strokes */}
+            <path
+              className="animate-line-slow"
+              d="M-100,300 Q360,250 720,300 T1540,300"
+              fill="none"
+              stroke="url(#waveGradient1)"
+              strokeWidth="2"
+              strokeOpacity="0.3"
+            />
+            <path
+              className="animate-line-medium"
+              d="M-100,450 Q400,400 800,450 T1540,450"
+              fill="none"
+              stroke="url(#waveGradient2)"
+              strokeWidth="1.5"
+              strokeOpacity="0.25"
+            />
+          </>
+        ) : (
+          /* Static waves on mobile - no animation for performance */
+          <>
+            <path
+              d="M0,700 C360,650 720,750 1080,700 C1260,675 1440,725 1440,725 L1440,800 L0,800 Z"
+              fill="url(#waveGradient1)"
+            />
+            <path
+              d="M0,650 C240,700 480,600 720,650 C960,700 1200,600 1440,650 L1440,800 L0,800 Z"
+              fill="url(#waveGradient2)"
+            />
+            <path
+              d="M0,550 C180,580 360,520 540,550 C720,580 900,520 1080,550 C1260,580 1440,520 1440,520 L1440,800 L0,800 Z"
+              fill="url(#waveGradient3)"
+            />
+          </>
+        )}
       </svg>
 
-      {/* Subtle glow orbs */}
-      <motion.div
-        className="absolute w-[600px] h-[600px] rounded-full"
+      {/* Subtle glow orbs - CSS animated, no filter on mobile */}
+      <div
+        className="absolute w-[600px] h-[600px] rounded-full animate-orb-pulse"
         style={{
           background: "radial-gradient(circle, hsl(210 100% 50% / 0.06) 0%, transparent 70%)",
           top: "-15%",
           right: "-10%",
-          filter: "blur(80px)",
-        }}
-        animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.6, 0.8, 0.6],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
+          ...(isMobile ? {} : { filter: "blur(80px)" }),
         }}
       />
       
-      <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full"
-        style={{
-          background: "radial-gradient(circle, hsl(200 90% 45% / 0.05) 0%, transparent 70%)",
-          bottom: "5%",
-          left: "-8%",
-          filter: "blur(60px)",
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 0.7, 0.5],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <div
+          className="absolute w-[500px] h-[500px] rounded-full animate-orb-pulse-slow"
+          style={{
+            background: "radial-gradient(circle, hsl(200 90% 45% / 0.05) 0%, transparent 70%)",
+            bottom: "5%",
+            left: "-8%",
+            filter: "blur(60px)",
+          }}
+        />
+      )}
     </div>
   );
-};
+});
+
+WaveBackground.displayName = 'WaveBackground';
 
 export default WaveBackground;

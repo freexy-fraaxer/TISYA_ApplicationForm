@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, memo } from "react";
 import WaveBackground from "@/components/WaveBackground";
 import HomePage from "@/components/HomePage";
 import RoleSelection from "@/components/RoleSelection";
@@ -6,6 +6,21 @@ import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
 import CollaboratorForm from "@/components/CollaboratorForm";
 import { AnimatePresence, motion } from "framer-motion";
+
+// Memoized page transition wrapper
+const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
+  <motion.div
+    key={keyProp}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.25 }}
+    style={{ willChange: 'opacity' }}
+  >
+    {children}
+  </motion.div>
+));
+PageTransition.displayName = 'PageTransition';
 
 type Screen = "home" | "operators" | "members" | "collaborator";
 
@@ -41,69 +56,55 @@ const Index = () => {
     setShowRoleSelection(false);
   };
 
+  // Memoize handlers to prevent prop changes causing re-renders
+  const memoizedHandlers = useMemo(() => ({
+    handleJoinClick,
+    handleCloseRoles,
+    handleSelectOperators,
+    handleSelectMembers,
+    handleSelectCollaborator,
+    handleBackToHome,
+  }), []);
+
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background */}
+      {/* Animated Background - memoized, won't re-render */}
       <WaveBackground />
 
-      {/* Main Content */}
+      {/* Main Content - simplified transitions using opacity only */}
       <AnimatePresence mode="wait">
         {currentScreen === "home" && (
-          <motion.div
-            key="home"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <HomePage onJoinClick={handleJoinClick} />
-          </motion.div>
+          <PageTransition keyProp="home">
+            <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
+          </PageTransition>
         )}
 
         {currentScreen === "operators" && (
-          <motion.div
-            key="operators"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.4 }}
-          >
-            <OperatorsForm onBack={handleBackToHome} />
-          </motion.div>
+          <PageTransition keyProp="operators">
+            <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
         )}
 
         {currentScreen === "members" && (
-          <motion.div
-            key="members"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.4 }}
-          >
-            <MemberForm onBack={handleBackToHome} />
-          </motion.div>
+          <PageTransition keyProp="members">
+            <MemberForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
         )}
 
         {currentScreen === "collaborator" && (
-          <motion.div
-            key="collaborator"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.4 }}
-          >
-            <CollaboratorForm onBack={handleBackToHome} />
-          </motion.div>
+          <PageTransition keyProp="collaborator">
+            <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
         )}
       </AnimatePresence>
 
       {/* Role Selection Overlay */}
       <RoleSelection
         isOpen={showRoleSelection}
-        onClose={handleCloseRoles}
-        onSelectOperators={handleSelectOperators}
-        onSelectMembers={handleSelectMembers}
-        onSelectCollaborator={handleSelectCollaborator}
+        onClose={memoizedHandlers.handleCloseRoles}
+        onSelectOperators={memoizedHandlers.handleSelectOperators}
+        onSelectMembers={memoizedHandlers.handleSelectMembers}
+        onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
       />
     </div>
   );

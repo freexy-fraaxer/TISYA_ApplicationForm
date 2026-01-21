@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
-import tisyaLogo from "@/assets/tisya-logo.png";
+import tisyaLogo from "@/assets/tisya-logo.svg";
 interface HomePageProps {
   onJoinClick: () => void;
 }
