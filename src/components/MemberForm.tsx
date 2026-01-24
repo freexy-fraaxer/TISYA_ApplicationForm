@@ -7,7 +7,9 @@ import FormProgressBar from "./shared/FormProgressBar";
 import MemberStep1Basics from "./member-form-steps/MemberStep1Basics";
 import MemberStep2Interests from "./member-form-steps/MemberStep2Interests";
 import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
-import FormSuccessScreen from "./shared/FormSuccessScreen";
+import MemberSuccessScreen from "./shared/MemberSuccessScreen";
+import { validateEmail } from "@/lib/validation";
+import { sendConfirmationEmail } from "@/lib/emailService";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -20,6 +22,7 @@ const MEMBER_MICROCOPY = [
   "Great picks",
   "Almost there",
 ];
+
 export interface MemberFormData {
   // Step 1
   full_name: string;
@@ -68,7 +71,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   const [formData, setFormData] = useState<MemberFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const totalSteps = 3;
@@ -76,6 +78,8 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
 
   const updateFormData = (updates: Partial<MemberFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    // Clear error when user makes changes
+    if (submitError) setSubmitError(null);
   };
 
   const validateStep = (step: number): boolean => {
@@ -84,7 +88,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         return !!(
           formData.full_name.trim() &&
           formData.email.trim() &&
-          formData.email.includes("@")
+          validateEmail(formData.email)
         );
       case 2:
         return formData.interest_zones.length > 0;
@@ -153,7 +157,13 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         }
       );
 
-      setApplicationId(`PTH-${Date.now().toString(36).toUpperCase()}`);
+      // Send confirmation email (no reference ID for members)
+      await sendConfirmationEmail({
+        formType: "member",
+        email: formData.email,
+        name: formData.full_name,
+      });
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
@@ -164,14 +174,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   };
 
   if (isSuccess) {
-    return (
-      <FormSuccessScreen
-        applicationId={applicationId || ""}
-        title="Welcome, Pathfinder"
-        subtitle="You're now part of the community. We'll be in touch soon."
-        onBack={onBack}
-      />
-    );
+    return <MemberSuccessScreen onBack={onBack} />;
   }
 
   // Optimized step transitions - opacity only to prevent layout reflow
@@ -184,7 +187,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
       <GlassCard
-        className="w-full max-w-2xl p-6 md:p-8"
+        className="w-full max-w-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}

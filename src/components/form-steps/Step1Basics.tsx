@@ -10,27 +10,14 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { countries, genderOptions, validateEmail, validatePhone, getEmailError, getPhoneError, getRequiredError } from "@/lib/validation";
+import FormFieldError from "../shared/FormFieldError";
+import { useState, useEffect } from "react";
 
 interface Step1Props {
   formData: FormData;
   updateFormData: (updates: Partial<FormData>) => void;
 }
-
-const countries = [
-  "Afghanistan", "Albania", "Algeria", "Argentina", "Armenia", "Australia", "Austria",
-  "Azerbaijan", "Bangladesh", "Belarus", "Belgium", "Bosnia and Herzegovina", "Brazil",
-  "Bulgaria", "Canada", "Chile", "China", "Colombia", "Croatia", "Cyprus", "Czech Republic",
-  "Denmark", "Egypt", "Estonia", "Ethiopia", "Finland", "France", "Georgia", "Germany",
-  "Greece", "Hungary", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-  "Japan", "Jordan", "Kazakhstan", "Kenya", "Kosovo", "Kuwait", "Kyrgyzstan", "Latvia",
-  "Lebanon", "Libya", "Lithuania", "Malaysia", "Mexico", "Moldova", "Mongolia", "Morocco",
-  "Netherlands", "New Zealand", "Nigeria", "North Macedonia", "Norway", "Pakistan",
-  "Palestine", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
-  "Saudi Arabia", "Serbia", "Singapore", "Slovakia", "Slovenia", "South Africa",
-  "South Korea", "Spain", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan",
-  "Thailand", "Tunisia", "Turkey", "Turkmenistan", "Ukraine", "United Arab Emirates",
-  "United Kingdom", "United States", "Uzbekistan", "Vietnam", "Yemen", "Other"
-];
 
 const educationLevels = [
   "High School",
@@ -40,8 +27,6 @@ const educationLevels = [
   "Graduated",
   "Other",
 ];
-
-const genderOptions = ["Male", "Female", "Other", "Prefer not to say"];
 
 const howFoundOptions = [
   "Instagram",
@@ -53,6 +38,39 @@ const howFoundOptions = [
 ];
 
 const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  useEffect(() => {
+    const newErrors: Record<string, string | null> = {};
+    if (touched.full_name) {
+      newErrors.full_name = getRequiredError(formData.full_name, "Full name");
+    }
+    if (touched.email) {
+      newErrors.email = getEmailError(formData.email);
+    }
+    if (touched.contact_number) {
+      newErrors.contact_number = getPhoneError(formData.contact_number);
+    }
+    if (touched.city) {
+      newErrors.city = getRequiredError(formData.city, "City");
+    }
+    if (touched.nationality) {
+      newErrors.nationality = formData.nationality ? null : "Nationality is required";
+    }
+    if (touched.university) {
+      newErrors.university = getRequiredError(formData.university, "University");
+    }
+    if (touched.education_level) {
+      newErrors.education_level = formData.education_level ? null : "Education level is required";
+    }
+    setErrors(newErrors);
+  }, [formData, touched]);
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   const toggleHowFound = (option: string) => {
     const current = formData.how_found_us;
     if (current.includes(option)) {
@@ -84,8 +102,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your full name"
           value={formData.full_name}
           onChange={(e) => updateFormData({ full_name: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("full_name")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.full_name ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.full_name || null} />
       </div>
 
       {/* Email */}
@@ -100,8 +120,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="you@email.com"
           value={formData.email}
           onChange={(e) => updateFormData({ email: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("email")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.email ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.email || null} />
       </div>
 
       {/* Contact Number */}
@@ -116,8 +138,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="+90 5XX XXX XXXX"
           value={formData.contact_number}
           onChange={(e) => updateFormData({ contact_number: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("contact_number")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.contact_number ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.contact_number || null} />
       </div>
 
       {/* City & Nationality */}
@@ -133,8 +157,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
             placeholder="City (Türkiye)"
             value={formData.city}
             onChange={(e) => updateFormData({ city: e.target.value })}
-            className="bg-secondary/50 border-border focus:border-primary"
+            onBlur={() => handleBlur("city")}
+            className={`bg-secondary/50 border-border focus:border-primary ${errors.city ? "border-destructive" : ""}`}
           />
+          <FormFieldError error={errors.city || null} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
@@ -143,9 +169,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           </Label>
           <Select
             value={formData.nationality}
-            onValueChange={(value) => updateFormData({ nationality: value })}
+            onValueChange={(value) => {
+              updateFormData({ nationality: value });
+              handleBlur("nationality");
+            }}
           >
-            <SelectTrigger className="bg-secondary/50 border-border">
+            <SelectTrigger className={`bg-secondary/50 border-border ${errors.nationality ? "border-destructive" : ""}`}>
               <SelectValue placeholder="Select country" />
             </SelectTrigger>
             <SelectContent className="bg-card border-border max-h-60">
@@ -156,6 +185,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
               ))}
             </SelectContent>
           </Select>
+          <FormFieldError error={errors.nationality || null} />
         </div>
       </div>
 
@@ -171,8 +201,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your university name"
           value={formData.university}
           onChange={(e) => updateFormData({ university: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("university")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.university ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.university || null} />
       </div>
 
       {/* Department */}
@@ -198,9 +230,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         </Label>
         <Select
           value={formData.education_level}
-          onValueChange={(value) => updateFormData({ education_level: value })}
+          onValueChange={(value) => {
+            updateFormData({ education_level: value });
+            handleBlur("education_level");
+          }}
         >
-          <SelectTrigger className="bg-secondary/50 border-border">
+          <SelectTrigger className={`bg-secondary/50 border-border ${errors.education_level ? "border-destructive" : ""}`}>
             <SelectValue placeholder="Select education level" />
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
@@ -211,6 +246,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
             ))}
           </SelectContent>
         </Select>
+        <FormFieldError error={errors.education_level || null} />
       </div>
 
       {/* Gender */}
@@ -219,12 +255,17 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         <div className="flex flex-wrap gap-2">
           {genderOptions.map((option) => (
             <button
-              key={option}
+              key={option.value}
               type="button"
-              onClick={() => updateFormData({ gender: option })}
-              className={cn("chip", formData.gender === option && "selected")}
+              onClick={() => !option.disabled && updateFormData({ gender: option.value })}
+              disabled={option.disabled}
+              className={cn(
+                "chip",
+                formData.gender === option.value && "selected",
+                option.disabled && "opacity-50 cursor-not-allowed"
+              )}
             >
-              {option}
+              {option.value}
             </button>
           ))}
         </div>

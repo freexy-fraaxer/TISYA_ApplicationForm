@@ -14,7 +14,9 @@ import CollabStepSponsorDetails from "./collaborator-form-steps/CollabStepSponso
 import CollabStepCommunityDetails from "./collaborator-form-steps/CollabStepCommunityDetails";
 import CollabStepOtherDetails from "./collaborator-form-steps/CollabStepOtherDetails";
 import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
-import FormSuccessScreen from "./shared/FormSuccessScreen";
+import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
+import { validateEmail, validateUrl } from "@/lib/validation";
+import { sendConfirmationEmail } from "@/lib/emailService";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -203,6 +205,8 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
   const updateFormData = (updates: Partial<CollaboratorFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    // Clear error when user makes changes
+    if (submitError) setSubmitError(null);
   };
 
   const validateStep = (step: number): boolean => {
@@ -210,11 +214,14 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
     switch (currentStepType) {
       case "org":
+        const emailValid = validateEmail(formData.email);
+        const websiteValid = !formData.website || validateUrl(formData.website);
         return !!(
           formData.org_name.trim() &&
           formData.contact_name.trim() &&
           formData.email.trim() &&
-          formData.email.includes("@")
+          emailValid &&
+          websiteValid
         );
       case "type":
         return formData.collab_type.length > 0;
@@ -248,6 +255,7 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
     setSubmitError(null);
 
     const params = new URLSearchParams(window.location.search);
+    const newApplicationId = `COL-${Date.now().toString(36).toUpperCase()}`;
 
     const payload = {
       formType: "collaborator",
@@ -340,7 +348,15 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         }
       );
 
-      setApplicationId(`COL-${Date.now().toString(36).toUpperCase()}`);
+      // Send confirmation email
+      await sendConfirmationEmail({
+        formType: "collaborator",
+        email: formData.email,
+        name: formData.contact_name,
+        referenceId: newApplicationId,
+      });
+
+      setApplicationId(newApplicationId);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
@@ -352,10 +368,8 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
   if (isSuccess) {
     return (
-      <FormSuccessScreen
+      <CollaboratorSuccessScreen
         applicationId={applicationId || ""}
-        title="Request Submitted"
-        subtitle="Thank you for your interest in collaborating with TISYA. We'll review your request and get back to you soon."
         onBack={onBack}
       />
     );
