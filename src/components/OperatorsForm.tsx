@@ -11,7 +11,9 @@ import Step3Skills from "./form-steps/Step3Skills";
 import Step4Schedule from "./form-steps/Step4Schedule";
 import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
-import SuccessScreen from "./form-steps/SuccessScreen";
+import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
+import { validateEmail, validatePhone } from "@/lib/validation";
+import { sendConfirmationEmail } from "@/lib/emailService";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -142,15 +144,20 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    // Clear error when user makes changes
+    if (submitError) setSubmitError(null);
   };
 
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
+        const emailValid = validateEmail(formData.email);
+        const phoneValid = !formData.contact_number || validatePhone(formData.contact_number);
         return !!(
           formData.full_name.trim() &&
           formData.email.trim() &&
-          formData.email.includes("@") &&
+          emailValid &&
+          phoneValid &&
           formData.city.trim() &&
           formData.nationality.trim() &&
           formData.university.trim() &&
@@ -217,6 +224,8 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
       }
     });
 
+    const newApplicationId = `TIS-${Date.now().toString(36).toUpperCase()}`;
+
     const payload = {
       formType: "volunteer",
       timestamp: new Date().toISOString(),
@@ -272,7 +281,15 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         }
       );
 
-      setApplicationId(`TIS-${Date.now().toString(36).toUpperCase()}`);
+      // Send confirmation email
+      await sendConfirmationEmail({
+        formType: "volunteer",
+        email: formData.email,
+        name: formData.full_name,
+        referenceId: newApplicationId,
+      });
+
+      setApplicationId(newApplicationId);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
@@ -283,7 +300,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
   };
 
   if (isSuccess) {
-    return <SuccessScreen applicationId={applicationId || ""} onBack={onBack} />;
+    return <VolunteerSuccessScreen applicationId={applicationId || ""} onBack={onBack} />;
   }
 
   const stepVariants = {

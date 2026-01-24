@@ -9,6 +9,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, User, Briefcase, Mail, Globe, MapPin } from "lucide-react";
+import { validateEmail, validateUrl, getEmailError, getUrlError, getRequiredError } from "@/lib/validation";
+import FormFieldError from "../shared/FormFieldError";
+import { useState, useEffect } from "react";
 
 interface Step1Props {
   formData: CollaboratorFormData;
@@ -27,6 +30,30 @@ const orgTypes = [
 ];
 
 const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  useEffect(() => {
+    const newErrors: Record<string, string | null> = {};
+    if (touched.org_name) {
+      newErrors.org_name = getRequiredError(formData.org_name, "Organization name");
+    }
+    if (touched.contact_name) {
+      newErrors.contact_name = getRequiredError(formData.contact_name, "Contact name");
+    }
+    if (touched.email) {
+      newErrors.email = getEmailError(formData.email);
+    }
+    if (touched.website) {
+      newErrors.website = getUrlError(formData.website, "website URL");
+    }
+    setErrors(newErrors);
+  }, [formData, touched]);
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -49,8 +76,10 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your organization or company name"
           value={formData.org_name}
           onChange={(e) => updateFormData({ org_name: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("org_name")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.org_name ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.org_name || null} />
       </div>
 
       {/* Contact Name */}
@@ -65,8 +94,10 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your full name"
           value={formData.contact_name}
           onChange={(e) => updateFormData({ contact_name: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("contact_name")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.contact_name ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.contact_name || null} />
       </div>
 
       {/* Role Title */}
@@ -97,8 +128,10 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           placeholder="you@organization.com"
           value={formData.email}
           onChange={(e) => updateFormData({ email: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("email")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.email ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.email || null} />
       </div>
 
       {/* Website & Location */}
@@ -114,8 +147,10 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
             placeholder="https://yourwebsite.com"
             value={formData.website}
             onChange={(e) => updateFormData({ website: e.target.value })}
-            className="bg-secondary/50 border-border focus:border-primary"
+            onBlur={() => handleBlur("website")}
+            className={`bg-secondary/50 border-border focus:border-primary ${errors.website ? "border-destructive" : ""}`}
           />
+          <FormFieldError error={errors.website || null} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="location" className="text-sm font-medium flex items-center gap-2">

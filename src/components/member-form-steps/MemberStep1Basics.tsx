@@ -9,29 +9,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { User, Mail, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import FormFieldError from "../shared/FormFieldError";
+import { useState, useEffect } from "react";
 
 interface Step1Props {
   formData: MemberFormData;
   updateFormData: (updates: Partial<MemberFormData>) => void;
 }
 
-const countries = [
-  "Afghanistan", "Albania", "Algeria", "Argentina", "Armenia", "Australia", "Austria",
-  "Azerbaijan", "Bangladesh", "Belarus", "Belgium", "Bosnia and Herzegovina", "Brazil",
-  "Bulgaria", "Canada", "Chile", "China", "Colombia", "Croatia", "Cyprus", "Czech Republic",
-  "Denmark", "Egypt", "Estonia", "Ethiopia", "Finland", "France", "Georgia", "Germany",
-  "Greece", "Hungary", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
-  "Japan", "Jordan", "Kazakhstan", "Kenya", "Kosovo", "Kuwait", "Kyrgyzstan", "Latvia",
-  "Lebanon", "Libya", "Lithuania", "Malaysia", "Mexico", "Moldova", "Mongolia", "Morocco",
-  "Netherlands", "New Zealand", "Nigeria", "North Macedonia", "Norway", "Pakistan",
-  "Palestine", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
-  "Saudi Arabia", "Serbia", "Singapore", "Slovakia", "Slovenia", "South Africa",
-  "South Korea", "Spain", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan",
-  "Thailand", "Tunisia", "Turkey", "Turkmenistan", "Ukraine", "United Arab Emirates",
-  "United Kingdom", "United States", "Uzbekistan", "Vietnam", "Yemen", "Other"
-];
-
 const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  useEffect(() => {
+    const newErrors: Record<string, string | null> = {};
+    if (touched.full_name) {
+      newErrors.full_name = getRequiredError(formData.full_name, "Full name");
+    }
+    if (touched.email) {
+      newErrors.email = getEmailError(formData.email);
+    }
+    setErrors(newErrors);
+  }, [formData, touched]);
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -54,8 +59,10 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your full name"
           value={formData.full_name}
           onChange={(e) => updateFormData({ full_name: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("full_name")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.full_name ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.full_name || null} />
       </div>
 
       {/* Email */}
@@ -70,8 +77,10 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="you@email.com"
           value={formData.email}
           onChange={(e) => updateFormData({ email: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onBlur={() => handleBlur("email")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.email ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.email || null} />
       </div>
 
       {/* Nationality */}
