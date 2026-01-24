@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import {
   Calendar,
   FolderKanban,
-  DollarSign,
   Mic,
   Camera,
+  DollarSign,
+  Users,
   MoreHorizontal,
 } from "lucide-react";
 
@@ -17,42 +18,13 @@ interface Step2Props {
 }
 
 const collabTypes = [
-  {
-    id: "Event Partnership",
-    label: "Event Partnership",
-    description: "Co-host or sponsor events together",
-    icon: Calendar,
-  },
-  {
-    id: "Project Collaboration",
-    label: "Project Collaboration",
-    description: "Work on shared initiatives and projects",
-    icon: FolderKanban,
-  },
-  {
-    id: "Sponsorship",
-    label: "Sponsorship",
-    description: "Financial or in-kind support",
-    icon: DollarSign,
-  },
-  {
-    id: "Speaker / Panel",
-    label: "Speaker / Panel",
-    description: "Participate as a speaker or panelist",
-    icon: Mic,
-  },
-  {
-    id: "Media Partnership",
-    label: "Media Partnership",
-    description: "Content sharing and cross-promotion",
-    icon: Camera,
-  },
-  {
-    id: "Other",
-    label: "Other",
-    description: "Something else in mind",
-    icon: MoreHorizontal,
-  },
+  { id: "Event Partner", label: "Event Partner", description: "Co-host or sponsor events together", icon: Calendar },
+  { id: "Project Partner", label: "Project Partner", description: "Work on shared initiatives and projects", icon: FolderKanban },
+  { id: "Speaker Partner", label: "Speaker Partner", description: "Participate as a speaker or panelist", icon: Mic },
+  { id: "Media Partner", label: "Media Partner", description: "Content sharing and cross-promotion", icon: Camera },
+  { id: "Sponsor", label: "Sponsor", description: "Financial or in-kind support", icon: DollarSign },
+  { id: "Community Partner", label: "Community Partner", description: "Community engagement collaboration", icon: Users },
+  { id: "Other", label: "Other", description: "Something else in mind", icon: MoreHorizontal },
 ];
 
 const CollabStep2Type = ({ formData, updateFormData }: Step2Props) => {
@@ -67,17 +39,11 @@ const CollabStep2Type = ({ formData, updateFormData }: Step2Props) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          Type of collaboration
-        </h2>
-        <p className="text-muted-foreground">
-          Select all that apply
-        </p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Type of collaboration</h2>
+        <p className="text-muted-foreground">Select all that apply</p>
       </div>
 
-      {/* Collaboration Types Grid */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
           What kind of collaboration are you interested in? <span className="text-destructive">*</span>
@@ -97,31 +63,12 @@ const CollabStep2Type = ({ formData, updateFormData }: Step2Props) => {
                 transition={{ delay: index * 0.05 }}
               >
                 <div className="flex items-start gap-3">
-                  <div
-                    className={cn(
-                      "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors",
-                      isSelected ? "bg-primary/20" : "bg-secondary"
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "w-5 h-5",
-                        isSelected ? "text-primary" : "text-muted-foreground"
-                      )}
-                    />
+                  <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors", isSelected ? "bg-primary/20" : "bg-secondary")}>
+                    <Icon className={cn("w-5 h-5", isSelected ? "text-primary" : "text-muted-foreground")} />
                   </div>
                   <div>
-                    <h3
-                      className={cn(
-                        "font-semibold text-sm",
-                        isSelected ? "text-primary" : "text-foreground"
-                      )}
-                    >
-                      {type.label}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {type.description}
-                    </p>
+                    <h3 className={cn("font-semibold text-sm", isSelected ? "text-primary" : "text-foreground")}>{type.label}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{type.description}</p>
                   </div>
                 </div>
               </motion.button>

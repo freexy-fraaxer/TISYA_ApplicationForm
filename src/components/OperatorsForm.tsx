@@ -6,24 +6,30 @@ import HeroButton from "./HeroButton";
 import FormProgressBar from "./shared/FormProgressBar";
 import Step1Basics from "./form-steps/Step1Basics";
 import Step2ImpactZones from "./form-steps/Step2ImpactZones";
+import Step2bLanguages from "./form-steps/Step2bLanguages";
 import Step3Skills from "./form-steps/Step3Skills";
 import Step4Schedule from "./form-steps/Step4Schedule";
+import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
 import SuccessScreen from "./form-steps/SuccessScreen";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
   { label: "Impact Zones" },
+  { label: "Languages" },
   { label: "Skills" },
   { label: "Schedule" },
+  { label: "Fun Tags" },
   { label: "Review" },
 ];
 
 const OPERATOR_MICROCOPY = [
   "Looking good",
   "Nice picks",
-  "Great insights",
+  "Great languages",
+  "Solid skills",
   "Almost done",
+  "Fun side",
   "Final stretch",
 ];
 
@@ -35,6 +41,7 @@ export interface FormData {
   city: string;
   nationality: string;
   university: string;
+  department: string;
   education_level: string;
   gender: string;
   how_found_us: string[];
@@ -43,7 +50,14 @@ export interface FormData {
   impact_zones: string[];
   motivation_tags: string[];
   tech_tools: string[];
+  other_tech_skill: string;
   media_interests: string[];
+  other_media_skill: string;
+  
+  // Step 2b - Languages
+  languages_known: string[];
+  other_language: string;
+  primary_language: string;
   
   // Step 3
   skills: string[];
@@ -59,6 +73,8 @@ export interface FormData {
   volunteered_before: boolean | null;
   experience_brief: string;
   extra_notes: string;
+  
+  // Step 4b - Fun Tags
   fun_tags: string[];
   
   // Step 5
@@ -76,13 +92,19 @@ const initialFormData: FormData = {
   city: "",
   nationality: "",
   university: "",
+  department: "",
   education_level: "",
   gender: "",
   how_found_us: [],
   impact_zones: [],
-  motivation_tags: ["Community"], // Smart default: preselect 1 common option
+  motivation_tags: ["Community"],
   tech_tools: [],
+  other_tech_skill: "",
   media_interests: [],
+  other_media_skill: "",
+  languages_known: [],
+  other_language: "",
+  primary_language: "",
   skills: [],
   slider_introvert_extrovert: 50,
   slider_planner_spontaneous: 50,
@@ -112,8 +134,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const totalSteps = 5;
-  const progress = (currentStep / totalSteps) * 100;
+  const totalSteps = 7;
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -134,8 +155,10 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
       case 2:
         return formData.impact_zones.length > 0;
       case 3:
-        return formData.skills.length > 0;
+        return !!formData.primary_language;
       case 4:
+        return formData.skills.length > 0;
+      case 5:
         return !!(
           formData.preferred_impact &&
           formData.involvement_level &&
@@ -143,7 +166,9 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           formData.volunteered_before !== null &&
           (formData.volunteered_before === false || formData.experience_brief.trim())
         );
-      case 5:
+      case 6:
+        return true; // Fun tags are optional
+      case 7:
         return formData.consent_data_storage;
       default:
         return true;
@@ -173,34 +198,43 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     const params = new URLSearchParams(window.location.search);
 
     const payload = {
+      formType: "volunteer",
       timestamp: new Date().toISOString(),
-      full_name: formData.full_name,
-      email: formData.email,
-      contact_number: formData.contact_number || "",
-      city: formData.city,
-      nationality: formData.nationality,
-      university: formData.university,
-      education_level: formData.education_level,
-      gender: formData.gender || "",
-      how_found_us: formData.how_found_us.join(", "),
-      impact_zones: formData.impact_zones.join(", "),
-      motivation_tags: formData.motivation_tags.join(", "),
-      tech_tools: formData.tech_tools.join(", "),
-      media_interests: formData.media_interests.join(", "),
-      skills: formData.skills.join(", "),
-      slider_introvert_extrovert: formData.slider_introvert_extrovert,
-      slider_planner_spontaneous: formData.slider_planner_spontaneous,
-      slider_behind_front: formData.slider_behind_front,
-      preferred_impact: formData.preferred_impact,
-      involvement_level: formData.involvement_level,
-      hours_per_week: formData.hours_per_week,
-      working_style: formData.working_style.join(", "),
-      volunteered_before: formData.volunteered_before ? "Yes" : "No",
-      experience_brief: formData.experience_brief,
-      extra_notes: formData.extra_notes,
-      fun_tags: formData.fun_tags.join(", "),
-      consent_data_storage: formData.consent_data_storage,
-      consent_updates: formData.consent_updates,
+      data: {
+        full_name: formData.full_name,
+        email: formData.email,
+        contact_number: formData.contact_number || "",
+        city: formData.city,
+        nationality: formData.nationality,
+        university: formData.university,
+        department: formData.department || "",
+        education_level: formData.education_level,
+        gender: formData.gender || "",
+        how_found_us: formData.how_found_us,
+        impact_zones: formData.impact_zones,
+        motivation_tags: formData.motivation_tags,
+        tech_tools: formData.tech_tools,
+        other_tech_skill: formData.other_tech_skill || "",
+        media_interests: formData.media_interests,
+        other_media_skill: formData.other_media_skill || "",
+        languages_known: formData.languages_known,
+        other_language: formData.other_language || "",
+        primary_language: formData.primary_language,
+        skills: formData.skills,
+        slider_introvert_extrovert: formData.slider_introvert_extrovert,
+        slider_planner_spontaneous: formData.slider_planner_spontaneous,
+        slider_behind_front: formData.slider_behind_front,
+        preferred_impact: formData.preferred_impact,
+        involvement_level: formData.involvement_level,
+        hours_per_week: formData.hours_per_week,
+        working_style: formData.working_style,
+        volunteered_before: formData.volunteered_before ? "Yes" : "No",
+        experience_brief: formData.experience_brief,
+        extra_notes: formData.extra_notes,
+        fun_tags: formData.fun_tags,
+        consent_data_storage: formData.consent_data_storage,
+        consent_updates: formData.consent_updates,
+      },
       honeypot: formData.honeypot,
       source: "lovable_form",
       utm_source: params.get("utm_source") || "",
@@ -209,8 +243,8 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     };
 
     try {
-      const response = await fetch(
-        "https://script.google.com/macros/s/AKfycbzKFtInw0aD2Fu-0xHzqF0spArbmn2uy_ykjvN1GTShXiUTewuFiNBeUaXsEojhUehp/exec",
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
         {
           method: "POST",
           headers: {
@@ -221,8 +255,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         }
       );
 
-      // Since we're using no-cors, we can't read the response
-      // We'll assume success if no error is thrown
       setApplicationId(`TIS-${Date.now().toString(36).toUpperCase()}`);
       setIsSuccess(true);
     } catch (error) {
@@ -237,11 +269,31 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     return <SuccessScreen applicationId={applicationId || ""} onBack={onBack} />;
   }
 
-  // Optimized step transitions - opacity only to prevent layout reflow
   const stepVariants = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
+  };
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return <Step1Basics formData={formData} updateFormData={updateFormData} />;
+      case 2:
+        return <Step2ImpactZones formData={formData} updateFormData={updateFormData} />;
+      case 3:
+        return <Step2bLanguages formData={formData} updateFormData={updateFormData} />;
+      case 4:
+        return <Step3Skills formData={formData} updateFormData={updateFormData} />;
+      case 5:
+        return <Step4Schedule formData={formData} updateFormData={updateFormData} />;
+      case 6:
+        return <Step4bFunTags formData={formData} updateFormData={updateFormData} />;
+      case 7:
+        return <Step5Review formData={formData} updateFormData={updateFormData} />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -291,21 +343,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
             exit="exit"
             transition={{ duration: 0.3 }}
           >
-            {currentStep === 1 && (
-              <Step1Basics formData={formData} updateFormData={updateFormData} />
-            )}
-            {currentStep === 2 && (
-              <Step2ImpactZones formData={formData} updateFormData={updateFormData} />
-            )}
-            {currentStep === 3 && (
-              <Step3Skills formData={formData} updateFormData={updateFormData} />
-            )}
-            {currentStep === 4 && (
-              <Step4Schedule formData={formData} updateFormData={updateFormData} />
-            )}
-            {currentStep === 5 && (
-              <Step5Review formData={formData} updateFormData={updateFormData} />
-            )}
+            {renderStepContent()}
           </motion.div>
         </AnimatePresence>
 

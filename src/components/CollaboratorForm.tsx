@@ -30,18 +30,49 @@ export interface CollaboratorFormData {
   // Step 2 - Collaboration Type
   collab_type: string[];
 
-  // Step 3 - Conditional Details
+  // Event Partner
   event_name: string;
   event_date: string;
   event_format: string;
   expected_attendance: string;
   target_audience: string;
   event_description: string;
+  
+  // Project Partner
   project_name: string;
   project_summary: string;
   timeline: string;
+  project_goals: string;
+  
+  // Speaker Partner
+  speaker_direction: string;
+  speaker_name: string;
+  speaker_topic: string;
+  speaker_profile_link: string;
+  requested_topic: string;
+  number_of_speakers: string;
+  
+  // Media Partner
+  media_type: string[];
+  platforms: string[];
+  deliverables: string;
+  posting_timeline: string;
+  audience_reach: string;
+  past_work_link: string;
+  
+  // Sponsor
+  sponsorship_type: string[];
+  estimated_budget: string;
+  what_they_provide: string;
+  what_they_expect: string;
+  brand_exposure: string;
+  
+  // Other
+  collab_description: string;
+  expectations: string;
+  notes: string;
 
-  // Step 4 - Final Details
+  // Step Final
   preferred_timeline: string;
   budget_range: string;
   success_definition: string;
@@ -71,13 +102,34 @@ const initialFormData: CollaboratorFormData = {
   project_name: "",
   project_summary: "",
   timeline: "",
+  project_goals: "",
+  speaker_direction: "",
+  speaker_name: "",
+  speaker_topic: "",
+  speaker_profile_link: "",
+  requested_topic: "",
+  number_of_speakers: "",
+  media_type: [],
+  platforms: [],
+  deliverables: "",
+  posting_timeline: "",
+  audience_reach: "",
+  past_work_link: "",
+  sponsorship_type: [],
+  estimated_budget: "",
+  what_they_provide: "",
+  what_they_expect: "",
+  brand_exposure: "",
+  collab_description: "",
+  expectations: "",
+  notes: "",
   preferred_timeline: "",
   budget_range: "",
   success_definition: "",
   additional_notes: "",
   consent_data_storage: false,
   honeypot: "",
-  submission_type: "collaboration",
+  submission_type: "collaborator",
 };
 
 interface CollaboratorFormProps {
@@ -92,37 +144,18 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Determine if we need the conditional details step
   const needsDetailsStep = useMemo(() => {
-    return (
-      formData.collab_type.includes("Event Partnership") ||
-      formData.collab_type.includes("Project Collaboration")
-    );
+    return formData.collab_type.length > 0;
   }, [formData.collab_type]);
 
-  const showEventDetails = formData.collab_type.includes("Event Partnership");
-  const showProjectDetails = formData.collab_type.includes("Project Collaboration");
-
-  // Calculate total steps (3 or 4 depending on conditional step)
   const totalSteps = needsDetailsStep ? 4 : 3;
-
-  // Map logical step to actual step component
-  const getActualStep = (step: number): number => {
-    if (!needsDetailsStep && step >= 3) {
-      return step + 1; // Skip step 3 (details)
-    }
-    return step;
-  };
-
-  const progress = (currentStep / totalSteps) * 100;
 
   const updateFormData = (updates: Partial<CollaboratorFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
   const validateStep = (step: number): boolean => {
-    const actualStep = getActualStep(step);
-    switch (actualStep) {
+    switch (step) {
       case 1:
         return !!(
           formData.org_name.trim() &&
@@ -133,9 +166,8 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
       case 2:
         return formData.collab_type.length > 0;
       case 3:
-        // Conditional details - only validate if shown
-        if (!needsDetailsStep) return true;
-        return true; // Details are optional
+        if (!needsDetailsStep) return formData.consent_data_storage;
+        return true;
       case 4:
         return formData.consent_data_storage;
       default:
@@ -166,30 +198,65 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
     const params = new URLSearchParams(window.location.search);
 
     const payload = {
+      formType: "collaborator",
       timestamp: new Date().toISOString(),
-      submission_type: "collaboration",
-      org_name: formData.org_name,
-      contact_name: formData.contact_name,
-      role_title: formData.role_title || "",
-      email: formData.email,
-      website: formData.website || "",
-      location: formData.location || "",
-      org_type: formData.org_type || "",
-      collab_type: formData.collab_type.join(", "),
-      event_name: formData.event_name || "",
-      event_date: formData.event_date || "",
-      event_format: formData.event_format || "",
-      expected_attendance: formData.expected_attendance || "",
-      target_audience: formData.target_audience || "",
-      event_description: formData.event_description || "",
-      project_name: formData.project_name || "",
-      project_summary: formData.project_summary || "",
-      timeline: formData.timeline || "",
-      preferred_timeline: formData.preferred_timeline || "",
-      budget_range: formData.budget_range || "",
-      success_definition: formData.success_definition || "",
-      additional_notes: formData.additional_notes || "",
-      consent_data_storage: formData.consent_data_storage,
+      data: {
+        org_name: formData.org_name,
+        contact_name: formData.contact_name,
+        role_title: formData.role_title || "",
+        email: formData.email,
+        website: formData.website || "",
+        location: formData.location || "",
+        org_type: formData.org_type || "",
+        collab_type: formData.collab_type,
+        success_definition: formData.success_definition || "",
+        additional_notes: formData.additional_notes || "",
+        consent_data_storage: formData.consent_data_storage,
+      },
+      details: {
+        event: formData.collab_type.includes("Event Partner") ? {
+          event_name: formData.event_name,
+          event_date: formData.event_date,
+          event_format: formData.event_format,
+          expected_attendance: formData.expected_attendance,
+          target_audience: formData.target_audience,
+          event_description: formData.event_description,
+        } : null,
+        project: formData.collab_type.includes("Project Partner") ? {
+          project_name: formData.project_name,
+          project_summary: formData.project_summary,
+          timeline: formData.timeline,
+          project_goals: formData.project_goals,
+        } : null,
+        speaker: formData.collab_type.includes("Speaker Partner") ? {
+          speaker_direction: formData.speaker_direction,
+          speaker_name: formData.speaker_name,
+          speaker_topic: formData.speaker_topic,
+          speaker_profile_link: formData.speaker_profile_link,
+          requested_topic: formData.requested_topic,
+          number_of_speakers: formData.number_of_speakers,
+        } : null,
+        media: formData.collab_type.includes("Media Partner") ? {
+          media_type: formData.media_type,
+          platforms: formData.platforms,
+          deliverables: formData.deliverables,
+          posting_timeline: formData.posting_timeline,
+          audience_reach: formData.audience_reach,
+          past_work_link: formData.past_work_link,
+        } : null,
+        sponsor: formData.collab_type.includes("Sponsor") ? {
+          sponsorship_type: formData.sponsorship_type,
+          estimated_budget: formData.estimated_budget,
+          what_they_provide: formData.what_they_provide,
+          what_they_expect: formData.what_they_expect,
+          brand_exposure: formData.brand_exposure,
+        } : null,
+        other: formData.collab_type.includes("Other") ? {
+          collab_description: formData.collab_description,
+          expectations: formData.expectations,
+          notes: formData.notes,
+        } : null,
+      },
       honeypot: formData.honeypot,
       source: "lovable_form",
       utm_source: params.get("utm_source") || "",
@@ -199,12 +266,10 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycbyrUnVVukfmZKrL4WLE0KPVK5ytcILxjhtl9-TvsX4IQ2EqVPfGEBmzA2mlu5mAkrF4/exec",
+        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           mode: "no-cors",
           body: JSON.stringify(payload),
         }
@@ -231,17 +296,13 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
     );
   }
 
-  // Optimized step transitions - opacity only to prevent layout reflow
   const stepVariants = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
   };
 
-  // Render appropriate step content
   const renderStepContent = () => {
-    const actualStep = getActualStep(currentStep);
-    
     if (currentStep === 1) {
       return <CollabStep1OrgInfo formData={formData} updateFormData={updateFormData} />;
     }
@@ -253,12 +314,11 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         <CollabStep3Details
           formData={formData}
           updateFormData={updateFormData}
-          showEventDetails={showEventDetails}
-          showProjectDetails={showProjectDetails}
+          showEventDetails={formData.collab_type.includes("Event Partner")}
+          showProjectDetails={formData.collab_type.includes("Project Partner")}
         />
       );
     }
-    // Final step
     return <CollabStep4Final formData={formData} updateFormData={updateFormData} />;
   };
 
@@ -270,7 +330,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Back to roles button */}
         <motion.button
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
           onClick={onBack}
@@ -280,28 +339,17 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
           <span>Back to roles</span>
         </motion.button>
 
-        {/* Progress Section */}
         <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
           steps={
             needsDetailsStep
-              ? [
-                  { label: "Organization" },
-                  { label: "Type" },
-                  { label: "Details" },
-                  { label: "Final" },
-                ]
-              : [
-                  { label: "Organization" },
-                  { label: "Type" },
-                  { label: "Final" },
-                ]
+              ? [{ label: "Organization" }, { label: "Type" }, { label: "Details" }, { label: "Final" }]
+              : [{ label: "Organization" }, { label: "Type" }, { label: "Final" }]
           }
           completedMicrocopy={COLLAB_MICROCOPY}
         />
 
-        {/* Hidden honeypot field */}
         <input
           type="text"
           name="honeypot"
@@ -312,7 +360,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
           autoComplete="off"
         />
 
-        {/* Form Steps */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -326,7 +373,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Error message */}
         {submitError && (
           <motion.div
             className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm"
@@ -337,7 +383,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
           </motion.div>
         )}
 
-        {/* Navigation */}
         <div className="flex justify-between mt-8">
           <HeroButton
             variant="ghost"
@@ -374,7 +419,7 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
                 </>
               ) : (
                 <>
-                  Submit Collaboration Request
+                  Submit Request
                   <Check className="w-4 h-4" />
                 </>
               )}
