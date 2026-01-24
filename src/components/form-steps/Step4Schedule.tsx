@@ -55,17 +55,6 @@ const workingStyles = [
   "Evenings",
 ];
 
-const funTags = [
-  "Hidden musician",
-  "Photographer",
-  "Gamer",
-  "Amateur chef",
-  "Plant parent",
-  "Writer",
-  "Speaker",
-  "Editor",
-];
-
 const hoursLabels = ["1-2", "3-4", "5-7", "8-10", "10+"];
 
 const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
@@ -75,15 +64,6 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
       updateFormData({ working_style: current.filter((s) => s !== style) });
     } else {
       updateFormData({ working_style: [...current, style] });
-    }
-  };
-
-  const toggleFunTag = (tag: string) => {
-    const current = formData.fun_tags;
-    if (current.includes(tag)) {
-      updateFormData({ fun_tags: current.filter((t) => t !== tag) });
-    } else {
-      updateFormData({ fun_tags: [...current, tag] });
     }
   };
 
@@ -303,26 +283,6 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         />
         <div className="text-xs text-muted-foreground text-right">
           {formData.extra_notes.length}/300
-        </div>
-      </div>
-
-      {/* Fun Tags */}
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">Any fun tags?</Label>
-        <div className="flex flex-wrap gap-2">
-          {funTags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => toggleFunTag(tag)}
-              className={cn(
-                "chip",
-                formData.fun_tags.includes(tag) && "selected"
-              )}
-            >
-              {tag}
-            </button>
-          ))}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { FormData } from "../OperatorsForm";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -76,21 +77,21 @@ const motivationTags = [
 
 const techTools = [
   "Framer",
+  "Figma",
   "Webflow",
   "Notion",
   "Airtable",
   "Bubble",
   "JS",
   "Python",
-  "Other",
 ];
 
 const mediaInterests = [
   "Post design",
-  "Video edits",
+  "Video editing",
   "Photography",
-  "Copywriting",
   "Branding",
+  "Copywriting",
 ];
 
 const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
@@ -207,7 +208,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
         >
-          <Label className="text-sm font-medium">Tech Tools you know</Label>
+          <Label className="text-sm font-medium">Tech Skills you know</Label>
           <div className="flex flex-wrap gap-2">
             {techTools.map((tool) => (
               <button
@@ -223,6 +224,19 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
               </button>
             ))}
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="other_tech" className="text-sm font-medium">
+              Other Tech Skill
+            </Label>
+            <Input
+              id="other_tech"
+              type="text"
+              placeholder="Specify other tech skills"
+              value={formData.other_tech_skill}
+              onChange={(e) => updateFormData({ other_tech_skill: e.target.value })}
+              className="bg-secondary/50 border-border focus:border-primary"
+            />
+          </div>
         </motion.div>
       )}
 
@@ -234,7 +248,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
         >
-          <Label className="text-sm font-medium">Media Interests</Label>
+          <Label className="text-sm font-medium">Media Design Skills</Label>
           <div className="flex flex-wrap gap-2">
             {mediaInterests.map((interest) => (
               <button
@@ -249,6 +263,19 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
                 {interest}
               </button>
             ))}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="other_media" className="text-sm font-medium">
+              Other Media Skill
+            </Label>
+            <Input
+              id="other_media"
+              type="text"
+              placeholder="Specify other media skills"
+              value={formData.other_media_skill}
+              onChange={(e) => updateFormData({ other_media_skill: e.target.value })}
+              className="bg-secondary/50 border-border focus:border-primary"
+            />
           </div>
         </motion.div>
       )}

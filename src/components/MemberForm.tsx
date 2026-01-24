@@ -26,6 +26,7 @@ export interface MemberFormData {
   email: string;
   nationality: string;
   university: string;
+  department: string;
   
   // Step 2
   interest_zones: string[];
@@ -47,9 +48,10 @@ const initialFormData: MemberFormData = {
   email: "",
   nationality: "",
   university: "",
-  interest_zones: ["Community"], // Smart default: preselect 1 common option
-  community_vibe: 50, // Neutral default
-  motivation: ["Learn"], // Smart default: preselect 1 common option
+  department: "",
+  interest_zones: ["Community"],
+  community_vibe: 50,
+  motivation: ["Learn"],
   contact_channels: [],
   consent_data_storage: false,
   consent_updates: false,
@@ -116,18 +118,21 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     const params = new URLSearchParams(window.location.search);
 
     const payload = {
+      formType: "member",
       timestamp: new Date().toISOString(),
-      submission_type: "member",
-      full_name: formData.full_name,
-      email: formData.email,
-      nationality: formData.nationality || "",
-      university: formData.university || "",
-      interest_zones: formData.interest_zones.join(", "),
-      community_vibe: formData.community_vibe,
-      motivation: formData.motivation.join(", "),
-      contact_channels: formData.contact_channels.join(", "),
-      consent_data_storage: formData.consent_data_storage,
-      consent_updates: formData.consent_updates,
+      data: {
+        full_name: formData.full_name,
+        email: formData.email,
+        nationality: formData.nationality || "",
+        university: formData.university || "",
+        department: formData.department || "",
+        interest_zones: formData.interest_zones,
+        community_vibe: formData.community_vibe,
+        motivation: formData.motivation,
+        contact_channels: formData.contact_channels,
+        consent_data_storage: formData.consent_data_storage,
+        consent_updates: formData.consent_updates,
+      },
       honeypot: formData.honeypot,
       source: "lovable_form",
       utm_source: params.get("utm_source") || "",
@@ -137,7 +142,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycbyrUnVVukfmZKrL4WLE0KPVK5ytcILxjhtl9-TvsX4IQ2EqVPfGEBmzA2mlu5mAkrF4/exec",
+        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
         {
           method: "POST",
           headers: {

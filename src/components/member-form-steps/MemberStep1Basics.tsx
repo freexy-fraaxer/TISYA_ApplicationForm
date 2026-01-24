@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User, Mail, Globe, GraduationCap } from "lucide-react";
+import { User, Mail, Globe, GraduationCap, BookOpen } from "lucide-react";
 
 interface Step1Props {
   formData: MemberFormData;
@@ -109,6 +109,22 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your university name"
           value={formData.university}
           onChange={(e) => updateFormData({ university: e.target.value })}
+          className="bg-secondary/50 border-border focus:border-primary"
+        />
+      </div>
+
+      {/* Department of Study */}
+      <div className="space-y-2">
+        <Label htmlFor="department" className="text-sm font-medium flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-muted-foreground" />
+          Department of Study
+        </Label>
+        <Input
+          id="department"
+          type="text"
+          placeholder="e.g., Computer Science, Business Administration"
+          value={formData.department}
+          onChange={(e) => updateFormData({ department: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>

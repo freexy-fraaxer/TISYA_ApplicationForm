@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
 
 interface Step1Props {
   formData: FormData;
@@ -73,7 +74,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Full Name */}
       <div className="space-y-2">
-        <Label htmlFor="full_name" className="text-sm font-medium">
+        <Label htmlFor="full_name" className="text-sm font-medium flex items-center gap-2">
+          <User className="w-4 h-4 text-muted-foreground" />
           Full Name <span className="text-destructive">*</span>
         </Label>
         <Input
@@ -88,7 +90,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Email */}
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-sm font-medium">
+        <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
+          <Mail className="w-4 h-4 text-muted-foreground" />
           Email <span className="text-destructive">*</span>
         </Label>
         <Input
@@ -103,7 +106,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Contact Number */}
       <div className="space-y-2">
-        <Label htmlFor="contact_number" className="text-sm font-medium">
+        <Label htmlFor="contact_number" className="text-sm font-medium flex items-center gap-2">
+          <Phone className="w-4 h-4 text-muted-foreground" />
           Contact Number
         </Label>
         <Input
@@ -119,7 +123,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       {/* City & Nationality */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="city" className="text-sm font-medium">
+          <Label htmlFor="city" className="text-sm font-medium flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-muted-foreground" />
             City <span className="text-destructive">*</span>
           </Label>
           <Input
@@ -132,7 +137,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="nationality" className="text-sm font-medium">
+          <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
+            <Globe className="w-4 h-4 text-muted-foreground" />
             Nationality <span className="text-destructive">*</span>
           </Label>
           <Select
@@ -155,7 +161,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* University */}
       <div className="space-y-2">
-        <Label htmlFor="university" className="text-sm font-medium">
+        <Label htmlFor="university" className="text-sm font-medium flex items-center gap-2">
+          <GraduationCap className="w-4 h-4 text-muted-foreground" />
           University <span className="text-destructive">*</span>
         </Label>
         <Input
@@ -164,6 +171,22 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           placeholder="Your university name"
           value={formData.university}
           onChange={(e) => updateFormData({ university: e.target.value })}
+          className="bg-secondary/50 border-border focus:border-primary"
+        />
+      </div>
+
+      {/* Department */}
+      <div className="space-y-2">
+        <Label htmlFor="department" className="text-sm font-medium flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-muted-foreground" />
+          Department of Study
+        </Label>
+        <Input
+          id="department"
+          type="text"
+          placeholder="e.g., Computer Science, Business Administration"
+          value={formData.department}
+          onChange={(e) => updateFormData({ department: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>
