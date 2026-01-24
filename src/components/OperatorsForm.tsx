@@ -46,9 +46,12 @@ export interface FormData {
   gender: string;
   how_found_us: string[];
   
-  // Step 2
+  // Step 2 - Impact Zones with sub-options
   impact_zones: string[];
-  motivation_tags: string[];
+  zone_sub_options: Record<string, string[]>;
+  zone_other_skills: Record<string, string>;
+  
+  // Legacy fields for backwards compatibility (kept but not actively used)
   tech_tools: string[];
   other_tech_skill: string;
   media_interests: string[];
@@ -97,7 +100,8 @@ const initialFormData: FormData = {
   gender: "",
   how_found_us: [],
   impact_zones: [],
-  motivation_tags: ["Community"],
+  zone_sub_options: {},
+  zone_other_skills: {},
   tech_tools: [],
   other_tech_skill: "",
   media_interests: [],
@@ -197,6 +201,22 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
 
     const params = new URLSearchParams(window.location.search);
 
+    // Flatten zone_sub_options for submission
+    const flattenedSubOptions: Record<string, string[]> = {};
+    Object.entries(formData.zone_sub_options).forEach(([zone, options]) => {
+      if (options.length > 0) {
+        flattenedSubOptions[zone] = options;
+      }
+    });
+
+    // Flatten zone_other_skills for submission
+    const flattenedOtherSkills: Record<string, string> = {};
+    Object.entries(formData.zone_other_skills).forEach(([zone, skill]) => {
+      if (skill.trim()) {
+        flattenedOtherSkills[zone] = skill;
+      }
+    });
+
     const payload = {
       formType: "volunteer",
       timestamp: new Date().toISOString(),
@@ -212,11 +232,8 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         gender: formData.gender || "",
         how_found_us: formData.how_found_us,
         impact_zones: formData.impact_zones,
-        motivation_tags: formData.motivation_tags,
-        tech_tools: formData.tech_tools,
-        other_tech_skill: formData.other_tech_skill || "",
-        media_interests: formData.media_interests,
-        other_media_skill: formData.other_media_skill || "",
+        zone_sub_options: flattenedSubOptions,
+        zone_other_skills: flattenedOtherSkills,
         languages_known: formData.languages_known,
         other_language: formData.other_language || "",
         primary_language: formData.primary_language,
@@ -299,7 +316,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
       <GlassCard
-        className="w-full max-w-2xl p-6 md:p-8"
+        className="w-full max-w-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
