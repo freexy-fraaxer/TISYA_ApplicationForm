@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import GlassCard from "../GlassCard";
 import HeroButton from "../HeroButton";
 import { CheckCircle, ArrowRight, Bell } from "lucide-react";
 import tisyaLogo from "@/assets/tisya-logo.svg";
+import { useSound } from "@/contexts/SoundContext";
+import Confetti from "./Confetti";
 
 interface CollaboratorSuccessScreenProps {
   applicationId: string;
@@ -10,8 +13,26 @@ interface CollaboratorSuccessScreenProps {
 }
 
 const CollaboratorSuccessScreen = ({ applicationId, onBack }: CollaboratorSuccessScreenProps) => {
+  const { playCelebration, playBack } = useSound();
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      playCelebration();
+      setShowConfetti(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [playCelebration]);
+
+  const handleBack = () => {
+    playBack();
+    onBack();
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
+      {showConfetti && <Confetti />}
+      
       <GlassCard
         className="max-w-lg w-full p-8 md:p-12 text-center max-h-[90vh] overflow-y-auto"
         initial={{ opacity: 0, scale: 0.95 }}
@@ -99,7 +120,7 @@ const CollaboratorSuccessScreen = ({ applicationId, onBack }: CollaboratorSucces
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <HeroButton onClick={onBack} variant="secondary">
+          <HeroButton onClick={handleBack} variant="secondary">
             Back to Home
             <ArrowRight className="w-4 h-4" />
           </HeroButton>

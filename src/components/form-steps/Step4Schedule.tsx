@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Clock, Zap, Calendar, Compass, Hammer, HeartHandshake, Megaphone } from "lucide-react";
 import HelperText from "../shared/HelperText";
+import { useSound } from "@/contexts/SoundContext";
 
 interface Step4Props {
   formData: FormData;
@@ -58,13 +60,25 @@ const workingStyles = [
 const hoursLabels = ["1-2", "3-4", "5-7", "8-10", "10+"];
 
 const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
+  const { playSliderTick, playTick } = useSound();
+  const lastHoursTick = useRef(formData.hours_per_week);
+
   const toggleWorkingStyle = (style: string) => {
+    playTick();
     const current = formData.working_style;
     if (current.includes(style)) {
       updateFormData({ working_style: current.filter((s) => s !== style) });
     } else {
       updateFormData({ working_style: [...current, style] });
     }
+  };
+
+  const handleHoursChange = (value: number) => {
+    if (value !== lastHoursTick.current) {
+      playSliderTick();
+      lastHoursTick.current = value;
+    }
+    updateFormData({ hours_per_week: value });
   };
 
   const getHoursLabel = (value: number) => {
@@ -182,7 +196,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </div>
         <Slider
           value={[formData.hours_per_week]}
-          onValueChange={([value]) => updateFormData({ hours_per_week: value })}
+          onValueChange={([value]) => handleHoursChange(value)}
           min={1}
           max={10}
           step={1}

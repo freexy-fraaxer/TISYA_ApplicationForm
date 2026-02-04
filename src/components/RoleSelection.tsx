@@ -19,13 +19,20 @@ interface RoleSelectionProps {
 }
 
 const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator }: RoleSelectionProps) => {
-  const { playAmbientTone, playTick } = useSound();
+  const { 
+    playAmbientTone, 
+    playBack,
+    playHover,
+    playPathfinderSelect, 
+    playOperatorSelect, 
+    playCollaboratorSelect,
+    playInternSelect
+  } = useSound();
 
   // Disable body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      // Play ambient tone when modal opens
       playAmbientTone();
     } else {
       document.body.style.overflow = "";
@@ -35,10 +42,29 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     };
   }, [isOpen, playAmbientTone]);
 
-  // Handler with tick sound for role selection
-  const handleRoleSelect = (callback: () => void) => {
-    playTick();
-    callback();
+  // Handler with role-specific sound
+  const handlePathfinderSelect = () => {
+    playPathfinderSelect();
+    onSelectMembers();
+  };
+
+  const handleOperatorSelect = () => {
+    playOperatorSelect();
+    onSelectOperators();
+  };
+
+  const handleCollaboratorSelect = () => {
+    playCollaboratorSelect();
+    onSelectCollaborator();
+  };
+
+  const handleInternHover = () => {
+    playInternSelect();
+  };
+
+  const handleClose = () => {
+    playBack();
+    onClose();
   };
 
   return (
@@ -55,19 +81,19 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             willChange: 'opacity'
           }}
         >
-          {/* Backdrop with blur and dark overlay */}
+          {/* Backdrop with stronger blur and dark overlay */}
           <motion.div
             className="fixed inset-0 z-[101]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={onClose}
+            onClick={handleClose}
             style={{ 
               willChange: 'opacity',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
-              backgroundColor: 'rgba(10, 15, 30, 0.45)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              backgroundColor: 'rgba(5, 10, 25, 0.55)',
             }}
           />
 
@@ -83,7 +109,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             {/* Close button */}
             <motion.button
               className="absolute -top-2 right-0 md:right-4 p-2.5 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-colors duration-150 z-[103]"
-              onClick={onClose}
+              onClick={handleClose}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -116,6 +142,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
+                onMouseEnter={playHover}
               >
                 <RoleCard
                   title="Pathfinders"
@@ -123,7 +150,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Join the community, get access to resources and events."
                   icon={<Users className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={pathfinderBg}
-                  onClick={() => handleRoleSelect(onSelectMembers)}
+                  onClick={handlePathfinderSelect}
                 />
               </motion.div>
 
@@ -131,6 +158,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
+                onMouseEnter={playHover}
               >
                 <RoleCard
                   title="Operators"
@@ -138,7 +166,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Help build programs, media, tech, and community."
                   icon={<Wrench className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={operatorBg}
-                  onClick={() => handleRoleSelect(onSelectOperators)}
+                  onClick={handleOperatorSelect}
                 />
               </motion.div>
 
@@ -146,6 +174,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
+                onMouseEnter={playHover}
               >
                 <RoleCard
                   title="Collaborator"
@@ -153,7 +182,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Partner with TISYA for events, initiatives, and opportunities."
                   icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
-                  onClick={() => handleRoleSelect(onSelectCollaborator)}
+                  onClick={handleCollaboratorSelect}
                 />
               </motion.div>
 
@@ -161,6 +190,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35 }}
+                onMouseEnter={handleInternHover}
               >
                 <RoleCard
                   title="Intern"
@@ -177,7 +207,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             {/* Back button */}
             <motion.button
               className="mt-8 mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
-              onClick={onClose}
+              onClick={handleClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
