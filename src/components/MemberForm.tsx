@@ -10,7 +10,7 @@ import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwt1EDgsk6he078VZqj5MY9WJzIBbj1caodBxKtz2njMzbf6HRY_xv27Q3mNtnhHgRU/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -145,12 +145,13 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        // Display backend error message verbatim
+      // Handle success: false from backend
+      if (!result.success) {
         throw new Error(result.error || result.message || "Submission failed");
       }
 
       // Backend handles email confirmation - no frontend email sending
+      // Members do NOT show referenceId
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
