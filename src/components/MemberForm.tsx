@@ -10,7 +10,7 @@ import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwt1EDgsk6he078VZqj5MY9WJzIBbj1caodBxKtz2njMzbf6HRY_xv27Q3mNtnhHgRU/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbymkzjX9cTABZtReFkeD87qtnQckyPZzxachpg8nbrje7ZZ7tx2Fy9KBlQMN8flbEe2/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
