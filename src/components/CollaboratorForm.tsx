@@ -16,7 +16,8 @@ import CollabStepOtherDetails from "./collaborator-form-steps/CollabStepOtherDet
 import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
 import { validateEmail, validateUrl } from "@/lib/validation";
-import { sendConfirmationEmail } from "@/lib/emailService";
+
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -249,114 +250,103 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
   };
 
   const handleSubmit = async () => {
-    if (!canProceed || formData.honeypot) return;
+    // Prevent duplicate submissions
+    if (!canProceed || formData.honeypot || isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const params = new URLSearchParams(window.location.search);
-    const newApplicationId = `COL-${Date.now().toString(36).toUpperCase()}`;
-
     const payload = {
       formType: "collaborator",
-      timestamp: new Date().toISOString(),
       data: {
         org_name: formData.org_name,
         contact_name: formData.contact_name,
-        role_title: formData.role_title || "",
+        role_title: formData.role_title || null,
         email: formData.email,
-        website: formData.website || "",
-        location: formData.location || "",
-        org_type: formData.org_type || "",
+        website: formData.website || null,
+        location: formData.location || null,
+        org_type: formData.org_type || null,
         collab_type: formData.collab_type,
-        success_definition: formData.success_definition || "",
-        additional_notes: formData.additional_notes || "",
+        preferred_timeline: formData.preferred_timeline || null,
+        budget_range: formData.budget_range || null,
+        success_definition: formData.success_definition || null,
+        additional_notes: formData.additional_notes || null,
         consent_data_storage: formData.consent_data_storage,
       },
       details: {
         event: formData.collab_type.includes("Event Partner") ? {
-          event_name: formData.event_name,
-          event_date: formData.event_date,
-          event_format: formData.event_format,
-          expected_attendance: formData.expected_attendance,
-          target_audience: formData.target_audience,
-          event_description: formData.event_description,
-          event_support_expected: formData.event_support_expected,
+          event_name: formData.event_name || null,
+          event_date: formData.event_date || null,
+          event_format: formData.event_format || null,
+          expected_attendance: formData.expected_attendance || null,
+          target_audience: formData.target_audience || null,
+          event_description: formData.event_description || null,
+          event_support_expected: formData.event_support_expected || null,
         } : null,
         project: formData.collab_type.includes("Project Partner") ? {
-          project_name: formData.project_name,
-          project_summary: formData.project_summary,
-          timeline: formData.timeline,
-          project_goals: formData.project_goals,
-          collaboration_scope: formData.collaboration_scope,
+          project_name: formData.project_name || null,
+          project_summary: formData.project_summary || null,
+          timeline: formData.timeline || null,
+          project_goals: formData.project_goals || null,
+          collaboration_scope: formData.collaboration_scope || null,
         } : null,
         speaker: formData.collab_type.includes("Speaker Partner") ? {
-          speaker_direction: formData.speaker_direction,
-          speaker_name: formData.speaker_name,
-          speaker_topic: formData.speaker_topic,
-          speaker_bio: formData.speaker_bio,
-          speaker_profile_link: formData.speaker_profile_link,
-          requested_topic: formData.requested_topic,
-          number_of_speakers: formData.number_of_speakers,
-          audience_type: formData.audience_type,
-          session_format: formData.session_format,
+          speaker_direction: formData.speaker_direction || null,
+          speaker_name: formData.speaker_name || null,
+          speaker_topic: formData.speaker_topic || null,
+          speaker_bio: formData.speaker_bio || null,
+          speaker_profile_link: formData.speaker_profile_link || null,
+          requested_topic: formData.requested_topic || null,
+          number_of_speakers: formData.number_of_speakers || null,
+          audience_type: formData.audience_type || null,
+          session_format: formData.session_format || null,
         } : null,
         media: formData.collab_type.includes("Media Partner") ? {
-          media_type: formData.media_type,
-          platforms: formData.platforms,
-          deliverables: formData.deliverables,
-          posting_timeline: formData.posting_timeline,
-          audience_reach: formData.audience_reach,
-          past_work_link: formData.past_work_link,
-          media_success: formData.media_success,
+          media_type: formData.media_type.length > 0 ? formData.media_type : null,
+          platforms: formData.platforms.length > 0 ? formData.platforms : null,
+          deliverables: formData.deliverables || null,
+          posting_timeline: formData.posting_timeline || null,
+          audience_reach: formData.audience_reach || null,
+          past_work_link: formData.past_work_link || null,
+          media_success: formData.media_success || null,
         } : null,
-        sponsor: formData.collab_type.includes("Sponsor") ? {
-          sponsorship_type: formData.sponsorship_type,
-          estimated_budget: formData.estimated_budget,
-          what_they_provide: formData.what_they_provide,
-          what_they_expect: formData.what_they_expect,
-          brand_exposure: formData.brand_exposure,
+        sponsorship: formData.collab_type.includes("Sponsor") ? {
+          sponsorship_type: formData.sponsorship_type.length > 0 ? formData.sponsorship_type : null,
+          estimated_budget: formData.estimated_budget || null,
+          what_they_provide: formData.what_they_provide || null,
+          what_they_expect: formData.what_they_expect || null,
+          brand_exposure: formData.brand_exposure || null,
         } : null,
         community: formData.collab_type.includes("Community Partner") ? {
-          community_collab_type: formData.community_collab_type,
-          community_size: formData.community_size,
-          community_target_audience: formData.community_target_audience,
-          planned_activities: formData.planned_activities,
-          community_success: formData.community_success,
+          community_collab_type: formData.community_collab_type || null,
+          community_size: formData.community_size || null,
+          community_target_audience: formData.community_target_audience || null,
+          planned_activities: formData.planned_activities || null,
+          community_success: formData.community_success || null,
         } : null,
         other: formData.collab_type.includes("Other") ? {
-          collab_description: formData.collab_description,
-          expectations: formData.expectations,
-          notes: formData.notes,
+          collab_description: formData.collab_description || null,
+          expectations: formData.expectations || null,
+          notes: formData.notes || null,
         } : null,
       },
-      honeypot: formData.honeypot,
-      source: "lovable_form",
-      utm_source: params.get("utm_source") || "",
-      utm_medium: params.get("utm_medium") || "",
-      utm_campaign: params.get("utm_campaign") || "",
     };
 
     try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          mode: "no-cors",
-          body: JSON.stringify(payload),
-        }
-      );
-
-      // Send confirmation email
-      await sendConfirmationEmail({
-        formType: "collaborator",
-        email: formData.email,
-        name: formData.contact_name,
-        referenceId: newApplicationId,
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      setApplicationId(newApplicationId);
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+
+      const result = await response.json();
+
+      // Use the referenceId returned by the API
+      setApplicationId(result.referenceId || null);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
