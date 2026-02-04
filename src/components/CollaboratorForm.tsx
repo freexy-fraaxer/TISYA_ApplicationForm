@@ -17,7 +17,7 @@ import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
 import { validateEmail, validateUrl } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwt1EDgsk6he078VZqj5MY9WJzIBbj1caodBxKtz2njMzbf6HRY_xv27Q3mNtnhHgRU/exec";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -341,8 +341,8 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        // Display backend error message verbatim
+      // Handle success: false from backend
+      if (!result.success) {
         throw new Error(result.error || result.message || "Submission failed");
       }
 

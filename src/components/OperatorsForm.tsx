@@ -14,7 +14,7 @@ import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwt1EDgsk6he078VZqj5MY9WJzIBbj1caodBxKtz2njMzbf6HRY_xv27Q3mNtnhHgRU/exec";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -245,8 +245,8 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        // Display backend error message verbatim
+      // Handle success: false from backend
+      if (!result.success) {
         throw new Error(result.error || result.message || "Submission failed");
       }
 
