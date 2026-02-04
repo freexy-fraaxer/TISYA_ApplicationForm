@@ -13,7 +13,8 @@ import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
-import { sendConfirmationEmail } from "@/lib/emailService";
+
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -201,12 +202,11 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
   };
 
   const handleSubmit = async () => {
-    if (!canProceed || formData.honeypot) return;
+    // Prevent duplicate submissions
+    if (!canProceed || formData.honeypot || isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
-
-    const params = new URLSearchParams(window.location.search);
 
     // Flatten zone_sub_options for submission
     const flattenedSubOptions: Record<string, string[]> = {};
@@ -224,27 +224,24 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
       }
     });
 
-    const newApplicationId = `TIS-${Date.now().toString(36).toUpperCase()}`;
-
     const payload = {
       formType: "volunteer",
-      timestamp: new Date().toISOString(),
       data: {
         full_name: formData.full_name,
         email: formData.email,
-        contact_number: formData.contact_number || "",
+        contact_number: formData.contact_number || null,
         city: formData.city,
         nationality: formData.nationality,
         university: formData.university,
-        department: formData.department || "",
+        department: formData.department || null,
         education_level: formData.education_level,
-        gender: formData.gender || "",
+        gender: formData.gender || null,
         how_found_us: formData.how_found_us,
         impact_zones: formData.impact_zones,
-        zone_sub_options: flattenedSubOptions,
-        zone_other_skills: flattenedOtherSkills,
+        zone_sub_options: Object.keys(flattenedSubOptions).length > 0 ? flattenedSubOptions : null,
+        zone_other_skills: Object.keys(flattenedOtherSkills).length > 0 ? flattenedOtherSkills : null,
         languages_known: formData.languages_known,
-        other_language: formData.other_language || "",
+        other_language: formData.other_language || null,
         primary_language: formData.primary_language,
         skills: formData.skills,
         slider_introvert_extrovert: formData.slider_introvert_extrovert,
@@ -255,41 +252,32 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         hours_per_week: formData.hours_per_week,
         working_style: formData.working_style,
         volunteered_before: formData.volunteered_before ? "Yes" : "No",
-        experience_brief: formData.experience_brief,
-        extra_notes: formData.extra_notes,
-        fun_tags: formData.fun_tags,
+        experience_brief: formData.experience_brief || null,
+        extra_notes: formData.extra_notes || null,
+        fun_tags: formData.fun_tags.length > 0 ? formData.fun_tags : null,
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },
-      honeypot: formData.honeypot,
-      source: "lovable_form",
-      utm_source: params.get("utm_source") || "",
-      utm_medium: params.get("utm_medium") || "",
-      utm_campaign: params.get("utm_campaign") || "",
+      details: null, // Volunteers don't have conditional detail sections like collaborators
     };
 
     try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "no-cors",
-          body: JSON.stringify(payload),
-        }
-      );
-
-      // Send confirmation email
-      await sendConfirmationEmail({
-        formType: "volunteer",
-        email: formData.email,
-        name: formData.full_name,
-        referenceId: newApplicationId,
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
-      setApplicationId(newApplicationId);
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+
+      const result = await response.json();
+      
+      // Use the referenceId returned by the API
+      setApplicationId(result.referenceId || null);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);

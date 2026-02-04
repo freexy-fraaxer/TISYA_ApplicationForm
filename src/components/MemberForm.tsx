@@ -9,7 +9,8 @@ import MemberStep2Interests from "./member-form-steps/MemberStep2Interests";
 import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
-import { sendConfirmationEmail } from "@/lib/emailService";
+
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -114,22 +115,20 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   };
 
   const handleSubmit = async () => {
-    if (!canProceed || formData.honeypot) return;
+    // Prevent duplicate submissions
+    if (!canProceed || formData.honeypot || isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const params = new URLSearchParams(window.location.search);
-
     const payload = {
       formType: "member",
-      timestamp: new Date().toISOString(),
       data: {
         full_name: formData.full_name,
         email: formData.email,
-        nationality: formData.nationality || "",
-        university: formData.university || "",
-        department: formData.department || "",
+        nationality: formData.nationality || null,
+        university: formData.university || null,
+        department: formData.department || null,
         interest_zones: formData.interest_zones,
         community_vibe: formData.community_vibe,
         motivation: formData.motivation,
@@ -137,33 +136,23 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },
-      honeypot: formData.honeypot,
-      source: "lovable_form",
-      utm_source: params.get("utm_source") || "",
-      utm_medium: params.get("utm_medium") || "",
-      utm_campaign: params.get("utm_campaign") || "",
+      details: null, // Members don't have conditional sections
     };
 
     try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwz6rQB_B0rwXLaJfDJyHYIbsA4xV6fSkebt2zMIiU7rm6NH4K6KPkXwBvRIopnBYbY/exec",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "no-cors",
-          body: JSON.stringify(payload),
-        }
-      );
-
-      // Send confirmation email (no reference ID for members)
-      await sendConfirmationEmail({
-        formType: "member",
-        email: formData.email,
-        name: formData.full_name,
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+
+      // Backend handles email confirmation - no frontend email sending
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
