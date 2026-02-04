@@ -17,7 +17,7 @@ import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
 import { validateEmail, validateUrl } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -339,18 +339,19 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        throw new Error("Submission failed");
-      }
-
       const result = await response.json();
+
+      if (!response.ok) {
+        // Display backend error message verbatim
+        throw new Error(result.error || result.message || "Submission failed");
+      }
 
       // Use the referenceId returned by the API
       setApplicationId(result.referenceId || null);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

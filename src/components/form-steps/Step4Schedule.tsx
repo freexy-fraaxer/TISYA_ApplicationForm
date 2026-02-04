@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Clock, Zap, Calendar, Compass, Hammer, Users, HeartHandshake, Megaphone } from "lucide-react";
+import { Clock, Zap, Calendar, Compass, Hammer, HeartHandshake, Megaphone } from "lucide-react";
 import HelperText from "../shared/HelperText";
 
 interface Step4Props {
@@ -137,12 +137,12 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <div className="grid grid-cols-2 gap-3">
           {impactStyles.map((style) => {
             const Icon = style.icon;
-            const isSelected = formData.preferred_impact === style.id;
+            const isSelected = formData.impact_preference === style.id;
             return (
               <motion.button
                 key={style.id}
                 type="button"
-                onClick={() => updateFormData({ preferred_impact: style.id })}
+                onClick={() => updateFormData({ impact_preference: style.id })}
                 className={cn("zone-card text-left p-3", isSelected && "selected")}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -215,7 +215,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </div>
       </div>
 
-      {/* Volunteered Before */}
+      {/* Previous Volunteering */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
           Have you volunteered before? <span className="text-destructive">*</span>
@@ -223,22 +223,20 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => updateFormData({ volunteered_before: true })}
+            onClick={() => updateFormData({ previous_volunteering: true })}
             className={cn(
               "chip px-6",
-              formData.volunteered_before === true && "selected"
+              formData.previous_volunteering === true && "selected"
             )}
           >
             Yes
           </button>
           <button
             type="button"
-            onClick={() =>
-              updateFormData({ volunteered_before: false, experience_brief: "" })
-            }
+            onClick={() => updateFormData({ previous_volunteering: false })}
             className={cn(
               "chip px-6",
-              formData.volunteered_before === false && "selected"
+              formData.previous_volunteering === false && "selected"
             )}
           >
             No
@@ -246,26 +244,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </div>
       </div>
 
-      {/* Experience Brief (conditional) */}
-      {formData.volunteered_before === true && (
-        <motion.div
-          className="space-y-2"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-        >
-          <Label className="text-sm font-medium">
-            Brief Experience <span className="text-destructive">*</span>
-          </Label>
-          <Textarea
-            placeholder="Example: NGO projects, event support, media team…"
-            value={formData.experience_brief}
-            onChange={(e) => updateFormData({ experience_brief: e.target.value })}
-            className="bg-secondary/50 border-border focus:border-primary min-h-[80px]"
-          />
-        </motion.div>
-      )}
-
-      {/* Extra Notes */}
+      {/* Additional Info */}
       <div className="space-y-2">
         <Label className="text-sm font-medium">
           Anything else you want us to know?
@@ -273,16 +252,16 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <HelperText>2–3 lines is more than enough.</HelperText>
         <Textarea
           placeholder="Fun fact, hidden talent, or anything you want us to know"
-          value={formData.extra_notes}
+          value={formData.additional_info}
           onChange={(e) => {
             if (e.target.value.length <= 300) {
-              updateFormData({ extra_notes: e.target.value });
+              updateFormData({ additional_info: e.target.value });
             }
           }}
           className="bg-secondary/50 border-border focus:border-primary min-h-[80px]"
         />
         <div className="text-xs text-muted-foreground text-right">
-          {formData.extra_notes.length}/300
+          {formData.additional_info.length}/300
         </div>
       </div>
     </div>

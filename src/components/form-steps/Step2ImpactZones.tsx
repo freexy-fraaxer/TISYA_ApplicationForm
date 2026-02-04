@@ -1,5 +1,4 @@
 import { FormData } from "../OperatorsForm";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,6 +24,7 @@ const impactZones = [
     label: "Events",
     description: "Plan & organize community gatherings",
     icon: Calendar,
+    skillsField: null as keyof FormData | null,
     subOptions: [
       "Event planning",
       "Logistics & coordination",
@@ -38,6 +38,7 @@ const impactZones = [
     label: "Media & Design",
     description: "Create visuals, content & campaigns",
     icon: Palette,
+    skillsField: "media_design_skills" as keyof FormData,
     subOptions: [
       "Graphic design",
       "Video editing",
@@ -51,6 +52,7 @@ const impactZones = [
     label: "Tech & Digital",
     description: "Build tools, website, automation",
     icon: Code,
+    skillsField: "tech_skills" as keyof FormData,
     subOptions: [
       "Framer",
       "Webflow",
@@ -65,6 +67,7 @@ const impactZones = [
     label: "Community & Outreach",
     description: "Partnerships, recruitment, networking",
     icon: Users,
+    skillsField: "outreach_skills" as keyof FormData,
     subOptions: [
       "Recruitment",
       "Partnerships",
@@ -78,6 +81,7 @@ const impactZones = [
     label: "Education & Projects",
     description: "Workshops, mentoring, project teams",
     icon: BookOpen,
+    skillsField: "education_project_skills" as keyof FormData,
     subOptions: [
       "Workshops",
       "Mentorship",
@@ -91,6 +95,7 @@ const impactZones = [
     label: "Research & Policy",
     description: "Research, reports, diplomacy topics",
     icon: Search,
+    skillsField: null as keyof FormData | null,
     subOptions: [
       "Writing & reports",
       "Policy research",
@@ -104,6 +109,7 @@ const impactZones = [
     label: "Operations & Support",
     description: "Logistics, coordination, internal support",
     icon: Settings,
+    skillsField: null as keyof FormData | null,
     subOptions: [
       "Internal coordination",
       "Admin support",
@@ -117,51 +123,30 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
   const toggleZone = (zone: string) => {
     const current = formData.impact_zones;
     if (current.includes(zone)) {
-      // When deselecting a zone, also clear its sub-options
-      const zoneConfig = impactZones.find((z) => z.id === zone);
-      if (zoneConfig) {
-        const currentSubOptions = formData.zone_sub_options || {};
-        const updatedSubOptions = { ...currentSubOptions };
-        delete updatedSubOptions[zone];
-        updateFormData({
-          impact_zones: current.filter((z) => z !== zone),
-          zone_sub_options: updatedSubOptions,
-        });
-      } else {
-        updateFormData({ impact_zones: current.filter((z) => z !== zone) });
-      }
+      updateFormData({ impact_zones: current.filter((z) => z !== zone) });
     } else {
       updateFormData({ impact_zones: [...current, zone] });
     }
   };
 
-  const toggleSubOption = (zoneId: string, option: string) => {
-    const currentSubOptions = formData.zone_sub_options || {};
-    const zoneSubOptions = currentSubOptions[zoneId] || [];
+  const toggleSubOption = (zoneId: string, option: string, skillsField: keyof FormData | null) => {
+    if (!skillsField) return;
     
-    let updatedZoneSubOptions: string[];
-    if (zoneSubOptions.includes(option)) {
-      updatedZoneSubOptions = zoneSubOptions.filter((o) => o !== option);
+    const currentSkills = (formData[skillsField] as string[]) || [];
+    let updatedSkills: string[];
+    
+    if (currentSkills.includes(option)) {
+      updatedSkills = currentSkills.filter((o) => o !== option);
     } else {
-      updatedZoneSubOptions = [...zoneSubOptions, option];
+      updatedSkills = [...currentSkills, option];
     }
     
-    updateFormData({
-      zone_sub_options: {
-        ...currentSubOptions,
-        [zoneId]: updatedZoneSubOptions,
-      },
-    });
+    updateFormData({ [skillsField]: updatedSkills } as Partial<FormData>);
   };
 
-  const handleOtherSkillChange = (zoneId: string, value: string) => {
-    const currentOtherSkills = formData.zone_other_skills || {};
-    updateFormData({
-      zone_other_skills: {
-        ...currentOtherSkills,
-        [zoneId]: value,
-      },
-    });
+  const getSkillsForZone = (skillsField: keyof FormData | null): string[] => {
+    if (!skillsField) return [];
+    return (formData[skillsField] as string[]) || [];
   };
 
   return (
@@ -186,8 +171,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           {impactZones.map((zone, index) => {
             const Icon = zone.icon;
             const isSelected = formData.impact_zones.includes(zone.id);
-            const currentSubOptions = (formData.zone_sub_options || {})[zone.id] || [];
-            const currentOtherSkill = (formData.zone_other_skills || {})[zone.id] || "";
+            const currentSkills = getSkillsForZone(zone.skillsField);
 
             return (
               <div key={zone.id} className="space-y-2">
@@ -231,7 +215,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
 
                 {/* Inline Sub-options */}
                 <AnimatePresence>
-                  {isSelected && zone.subOptions.length > 0 && (
+                  {isSelected && zone.subOptions.length > 0 && zone.skillsField && (
                     <motion.div
                       className="ml-4 pl-4 border-l-2 border-primary/30 space-y-3"
                       initial={{ opacity: 0, height: 0 }}
@@ -247,24 +231,15 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
                           <button
                             key={option}
                             type="button"
-                            onClick={() => toggleSubOption(zone.id, option)}
+                            onClick={() => toggleSubOption(zone.id, option, zone.skillsField)}
                             className={cn(
                               "chip text-xs",
-                              currentSubOptions.includes(option) && "selected"
+                              currentSkills.includes(option) && "selected"
                             )}
                           >
                             {option}
                           </button>
                         ))}
-                      </div>
-                      <div className="pt-2">
-                        <Input
-                          type="text"
-                          placeholder={`Other ${zone.label.toLowerCase()} skill...`}
-                          value={currentOtherSkill}
-                          onChange={(e) => handleOtherSkillChange(zone.id, e.target.value)}
-                          className="bg-secondary/50 border-border focus:border-primary text-sm h-9"
-                        />
                       </div>
                     </motion.div>
                   )}

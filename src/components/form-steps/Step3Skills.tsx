@@ -29,7 +29,7 @@ const skills = [
 ];
 
 // Gen-Z dynamic labels for personality sliders
-const getIntrovertExtrovertLabel = (value: number): string => {
+const getSocialEnergyLabel = (value: number): string => {
   if (value <= 20) return "Charging solo";
   if (value <= 40) return "Low-key observer";
   if (value <= 60) return "Social but selective";
@@ -37,7 +37,7 @@ const getIntrovertExtrovertLabel = (value: number): string => {
   return "Runs the room";
 };
 
-const getPlannerSpontaneousLabel = (value: number): string => {
+const getPlanningStyleLabel = (value: number): string => {
   if (value <= 20) return "Needs a checklist";
   if (value <= 40) return "Plans... kinda";
   if (value <= 60) return "Vibes and adapts";
@@ -45,7 +45,7 @@ const getPlannerSpontaneousLabel = (value: number): string => {
   return "Thrives in chaos";
 };
 
-const getBehindFrontLabel = (value: number): string => {
+const getVisibilityLabel = (value: number): string => {
   if (value <= 20) return "Silent operator";
   if (value <= 40) return "Support role vibes";
   if (value <= 60) return "Comfortable presenting";
@@ -102,14 +102,14 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
       <div className="space-y-6 pt-4">
         <Label className="text-sm font-medium">Personality Traits</Label>
 
-        {/* Introvert/Extrovert */}
+        {/* Social Energy (Introvert/Extrovert) */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_introvert_extrovert <= 50 ? 1 : 0.5,
-                scale: formData.slider_introvert_extrovert <= 30 ? 1.05 : 1,
+                opacity: formData.social_energy <= 50 ? 1 : 0.5,
+                scale: formData.social_energy <= 30 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -118,8 +118,8 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_introvert_extrovert >= 50 ? 1 : 0.5,
-                scale: formData.slider_introvert_extrovert >= 70 ? 1.05 : 1,
+                opacity: formData.social_energy >= 50 ? 1 : 0.5,
+                scale: formData.social_energy >= 70 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -127,9 +127,9 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             </motion.span>
           </div>
           <Slider
-            value={[formData.slider_introvert_extrovert]}
+            value={[formData.social_energy]}
             onValueChange={([value]) =>
-              updateFormData({ slider_introvert_extrovert: value })
+              updateFormData({ social_energy: value })
             }
             max={100}
             step={1}
@@ -137,24 +137,24 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           />
           <div className="text-center">
             <motion.span
-              key={getIntrovertExtrovertLabel(formData.slider_introvert_extrovert)}
+              key={getSocialEnergyLabel(formData.social_energy)}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-sm font-medium text-primary"
             >
-              {getIntrovertExtrovertLabel(formData.slider_introvert_extrovert)}
+              {getSocialEnergyLabel(formData.social_energy)}
             </motion.span>
           </div>
         </div>
 
-        {/* Planner/Spontaneous */}
+        {/* Planning Style (Planner/Spontaneous) */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_planner_spontaneous <= 50 ? 1 : 0.5,
-                scale: formData.slider_planner_spontaneous <= 30 ? 1.05 : 1,
+                opacity: formData.planning_style <= 50 ? 1 : 0.5,
+                scale: formData.planning_style <= 30 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -163,8 +163,8 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_planner_spontaneous >= 50 ? 1 : 0.5,
-                scale: formData.slider_planner_spontaneous >= 70 ? 1.05 : 1,
+                opacity: formData.planning_style >= 50 ? 1 : 0.5,
+                scale: formData.planning_style >= 70 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -172,9 +172,9 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             </motion.span>
           </div>
           <Slider
-            value={[formData.slider_planner_spontaneous]}
+            value={[formData.planning_style]}
             onValueChange={([value]) =>
-              updateFormData({ slider_planner_spontaneous: value })
+              updateFormData({ planning_style: value })
             }
             max={100}
             step={1}
@@ -182,24 +182,24 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           />
           <div className="text-center">
             <motion.span
-              key={getPlannerSpontaneousLabel(formData.slider_planner_spontaneous)}
+              key={getPlanningStyleLabel(formData.planning_style)}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-sm font-medium text-primary"
             >
-              {getPlannerSpontaneousLabel(formData.slider_planner_spontaneous)}
+              {getPlanningStyleLabel(formData.planning_style)}
             </motion.span>
           </div>
         </div>
 
-        {/* Behind-the-scenes/Front-facing */}
+        {/* Visibility Preference (Behind-the-scenes/Front-facing) */}
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_behind_front <= 50 ? 1 : 0.5,
-                scale: formData.slider_behind_front <= 30 ? 1.05 : 1,
+                opacity: formData.visibility_preference <= 50 ? 1 : 0.5,
+                scale: formData.visibility_preference <= 30 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -208,8 +208,8 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             <motion.span
               className="text-muted-foreground transition-all"
               animate={{
-                opacity: formData.slider_behind_front >= 50 ? 1 : 0.5,
-                scale: formData.slider_behind_front >= 70 ? 1.05 : 1,
+                opacity: formData.visibility_preference >= 50 ? 1 : 0.5,
+                scale: formData.visibility_preference >= 70 ? 1.05 : 1,
               }}
               transition={{ duration: 0.2 }}
             >
@@ -217,9 +217,9 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
             </motion.span>
           </div>
           <Slider
-            value={[formData.slider_behind_front]}
+            value={[formData.visibility_preference]}
             onValueChange={([value]) =>
-              updateFormData({ slider_behind_front: value })
+              updateFormData({ visibility_preference: value })
             }
             max={100}
             step={1}
@@ -227,12 +227,12 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           />
           <div className="text-center">
             <motion.span
-              key={getBehindFrontLabel(formData.slider_behind_front)}
+              key={getVisibilityLabel(formData.visibility_preference)}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-sm font-medium text-primary"
             >
-              {getBehindFrontLabel(formData.slider_behind_front)}
+              {getVisibilityLabel(formData.visibility_preference)}
             </motion.span>
           </div>
         </div>

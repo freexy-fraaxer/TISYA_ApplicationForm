@@ -71,12 +71,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
-  const toggleHowFound = (option: string) => {
-    const current = formData.how_found_us;
+  const toggleReferral = (option: string) => {
+    const current = formData.referral_source;
     if (current.includes(option)) {
-      updateFormData({ how_found_us: current.filter((o) => o !== option) });
+      updateFormData({ referral_source: current.filter((o) => o !== option) });
     } else {
-      updateFormData({ how_found_us: [...current, option] });
+      updateFormData({ referral_source: [...current, option] });
     }
   };
 
@@ -209,16 +209,16 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Department */}
       <div className="space-y-2">
-        <Label htmlFor="department" className="text-sm font-medium flex items-center gap-2">
+        <Label htmlFor="department_of_study" className="text-sm font-medium flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-muted-foreground" />
           Department of Study
         </Label>
         <Input
-          id="department"
+          id="department_of_study"
           type="text"
           placeholder="e.g., Computer Science, Business Administration"
-          value={formData.department}
-          onChange={(e) => updateFormData({ department: e.target.value })}
+          value={formData.department_of_study}
+          onChange={(e) => updateFormData({ department_of_study: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>
@@ -279,10 +279,10 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
             <button
               key={option}
               type="button"
-              onClick={() => toggleHowFound(option)}
+              onClick={() => toggleReferral(option)}
               className={cn(
                 "chip",
-                formData.how_found_us.includes(option) && "selected"
+                formData.referral_source.includes(option) && "selected"
               )}
             >
               {option}

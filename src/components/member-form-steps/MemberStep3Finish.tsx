@@ -10,19 +10,19 @@ interface Step3Props {
   updateFormData: (updates: Partial<MemberFormData>) => void;
 }
 
-const contactChannels = [
+const referralOptions = [
   { id: "Email", label: "Email", icon: Mail },
   { id: "WhatsApp", label: "WhatsApp", icon: MessageCircle },
   { id: "Instagram", label: "Instagram", icon: Instagram },
 ];
 
 const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
-  const toggleChannel = (channel: string) => {
-    const current = formData.contact_channels;
-    if (current.includes(channel)) {
-      updateFormData({ contact_channels: current.filter((c) => c !== channel) });
+  const toggleReferral = (source: string) => {
+    const current = formData.referral_source;
+    if (current.includes(source)) {
+      updateFormData({ referral_source: current.filter((c) => c !== source) });
     } else {
-      updateFormData({ contact_channels: [...current, channel] });
+      updateFormData({ referral_source: [...current, source] });
     }
   };
 
@@ -42,23 +42,23 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
       <PreSubmitSummary
         name={formData.full_name}
         role="Pathfinder"
-        interests={formData.interest_zones}
+        interests={formData.interests}
       />
 
-      {/* Contact Channels */}
+      {/* How did you hear about us */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          How should we reach you?
+          How did you hear about us?
         </Label>
         <div className="flex flex-wrap gap-3">
-          {contactChannels.map((channel) => {
-            const Icon = channel.icon;
-            const isSelected = formData.contact_channels.includes(channel.id);
+          {referralOptions.map((option) => {
+            const Icon = option.icon;
+            const isSelected = formData.referral_source.includes(option.id);
             return (
               <button
-                key={channel.id}
+                key={option.id}
                 type="button"
-                onClick={() => toggleChannel(channel.id)}
+                onClick={() => toggleReferral(option.id)}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all duration-300",
                   isSelected
@@ -67,7 +67,7 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
                 )}
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-sm font-medium">{channel.label}</span>
+                <span className="text-sm font-medium">{option.label}</span>
               </button>
             );
           })}

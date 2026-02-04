@@ -10,7 +10,7 @@ import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -25,26 +25,24 @@ const MEMBER_MICROCOPY = [
 ];
 
 export interface MemberFormData {
-  // Step 1
+  // Step 1 - matching backend field names exactly
   full_name: string;
   email: string;
   nationality: string;
   university: string;
-  department: string;
+  department_of_study: string;
   
   // Step 2
-  interest_zones: string[];
+  interests: string[];
   community_vibe: number;
-  motivation: string[];
   
   // Step 3
-  contact_channels: string[];
+  referral_source: string[];
   consent_data_storage: boolean;
   consent_updates: boolean;
   
   // Hidden
   honeypot: string;
-  submission_type: string;
 }
 
 const initialFormData: MemberFormData = {
@@ -52,15 +50,13 @@ const initialFormData: MemberFormData = {
   email: "",
   nationality: "",
   university: "",
-  department: "",
-  interest_zones: ["Community"],
+  department_of_study: "",
+  interests: [],
   community_vibe: 50,
-  motivation: ["Learn"],
-  contact_channels: [],
+  referral_source: [],
   consent_data_storage: false,
   consent_updates: false,
   honeypot: "",
-  submission_type: "member",
 };
 
 interface MemberFormProps {
@@ -92,7 +88,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           validateEmail(formData.email)
         );
       case 2:
-        return formData.interest_zones.length > 0;
+        return formData.interests.length > 0;
       case 3:
         return formData.consent_data_storage;
       default:
@@ -128,15 +124,14 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         email: formData.email,
         nationality: formData.nationality || null,
         university: formData.university || null,
-        department: formData.department || null,
-        interest_zones: formData.interest_zones,
+        department_of_study: formData.department_of_study || null,
+        interests: formData.interests,
         community_vibe: formData.community_vibe,
-        motivation: formData.motivation,
-        contact_channels: formData.contact_channels,
+        referral_source: formData.referral_source.length > 0 ? formData.referral_source : null,
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },
-      details: null, // Members don't have conditional sections
+      details: null,
     };
 
     try {
@@ -148,15 +143,18 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         body: JSON.stringify(payload),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Submission failed");
+        // Display backend error message verbatim
+        throw new Error(result.error || result.message || "Submission failed");
       }
 
       // Backend handles email confirmation - no frontend email sending
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

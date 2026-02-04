@@ -27,7 +27,7 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
         name={formData.full_name}
         role="Operator"
         interests={formData.impact_zones}
-        preferredImpact={formData.preferred_impact}
+        preferredImpact={formData.impact_preference}
       />
 
       {/* Summary Card */}

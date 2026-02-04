@@ -29,33 +29,13 @@ const interestZones = [
   { id: "Projects", label: "Projects", icon: FolderKanban },
 ];
 
-const motivationOptions = ["Learn", "Meet people", "Grow", "Explore"];
-
-// Gen-Z dynamic vibe labels
-const getVibeLabel = (value: number): string => {
-  if (value <= 20) return "Charging solo";
-  if (value <= 40) return "Low-key observer";
-  if (value <= 60) return "Social but selective";
-  if (value <= 80) return "Main character energy";
-  return "Runs the room";
-};
-
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
   const toggleZone = (zone: string) => {
-    const current = formData.interest_zones;
+    const current = formData.interests;
     if (current.includes(zone)) {
-      updateFormData({ interest_zones: current.filter((z) => z !== zone) });
+      updateFormData({ interests: current.filter((z) => z !== zone) });
     } else {
-      updateFormData({ interest_zones: [...current, zone] });
-    }
-  };
-
-  const toggleMotivation = (option: string) => {
-    const current = formData.motivation;
-    if (current.includes(option)) {
-      updateFormData({ motivation: current.filter((m) => m !== option) });
-    } else {
-      updateFormData({ motivation: [...current, option] });
+      updateFormData({ interests: [...current, zone] });
     }
   };
 
@@ -80,7 +60,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {interestZones.map((zone, index) => {
             const Icon = zone.icon;
-            const isSelected = formData.interest_zones.includes(zone.id);
+            const isSelected = formData.interests.includes(zone.id);
             return (
               <motion.button
                 key={zone.id}
@@ -125,7 +105,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         </div>
       </div>
 
-      {/* Community Vibe Slider with Gen-Z labels */}
+      {/* Community Vibe Slider */}
       <div className="space-y-4">
         <Label className="text-sm font-medium">
           How social are you in communities?
@@ -133,26 +113,8 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         <HelperText>Life happens, just be honest.</HelperText>
         <div className="space-y-3">
           <div className="flex justify-between text-xs">
-            <motion.span
-              className="text-muted-foreground transition-all"
-              animate={{
-                opacity: formData.community_vibe <= 50 ? 1 : 0.5,
-                scale: formData.community_vibe <= 30 ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.2 }}
-            >
-              Quiet
-            </motion.span>
-            <motion.span
-              className="text-muted-foreground transition-all"
-              animate={{
-                opacity: formData.community_vibe >= 50 ? 1 : 0.5,
-                scale: formData.community_vibe >= 70 ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.2 }}
-            >
-              Social
-            </motion.span>
+            <span className="text-muted-foreground">Quiet</span>
+            <span className="text-muted-foreground">Social</span>
           </div>
           <Slider
             value={[formData.community_vibe]}
@@ -162,36 +124,6 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
             step={1}
             className="w-full"
           />
-          <div className="text-center">
-            <motion.span
-              key={getVibeLabel(formData.community_vibe)}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-sm font-medium text-primary"
-            >
-              {getVibeLabel(formData.community_vibe)}
-            </motion.span>
-          </div>
-        </div>
-      </div>
-
-      {/* Motivation Chips */}
-      <div className="space-y-3">
-        <Label className="text-sm font-medium">What motivates you?</Label>
-        <div className="flex flex-wrap gap-2">
-          {motivationOptions.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => toggleMotivation(option)}
-              className={cn(
-                "chip",
-                formData.motivation.includes(option) && "selected"
-              )}
-            >
-              {option}
-            </button>
-          ))}
         </div>
       </div>
     </div>

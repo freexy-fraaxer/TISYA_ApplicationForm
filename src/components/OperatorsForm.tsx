@@ -14,7 +14,7 @@ import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbySufLUPOzBY8moPnk461D2C12R5A89fHKSOAMW9QhmaLInsaabTb1da-pqdt7VSqiX/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzgKLmuzFnOdI1JHjFJSKbHJIfxWZDUFxJde9IhHesx2PDwem0l0lHpPCdMJzlcUSui/exec";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -37,48 +37,42 @@ const OPERATOR_MICROCOPY = [
 ];
 
 export interface FormData {
-  // Step 1
+  // Step 1 - matching backend field names exactly
   full_name: string;
   email: string;
   contact_number: string;
   city: string;
   nationality: string;
   university: string;
-  department: string;
+  department_of_study: string;
   education_level: string;
   gender: string;
-  how_found_us: string[];
+  referral_source: string[];
   
   // Step 2 - Impact Zones with sub-options
   impact_zones: string[];
-  zone_sub_options: Record<string, string[]>;
-  zone_other_skills: Record<string, string>;
-  
-  // Legacy fields for backwards compatibility (kept but not actively used)
-  tech_tools: string[];
-  other_tech_skill: string;
-  media_interests: string[];
-  other_media_skill: string;
+  media_design_skills: string[];
+  tech_skills: string[];
+  outreach_skills: string[];
+  education_project_skills: string[];
   
   // Step 2b - Languages
   languages_known: string[];
-  other_language: string;
   primary_language: string;
   
   // Step 3
   skills: string[];
-  slider_introvert_extrovert: number;
-  slider_planner_spontaneous: number;
-  slider_behind_front: number;
+  social_energy: number;
+  planning_style: number;
+  visibility_preference: number;
   
   // Step 4
-  preferred_impact: string;
+  impact_preference: string;
   involvement_level: string;
   hours_per_week: number;
   working_style: string[];
-  volunteered_before: boolean | null;
-  experience_brief: string;
-  extra_notes: string;
+  previous_volunteering: boolean | null;
+  additional_info: string;
   
   // Step 4b - Fun Tags
   fun_tags: string[];
@@ -98,31 +92,27 @@ const initialFormData: FormData = {
   city: "",
   nationality: "",
   university: "",
-  department: "",
+  department_of_study: "",
   education_level: "",
   gender: "",
-  how_found_us: [],
+  referral_source: [],
   impact_zones: [],
-  zone_sub_options: {},
-  zone_other_skills: {},
-  tech_tools: [],
-  other_tech_skill: "",
-  media_interests: [],
-  other_media_skill: "",
+  media_design_skills: [],
+  tech_skills: [],
+  outreach_skills: [],
+  education_project_skills: [],
   languages_known: [],
-  other_language: "",
   primary_language: "",
   skills: [],
-  slider_introvert_extrovert: 50,
-  slider_planner_spontaneous: 50,
-  slider_behind_front: 50,
-  preferred_impact: "",
+  social_energy: 50,
+  planning_style: 50,
+  visibility_preference: 50,
+  impact_preference: "",
   involvement_level: "",
   hours_per_week: 3,
   working_style: [],
-  volunteered_before: null,
-  experience_brief: "",
-  extra_notes: "",
+  previous_volunteering: null,
+  additional_info: "",
   fun_tags: [],
   consent_data_storage: false,
   consent_updates: false,
@@ -172,11 +162,10 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         return formData.skills.length > 0;
       case 5:
         return !!(
-          formData.preferred_impact &&
+          formData.impact_preference &&
           formData.involvement_level &&
           formData.hours_per_week &&
-          formData.volunteered_before !== null &&
-          (formData.volunteered_before === false || formData.experience_brief.trim())
+          formData.previous_volunteering !== null
         );
       case 6:
         return true; // Fun tags are optional
@@ -208,22 +197,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    // Flatten zone_sub_options for submission
-    const flattenedSubOptions: Record<string, string[]> = {};
-    Object.entries(formData.zone_sub_options).forEach(([zone, options]) => {
-      if (options.length > 0) {
-        flattenedSubOptions[zone] = options;
-      }
-    });
-
-    // Flatten zone_other_skills for submission
-    const flattenedOtherSkills: Record<string, string> = {};
-    Object.entries(formData.zone_other_skills).forEach(([zone, skill]) => {
-      if (skill.trim()) {
-        flattenedOtherSkills[zone] = skill;
-      }
-    });
-
     const payload = {
       formType: "volunteer",
       data: {
@@ -233,32 +206,32 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         city: formData.city,
         nationality: formData.nationality,
         university: formData.university,
-        department: formData.department || null,
+        department_of_study: formData.department_of_study || null,
         education_level: formData.education_level,
         gender: formData.gender || null,
-        how_found_us: formData.how_found_us,
+        referral_source: formData.referral_source.length > 0 ? formData.referral_source : null,
         impact_zones: formData.impact_zones,
-        zone_sub_options: Object.keys(flattenedSubOptions).length > 0 ? flattenedSubOptions : null,
-        zone_other_skills: Object.keys(flattenedOtherSkills).length > 0 ? flattenedOtherSkills : null,
-        languages_known: formData.languages_known,
-        other_language: formData.other_language || null,
+        media_design_skills: formData.media_design_skills.length > 0 ? formData.media_design_skills : null,
+        tech_skills: formData.tech_skills.length > 0 ? formData.tech_skills : null,
+        outreach_skills: formData.outreach_skills.length > 0 ? formData.outreach_skills : null,
+        education_project_skills: formData.education_project_skills.length > 0 ? formData.education_project_skills : null,
+        languages_known: formData.languages_known.length > 0 ? formData.languages_known : null,
         primary_language: formData.primary_language,
         skills: formData.skills,
-        slider_introvert_extrovert: formData.slider_introvert_extrovert,
-        slider_planner_spontaneous: formData.slider_planner_spontaneous,
-        slider_behind_front: formData.slider_behind_front,
-        preferred_impact: formData.preferred_impact,
+        social_energy: formData.social_energy,
+        planning_style: formData.planning_style,
+        visibility_preference: formData.visibility_preference,
+        impact_preference: formData.impact_preference,
         involvement_level: formData.involvement_level,
         hours_per_week: formData.hours_per_week,
-        working_style: formData.working_style,
-        volunteered_before: formData.volunteered_before ? "Yes" : "No",
-        experience_brief: formData.experience_brief || null,
-        extra_notes: formData.extra_notes || null,
+        working_style: formData.working_style.length > 0 ? formData.working_style : null,
+        previous_volunteering: formData.previous_volunteering,
+        additional_info: formData.additional_info || null,
         fun_tags: formData.fun_tags.length > 0 ? formData.fun_tags : null,
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },
-      details: null, // Volunteers don't have conditional detail sections like collaborators
+      details: null,
     };
 
     try {
@@ -270,18 +243,19 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         body: JSON.stringify(payload),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Submission failed");
+        // Display backend error message verbatim
+        throw new Error(result.error || result.message || "Submission failed");
       }
 
-      const result = await response.json();
-      
       // Use the referenceId returned by the API
       setApplicationId(result.referenceId || null);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
-      setSubmitError("Something went wrong. Please try again.");
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
