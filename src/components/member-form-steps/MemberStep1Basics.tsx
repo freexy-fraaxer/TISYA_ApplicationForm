@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User, Mail, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { User, Mail, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect } from "react";
@@ -83,27 +83,43 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
         <FormFieldError error={errors.email || null} />
       </div>
 
-      {/* Nationality */}
-      <div className="space-y-2">
-        <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
-          <Globe className="w-4 h-4 text-muted-foreground" />
-          Nationality
-        </Label>
-        <Select
-          value={formData.nationality}
-          onValueChange={(value) => updateFormData({ nationality: value })}
-        >
-          <SelectTrigger className="bg-secondary/50 border-border">
-            <SelectValue placeholder="Select country" />
-          </SelectTrigger>
-          <SelectContent className="bg-card border-border max-h-60">
-            {countries.map((country) => (
-              <SelectItem key={country} value={country}>
-                {country}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      {/* City & Nationality */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="city" className="text-sm font-medium flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-muted-foreground" />
+            City
+          </Label>
+          <Input
+            id="city"
+            type="text"
+            placeholder="Your city"
+            value={formData.city}
+            onChange={(e) => updateFormData({ city: e.target.value })}
+            className="bg-secondary/50 border-border focus:border-primary"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
+            <Globe className="w-4 h-4 text-muted-foreground" />
+            Nationality
+          </Label>
+          <Select
+            value={formData.nationality}
+            onValueChange={(value) => updateFormData({ nationality: value })}
+          >
+            <SelectTrigger className="bg-secondary/50 border-border">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent className="bg-card border-border max-h-60">
+              {countries.map((country) => (
+                <SelectItem key={country} value={country}>
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* University */}

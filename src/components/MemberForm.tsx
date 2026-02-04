@@ -28,6 +28,7 @@ export interface MemberFormData {
   // Step 1 - matching backend field names exactly
   full_name: string;
   email: string;
+  city: string;
   nationality: string;
   university: string;
   department_of_study: string;
@@ -48,6 +49,7 @@ export interface MemberFormData {
 const initialFormData: MemberFormData = {
   full_name: "",
   email: "",
+  city: "",
   nationality: "",
   university: "",
   department_of_study: "",
@@ -122,6 +124,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
       data: {
         full_name: formData.full_name,
         email: formData.email,
+        city: formData.city || null,
         nationality: formData.nationality || null,
         university: formData.university || null,
         department_of_study: formData.department_of_study || null,
