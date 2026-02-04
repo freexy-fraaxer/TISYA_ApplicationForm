@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 import RoleCard from "./RoleCard";
 import { Users, Wrench, Handshake, GraduationCap, X, ArrowLeft } from "lucide-react";
+import { useSound } from "@/contexts/SoundContext";
 
 // Import role card background images
 import pathfinderBg from "@/assets/role-pathfinder.png";
@@ -17,6 +19,28 @@ interface RoleSelectionProps {
 }
 
 const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator }: RoleSelectionProps) => {
+  const { playAmbientTone, playTick } = useSound();
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      // Play ambient tone when modal opens
+      playAmbientTone();
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, playAmbientTone]);
+
+  // Handler with tick sound for role selection
+  const handleRoleSelect = (callback: () => void) => {
+    playTick();
+    callback();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -25,30 +49,35 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
           style={{ 
             isolation: 'isolate',
             willChange: 'opacity'
           }}
         >
-          {/* Backdrop - solid overlay for proper stacking */}
+          {/* Backdrop with blur and dark overlay */}
           <motion.div
-            className="fixed inset-0 bg-background/98 z-[101]"
+            className="fixed inset-0 z-[101]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
-            style={{ willChange: 'opacity' }}
+            style={{ 
+              willChange: 'opacity',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              backgroundColor: 'rgba(10, 15, 30, 0.45)',
+            }}
           />
 
-          {/* Content - higher z-index to stay above backdrop */}
+          {/* Content - higher z-index to stay above backdrop with scale-in animation */}
           <motion.div
             className="relative z-[102] w-full max-w-4xl py-6 max-h-[90vh] overflow-y-auto"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
             style={{ willChange: 'opacity, transform' }}
           >
             {/* Close button */}
@@ -94,7 +123,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Join the community, get access to resources and events."
                   icon={<Users className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={pathfinderBg}
-                  onClick={onSelectMembers}
+                  onClick={() => handleRoleSelect(onSelectMembers)}
                 />
               </motion.div>
 
@@ -109,7 +138,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Help build programs, media, tech, and community."
                   icon={<Wrench className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={operatorBg}
-                  onClick={onSelectOperators}
+                  onClick={() => handleRoleSelect(onSelectOperators)}
                 />
               </motion.div>
 
@@ -124,7 +153,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   description="Partner with TISYA for events, initiatives, and opportunities."
                   icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
-                  onClick={onSelectCollaborator}
+                  onClick={() => handleRoleSelect(onSelectCollaborator)}
                 />
               </motion.div>
 

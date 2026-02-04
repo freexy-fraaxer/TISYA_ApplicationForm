@@ -3,12 +3,21 @@ import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import tisyaLogo from "@/assets/tisya-logo.svg";
 import SocialLinks from "./shared/SocialLinks";
+import { useSound } from "@/contexts/SoundContext";
 
 interface HomePageProps {
   onJoinClick: () => void;
 }
 
 const HomePage = ({ onJoinClick }: HomePageProps) => {
+  const { enableSound, playClickJingle } = useSound();
+
+  const handleJoinClick = () => {
+    enableSound(); // Enable sound on first interaction
+    playClickJingle(); // Play jingle
+    onJoinClick();
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
       <GlassCard
@@ -58,7 +67,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          <HeroButton onClick={onJoinClick} size="lg">
+          <HeroButton onClick={handleJoinClick} size="lg">
             Join TİSYA
             <svg
               className="w-5 h-5"
