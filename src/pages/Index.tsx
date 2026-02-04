@@ -6,6 +6,7 @@ import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
 import CollaboratorForm from "@/components/CollaboratorForm";
 import { AnimatePresence, motion } from "framer-motion";
+import { SoundProvider } from "@/contexts/SoundContext";
 
 // Memoized page transition wrapper
 const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
@@ -67,46 +68,48 @@ const Index = () => {
   }), []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background - memoized, won't re-render */}
-      <WaveBackground />
+    <SoundProvider>
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Animated Background - memoized, won't re-render */}
+        <WaveBackground />
 
-      {/* Main Content - simplified transitions using opacity only */}
-      <AnimatePresence mode="wait">
-        {currentScreen === "home" && (
-          <PageTransition keyProp="home">
-            <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
-          </PageTransition>
-        )}
+        {/* Main Content - simplified transitions using opacity only */}
+        <AnimatePresence mode="wait">
+          {currentScreen === "home" && (
+            <PageTransition keyProp="home">
+              <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
+            </PageTransition>
+          )}
 
-        {currentScreen === "operators" && (
-          <PageTransition keyProp="operators">
-            <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
-          </PageTransition>
-        )}
+          {currentScreen === "operators" && (
+            <PageTransition keyProp="operators">
+              <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
+            </PageTransition>
+          )}
 
-        {currentScreen === "members" && (
-          <PageTransition keyProp="members">
-            <MemberForm onBack={memoizedHandlers.handleBackToHome} />
-          </PageTransition>
-        )}
+          {currentScreen === "members" && (
+            <PageTransition keyProp="members">
+              <MemberForm onBack={memoizedHandlers.handleBackToHome} />
+            </PageTransition>
+          )}
 
-        {currentScreen === "collaborator" && (
-          <PageTransition keyProp="collaborator">
-            <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
-          </PageTransition>
-        )}
-      </AnimatePresence>
+          {currentScreen === "collaborator" && (
+            <PageTransition keyProp="collaborator">
+              <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
+            </PageTransition>
+          )}
+        </AnimatePresence>
 
-      {/* Role Selection Overlay */}
-      <RoleSelection
-        isOpen={showRoleSelection}
-        onClose={memoizedHandlers.handleCloseRoles}
-        onSelectOperators={memoizedHandlers.handleSelectOperators}
-        onSelectMembers={memoizedHandlers.handleSelectMembers}
-        onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
-      />
-    </div>
+        {/* Role Selection Overlay */}
+        <RoleSelection
+          isOpen={showRoleSelection}
+          onClose={memoizedHandlers.handleCloseRoles}
+          onSelectOperators={memoizedHandlers.handleSelectOperators}
+          onSelectMembers={memoizedHandlers.handleSelectMembers}
+          onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
+        />
+      </div>
+    </SoundProvider>
   );
 };
 

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSound } from "@/contexts/SoundContext";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
@@ -174,6 +175,7 @@ interface CollaboratorFormProps {
 }
 
 const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
+  const { playPulse } = useSound();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<CollaboratorFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -239,6 +241,7 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
 
   const handleNext = () => {
     if (currentStep < totalSteps && canProceed) {
+      playPulse();
       setCurrentStep((prev) => prev + 1);
     }
   };
