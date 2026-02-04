@@ -124,16 +124,16 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Department of Study */}
       <div className="space-y-2">
-        <Label htmlFor="department" className="text-sm font-medium flex items-center gap-2">
+        <Label htmlFor="department_of_study" className="text-sm font-medium flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-muted-foreground" />
           Department of Study
         </Label>
         <Input
-          id="department"
+          id="department_of_study"
           type="text"
           placeholder="e.g., Computer Science, Business Administration"
-          value={formData.department}
-          onChange={(e) => updateFormData({ department: e.target.value })}
+          value={formData.department_of_study}
+          onChange={(e) => updateFormData({ department_of_study: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>

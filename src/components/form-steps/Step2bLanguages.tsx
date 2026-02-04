@@ -1,5 +1,4 @@
 import { FormData } from "../OperatorsForm";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -90,21 +89,6 @@ const Step2bLanguages = ({ formData, updateFormData }: Step2bProps) => {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Other Language */}
-      <div className="space-y-2">
-        <Label htmlFor="other_language" className="text-sm font-medium">
-          Other Language
-        </Label>
-        <Input
-          id="other_language"
-          type="text"
-          placeholder="Specify other language(s)"
-          value={formData.other_language}
-          onChange={(e) => updateFormData({ other_language: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
-        />
       </div>
 
       {/* Primary Language */}
