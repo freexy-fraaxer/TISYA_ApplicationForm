@@ -125,13 +125,18 @@ interface OperatorsFormProps {
 }
 
 const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
-  const { playPulse } = useSound();
+  const { playPulse, playBack } = useSound();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleBackToRoles = () => {
+    playBack();
+    onBack();
+  };
 
   const totalSteps = 7;
 
@@ -304,7 +309,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         {/* Back to roles button */}
         <motion.button
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
-          onClick={onBack}
+          onClick={handleBackToRoles}
           whileHover={{ x: -5 }}
         >
           <ArrowLeft className="w-4 h-4" />

@@ -31,10 +31,9 @@ export const useSoundFeedback = () => {
     const ctx = audioContextRef.current;
     const now = ctx.currentTime;
 
-    // Create a soft pad-like tone with two oscillators
-    const frequencies = [220, 330]; // A3 and E4 - soft fifth
+    const frequencies = [220, 330];
     
-    frequencies.forEach((freq, i) => {
+    frequencies.forEach((freq) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
@@ -42,7 +41,7 @@ export const useSoundFeedback = () => {
       osc.frequency.setValueAtTime(freq, now);
       
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.03, now + 0.1); // Very soft
+      gain.gain.linearRampToValueAtTime(0.06, now + 0.1);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
       
       osc.connect(gain);
@@ -59,7 +58,7 @@ export const useSoundFeedback = () => {
     const ctx = audioContextRef.current;
     const now = ctx.currentTime;
 
-    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 - major chord arpeggio
+    const notes = [523.25, 659.25, 783.99];
     
     notes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
@@ -69,7 +68,7 @@ export const useSoundFeedback = () => {
       osc.frequency.setValueAtTime(freq, now + i * 0.06);
       
       gain.gain.setValueAtTime(0, now + i * 0.06);
-      gain.gain.linearRampToValueAtTime(0.08, now + i * 0.06 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.12, now + i * 0.06 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
       
       osc.connect(gain);
@@ -80,33 +79,35 @@ export const useSoundFeedback = () => {
     });
   }, []);
 
-  // Heartbeat-style pulse for "Next" button
+  // Louder heartbeat-style pulse for "Next" button
   const playPulse = useCallback(() => {
     if (!isEnabledRef.current || !audioContextRef.current) return;
     const ctx = audioContextRef.current;
     const now = ctx.currentTime;
 
-    // Two quick low thuds like a heartbeat
-    [0, 0.12].forEach((delay) => {
+    // Two stronger thuds like a heartbeat
+    [0, 0.1].forEach((delay, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       
       osc.type = "sine";
-      osc.frequency.setValueAtTime(80, now + delay);
-      osc.frequency.exponentialRampToValueAtTime(40, now + delay + 0.1);
+      osc.frequency.setValueAtTime(100, now + delay);
+      osc.frequency.exponentialRampToValueAtTime(50, now + delay + 0.12);
       
-      gain.gain.setValueAtTime(0.1, now + delay);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.1);
+      // Louder volume
+      const vol = i === 0 ? 0.25 : 0.18;
+      gain.gain.setValueAtTime(vol, now + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.15);
       
       osc.connect(gain);
       gain.connect(ctx.destination);
       
       osc.start(now + delay);
-      osc.stop(now + delay + 0.15);
+      osc.stop(now + delay + 0.2);
     });
   }, []);
 
-  // Sliding tick for role selector
+  // Sliding tick for sliders
   const playTick = useCallback(() => {
     if (!isEnabledRef.current || !audioContextRef.current) return;
     const ctx = audioContextRef.current;
@@ -119,7 +120,7 @@ export const useSoundFeedback = () => {
     osc.frequency.setValueAtTime(1200, now);
     osc.frequency.exponentialRampToValueAtTime(800, now + 0.03);
     
-    gain.gain.setValueAtTime(0.04, now);
+    gain.gain.setValueAtTime(0.08, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
     
     osc.connect(gain);
@@ -129,12 +130,214 @@ export const useSoundFeedback = () => {
     osc.stop(now + 0.06);
   }, []);
 
+  // Hover sound - soft blip
+  const playHover = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.04);
+    
+    gain.gain.setValueAtTime(0.06, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }, []);
+
+  // Back button sound - descending whoosh
+  const playBack = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(500, now);
+    osc.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+    
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(now);
+    osc.stop(now + 0.18);
+  }, []);
+
+  // Role-specific sounds
+  // Pathfinder - warm welcome chord (community-focused)
+  const playPathfinderSelect = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const notes = [261.63, 329.63, 392]; // C4, E4, G4 - major chord (welcoming)
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.02);
+      osc.stop(now + 0.35);
+    });
+  }, []);
+
+  // Operator - mechanical/tech beep sequence (building things)
+  const playOperatorSelect = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const beeps = [440, 554.37, 659.25]; // A4, C#5, E5 - techy rising
+    beeps.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(freq, now + i * 0.08);
+      gain.gain.setValueAtTime(0.08, now + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.08);
+      osc.stop(now + i * 0.08 + 0.1);
+    });
+  }, []);
+
+  // Collaborator - handshake/partnership flourish
+  const playCollaboratorSelect = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    // Two-part handshake sound
+    [392, 523.25].forEach((freq, i) => { // G4, C5 - partnership resolution
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + i * 0.1);
+      gain.gain.setValueAtTime(0.12, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
+  }, []);
+
+  // Intern - curious/learning ascending tone
+  const playInternSelect = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.linearRampToValueAtTime(500, now + 0.15);
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  }, []);
+
+  // Celebration sound for success screen
+  const playCelebration = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    // Celebratory fanfare - ascending major arpeggio with sparkles
+    const fanfare = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+    fanfare.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + i * 0.1);
+      gain.gain.setValueAtTime(0, now + i * 0.1);
+      gain.gain.linearRampToValueAtTime(0.15, now + i * 0.1 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.5);
+    });
+
+    // Add sparkle overlay
+    setTimeout(() => {
+      if (!audioContextRef.current) return;
+      const ctx2 = audioContextRef.current;
+      const now2 = ctx2.currentTime;
+      [1200, 1500, 1800].forEach((freq, i) => {
+        const osc = ctx2.createOscillator();
+        const gain = ctx2.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now2 + i * 0.05);
+        gain.gain.setValueAtTime(0.05, now2 + i * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now2 + i * 0.05 + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx2.destination);
+        osc.start(now2 + i * 0.05);
+        osc.stop(now2 + i * 0.05 + 0.15);
+      });
+    }, 300);
+  }, []);
+
+  // Slider change sound - subtle tick
+  const playSliderTick = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(800, now);
+    
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(now);
+    osc.stop(now + 0.04);
+  }, []);
+
   return {
     enableSound,
     playAmbientTone,
     playClickJingle,
     playPulse,
     playTick,
+    playHover,
+    playBack,
+    playPathfinderSelect,
+    playOperatorSelect,
+    playCollaboratorSelect,
+    playInternSelect,
+    playCelebration,
+    playSliderTick,
   };
 };
 

@@ -1,9 +1,11 @@
+import { useRef } from "react";
 import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import HelperText from "../shared/HelperText";
+import { useSound } from "@/contexts/SoundContext";
 
 interface Step3Props {
   formData: FormData;
@@ -54,13 +56,31 @@ const getVisibilityLabel = (value: number): string => {
 };
 
 const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
+  const { playSliderTick, playTick } = useSound();
+  const lastSocialTick = useRef(formData.social_energy);
+  const lastPlanningTick = useRef(formData.planning_style);
+  const lastVisibilityTick = useRef(formData.visibility_preference);
+
   const toggleSkill = (skill: string) => {
+    playTick();
     const current = formData.skills;
     if (current.includes(skill)) {
       updateFormData({ skills: current.filter((s) => s !== skill) });
     } else {
       updateFormData({ skills: [...current, skill] });
     }
+  };
+
+  const handleSliderChange = (
+    field: keyof FormData,
+    value: number,
+    lastRef: React.MutableRefObject<number>
+  ) => {
+    if (Math.abs(value - lastRef.current) >= 10) {
+      playSliderTick();
+      lastRef.current = value;
+    }
+    updateFormData({ [field]: value } as Partial<FormData>);
   };
 
   return (
@@ -129,7 +149,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           <Slider
             value={[formData.social_energy]}
             onValueChange={([value]) =>
-              updateFormData({ social_energy: value })
+              handleSliderChange("social_energy", value, lastSocialTick)
             }
             max={100}
             step={1}
@@ -174,7 +194,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           <Slider
             value={[formData.planning_style]}
             onValueChange={([value]) =>
-              updateFormData({ planning_style: value })
+              handleSliderChange("planning_style", value, lastPlanningTick)
             }
             max={100}
             step={1}
@@ -219,7 +239,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           <Slider
             value={[formData.visibility_preference]}
             onValueChange={([value]) =>
-              updateFormData({ visibility_preference: value })
+              handleSliderChange("visibility_preference", value, lastVisibilityTick)
             }
             max={100}
             step={1}

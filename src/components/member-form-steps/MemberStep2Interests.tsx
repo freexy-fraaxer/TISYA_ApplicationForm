@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { MemberFormData } from "../MemberForm";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -13,6 +14,7 @@ import {
   FolderKanban,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
+import { useSound } from "@/contexts/SoundContext";
 
 interface Step2Props {
   formData: MemberFormData;
@@ -30,13 +32,27 @@ const interestZones = [
 ];
 
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
+  const { playSliderTick, playTick } = useSound();
+  const lastTickValue = useRef(formData.community_vibe);
+
   const toggleZone = (zone: string) => {
+    playTick();
     const current = formData.interests;
     if (current.includes(zone)) {
       updateFormData({ interests: current.filter((z) => z !== zone) });
     } else {
       updateFormData({ interests: [...current, zone] });
     }
+  };
+
+  const handleSliderChange = (value: number[]) => {
+    const newValue = value[0];
+    // Play tick sound every 10 units of change
+    if (Math.abs(newValue - lastTickValue.current) >= 10) {
+      playSliderTick();
+      lastTickValue.current = newValue;
+    }
+    updateFormData({ community_vibe: newValue });
   };
 
   return (
@@ -118,7 +134,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
           </div>
           <Slider
             value={[formData.community_vibe]}
-            onValueChange={(value) => updateFormData({ community_vibe: value[0] })}
+            onValueChange={handleSliderChange}
             min={0}
             max={100}
             step={1}
