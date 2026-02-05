@@ -24,7 +24,7 @@ const impactZones = [
     label: "Events",
     description: "Plan & organize community gatherings",
     icon: Calendar,
-    skillsField: null as keyof FormData | null,
+    skillsField: "event_roles" as keyof FormData,
     subOptions: [
       "Event planning",
       "Logistics & coordination",
@@ -95,7 +95,7 @@ const impactZones = [
     label: "Research & Policy",
     description: "Research, reports, diplomacy topics",
     icon: Search,
-    skillsField: null as keyof FormData | null,
+    skillsField: "research_policy_roles" as keyof FormData,
     subOptions: [
       "Writing & reports",
       "Policy research",
@@ -109,7 +109,7 @@ const impactZones = [
     label: "Operations & Support",
     description: "Logistics, coordination, internal support",
     icon: Settings,
-    skillsField: null as keyof FormData | null,
+    skillsField: "operations_roles" as keyof FormData,
     subOptions: [
       "Internal coordination",
       "Admin support",
@@ -215,7 +215,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
 
                 {/* Inline Sub-options */}
                 <AnimatePresence>
-                  {isSelected && zone.subOptions.length > 0 && zone.skillsField && (
+                  {isSelected && zone.subOptions.length > 0 && (
                     <motion.div
                       className="ml-4 pl-4 border-l-2 border-primary/30 space-y-3"
                       initial={{ opacity: 0, height: 0 }}

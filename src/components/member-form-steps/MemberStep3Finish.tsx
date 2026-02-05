@@ -1,8 +1,9 @@
 import { MemberFormData } from "../MemberForm";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Mail, MessageCircle, Instagram } from "lucide-react";
+import { Instagram, MessageCircle, Users, GraduationCap, Calendar, Globe, MoreHorizontal } from "lucide-react";
 import PreSubmitSummary from "../shared/PreSubmitSummary";
 
 interface Step3Props {
@@ -11,20 +12,29 @@ interface Step3Props {
 }
 
 const referralOptions = [
-  { id: "Email", label: "Email", icon: Mail },
-  { id: "WhatsApp", label: "WhatsApp", icon: MessageCircle },
   { id: "Instagram", label: "Instagram", icon: Instagram },
+  { id: "WhatsApp", label: "WhatsApp", icon: MessageCircle },
+  { id: "Friend / Referral", label: "Friend / Referral", icon: Users },
+  { id: "University / Campus", label: "University / Campus", icon: GraduationCap },
+  { id: "Event / Workshop", label: "Event / Workshop", icon: Calendar },
+  { id: "Website", label: "Website", icon: Globe },
+  { id: "Other", label: "Other", icon: MoreHorizontal },
 ];
 
 const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
-  const toggleReferral = (source: string) => {
-    const current = formData.referral_source;
-    if (current.includes(source)) {
-      updateFormData({ referral_source: current.filter((c) => c !== source) });
+  const handleSourceSelect = (source: string) => {
+    // Single selection, clear source_other if not selecting Other
+    if (source !== "Other") {
+      updateFormData({ 
+        referral_source: [source],
+        source_other: "" 
+      });
     } else {
-      updateFormData({ referral_source: [...current, source] });
+      updateFormData({ referral_source: [source] });
     }
   };
+
+  const isOtherSelected = formData.referral_source.includes("Other");
 
   return (
     <div className="space-y-8">
@@ -58,7 +68,7 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
               <button
                 key={option.id}
                 type="button"
-                onClick={() => toggleReferral(option.id)}
+                onClick={() => handleSourceSelect(option.id)}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all duration-300",
                   isSelected
@@ -72,6 +82,19 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
             );
           })}
         </div>
+        
+        {/* Conditional Other text input */}
+        {isOtherSelected && (
+          <div className="mt-3">
+            <Input
+              placeholder="Please specify..."
+              value={formData.source_other || ""}
+              onChange={(e) => updateFormData({ source_other: e.target.value })}
+              className="bg-secondary/50 border-border focus:border-primary"
+              maxLength={100}
+            />
+          </div>
+        )}
       </div>
 
       {/* Consent Checkboxes */}

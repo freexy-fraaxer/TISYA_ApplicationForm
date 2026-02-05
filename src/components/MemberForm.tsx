@@ -11,7 +11,7 @@ import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbymkzjX9cTABZtReFkeD87qtnQckyPZzxachpg8nbrje7ZZ7tx2Fy9KBlQMN8flbEe2/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3ZpuopWA1VIXqIbAdejWZKMaI54rwodb4ktR9chJTY0t5gjT1O6AT3Yfs7XpACAAJ/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -40,6 +40,7 @@ export interface MemberFormData {
   
   // Step 3
   referral_source: string[];
+  source_other: string;
   consent_data_storage: boolean;
   consent_updates: boolean;
   
@@ -57,6 +58,7 @@ const initialFormData: MemberFormData = {
   interests: [],
   community_vibe: 50,
   referral_source: [],
+  source_other: "",
   consent_data_storage: false,
   consent_updates: false,
   honeypot: "",
@@ -127,6 +129,17 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    // Determine final source value: if "Other" is selected, use source_other text
+    const getFinalSource = () => {
+      if (formData.referral_source.includes("Other") && formData.source_other.trim()) {
+        return formData.source_other.trim();
+      }
+      if (formData.referral_source.length > 0) {
+        return formData.referral_source[0]; // Single selection
+      }
+      return null;
+    };
+
     const payload = {
       formType: "member",
       data: {
@@ -138,7 +151,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         department_of_study: formData.department_of_study || null,
         interests: formData.interests,
         community_vibe: formData.community_vibe,
-        referral_source: formData.referral_source.length > 0 ? formData.referral_source : null,
+        source: getFinalSource(),
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },

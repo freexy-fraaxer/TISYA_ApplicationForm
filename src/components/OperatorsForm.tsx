@@ -15,7 +15,7 @@ import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbymkzjX9cTABZtReFkeD87qtnQckyPZzxachpg8nbrje7ZZ7tx2Fy9KBlQMN8flbEe2/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3ZpuopWA1VIXqIbAdejWZKMaI54rwodb4ktR9chJTY0t5gjT1O6AT3Yfs7XpACAAJ/exec";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -52,10 +52,13 @@ export interface FormData {
   
   // Step 2 - Impact Zones with sub-options
   impact_zones: string[];
+  event_roles: string[];
   media_design_skills: string[];
   tech_skills: string[];
   outreach_skills: string[];
   education_project_skills: string[];
+  research_policy_roles: string[];
+  operations_roles: string[];
   
   // Step 2b - Languages
   languages_known: string[];
@@ -73,6 +76,7 @@ export interface FormData {
   hours_per_week: number;
   working_style: string[];
   previous_volunteering: boolean | null;
+  previous_volunteering_experience: string;
   additional_info: string;
   
   // Step 4b - Fun Tags
@@ -98,10 +102,13 @@ const initialFormData: FormData = {
   gender: "",
   referral_source: [],
   impact_zones: [],
+  event_roles: [],
   media_design_skills: [],
   tech_skills: [],
   outreach_skills: [],
   education_project_skills: [],
+  research_policy_roles: [],
+  operations_roles: [],
   languages_known: [],
   primary_language: "",
   skills: [],
@@ -113,6 +120,7 @@ const initialFormData: FormData = {
   hours_per_week: 3,
   working_style: [],
   previous_volunteering: null,
+  previous_volunteering_experience: "",
   additional_info: "",
   fun_tags: [],
   consent_data_storage: false,
@@ -219,10 +227,13 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         gender: formData.gender || null,
         referral_source: formData.referral_source.length > 0 ? formData.referral_source : null,
         impact_zones: formData.impact_zones,
+        event_roles: formData.event_roles.length > 0 ? formData.event_roles : null,
         media_design_skills: formData.media_design_skills.length > 0 ? formData.media_design_skills : null,
         tech_skills: formData.tech_skills.length > 0 ? formData.tech_skills : null,
         outreach_skills: formData.outreach_skills.length > 0 ? formData.outreach_skills : null,
         education_project_skills: formData.education_project_skills.length > 0 ? formData.education_project_skills : null,
+        research_policy_roles: formData.research_policy_roles.length > 0 ? formData.research_policy_roles : null,
+        operations_roles: formData.operations_roles.length > 0 ? formData.operations_roles : null,
         languages_known: formData.languages_known.length > 0 ? formData.languages_known : null,
         primary_language: formData.primary_language,
         skills: formData.skills,
@@ -234,6 +245,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         hours_per_week: formData.hours_per_week,
         working_style: formData.working_style.length > 0 ? formData.working_style : null,
         previous_volunteering: formData.previous_volunteering,
+        previous_volunteering_experience: formData.previous_volunteering === true ? (formData.previous_volunteering_experience || null) : null,
         additional_info: formData.additional_info || null,
         fun_tags: formData.fun_tags.length > 0 ? formData.fun_tags : null,
         consent_data_storage: formData.consent_data_storage,
