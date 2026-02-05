@@ -237,7 +237,9 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => updateFormData({ previous_volunteering: true })}
+            onClick={() => updateFormData({ 
+              previous_volunteering: true 
+            })}
             className={cn(
               "chip px-6",
               formData.previous_volunteering === true && "selected"
@@ -247,7 +249,10 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
           </button>
           <button
             type="button"
-            onClick={() => updateFormData({ previous_volunteering: false })}
+            onClick={() => updateFormData({ 
+              previous_volunteering: false,
+              previous_volunteering_experience: "" // Clear experience when "No"
+            })}
             className={cn(
               "chip px-6",
               formData.previous_volunteering === false && "selected"
@@ -256,6 +261,28 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
             No
           </button>
         </div>
+        
+        {/* Conditional experience textarea */}
+        {formData.previous_volunteering === true && (
+          <div className="mt-3 space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Tell us about your experience
+            </Label>
+            <Textarea
+              placeholder="What did you do? What did you learn?"
+              value={formData.previous_volunteering_experience}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  updateFormData({ previous_volunteering_experience: e.target.value });
+                }
+              }}
+              className="bg-secondary/50 border-border focus:border-primary min-h-[80px]"
+            />
+            <div className="text-xs text-muted-foreground text-right">
+              {formData.previous_volunteering_experience?.length || 0}/500
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Additional Info */}
