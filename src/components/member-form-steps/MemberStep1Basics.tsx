@@ -8,10 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User, Mail, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { User, Mail, MapPin, Globe, GraduationCap, BookOpen, Phone } from "lucide-react";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 import FormFieldError from "../shared/FormFieldError";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Step1Props {
   formData: MemberFormData;
@@ -21,6 +21,11 @@ interface Step1Props {
 const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  
+  // Refs for autofill detection
+  const fullNameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const contactRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const newErrors: Record<string, string | null> = {};
@@ -30,11 +35,50 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
     if (touched.email) {
       newErrors.email = getEmailError(formData.email);
     }
+    if (touched.contact_number) {
+      newErrors.contact_number = getRequiredError(formData.contact_number, "Contact number");
+    }
+    if (touched.nationality) {
+      newErrors.nationality = getRequiredError(formData.nationality, "Nationality");
+    }
+    if (touched.university) {
+      newErrors.university = getRequiredError(formData.university, "University");
+    }
     setErrors(newErrors);
   }, [formData, touched]);
 
+  // Autofill detection - check values on mount and periodically
+  useEffect(() => {
+    const checkAutofill = () => {
+      if (fullNameRef.current && fullNameRef.current.value && !formData.full_name) {
+        updateFormData({ full_name: fullNameRef.current.value });
+      }
+      if (emailRef.current && emailRef.current.value && !formData.email) {
+        updateFormData({ email: emailRef.current.value });
+      }
+      if (contactRef.current && contactRef.current.value && !formData.contact_number) {
+        updateFormData({ contact_number: contactRef.current.value });
+      }
+    };
+    
+    // Check immediately and after a short delay for browser autofill
+    checkAutofill();
+    const timer = setTimeout(checkAutofill, 100);
+    const timer2 = setTimeout(checkAutofill, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer2);
+    };
+  }, []);
+
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  // Handle input with autofill sync
+  const handleInputChange = (field: keyof MemberFormData, value: string) => {
+    updateFormData({ [field]: value });
   };
 
   return (
@@ -54,11 +98,14 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           Full Name <span className="text-destructive">*</span>
         </Label>
         <Input
+          ref={fullNameRef}
           id="full_name"
+          name="name"
           type="text"
+          autoComplete="name"
           placeholder="Your full name"
           value={formData.full_name}
-          onChange={(e) => updateFormData({ full_name: e.target.value })}
+          onChange={(e) => handleInputChange("full_name", e.target.value)}
           onBlur={() => handleBlur("full_name")}
           className={`bg-secondary/50 border-border focus:border-primary ${errors.full_name ? "border-destructive" : ""}`}
         />
@@ -72,15 +119,39 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           Email <span className="text-destructive">*</span>
         </Label>
         <Input
+          ref={emailRef}
           id="email"
+          name="email"
           type="email"
+          autoComplete="email"
           placeholder="you@email.com"
           value={formData.email}
-          onChange={(e) => updateFormData({ email: e.target.value })}
+          onChange={(e) => handleInputChange("email", e.target.value)}
           onBlur={() => handleBlur("email")}
           className={`bg-secondary/50 border-border focus:border-primary ${errors.email ? "border-destructive" : ""}`}
         />
         <FormFieldError error={errors.email || null} />
+      </div>
+
+      {/* Contact Number */}
+      <div className="space-y-2">
+        <Label htmlFor="contact_number" className="text-sm font-medium flex items-center gap-2">
+          <Phone className="w-4 h-4 text-muted-foreground" />
+          Contact Number <span className="text-destructive">*</span>
+        </Label>
+        <Input
+          ref={contactRef}
+          id="contact_number"
+          name="tel"
+          type="tel"
+          autoComplete="tel"
+          placeholder="+1 234 567 8900"
+          value={formData.contact_number}
+          onChange={(e) => handleInputChange("contact_number", e.target.value)}
+          onBlur={() => handleBlur("contact_number")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.contact_number ? "border-destructive" : ""}`}
+        />
+        <FormFieldError error={errors.contact_number || null} />
       </div>
 
       {/* City & Nationality */}
@@ -92,23 +163,28 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           </Label>
           <Input
             id="city"
+            name="city"
             type="text"
+            autoComplete="address-level2"
             placeholder="Your city"
             value={formData.city}
-            onChange={(e) => updateFormData({ city: e.target.value })}
+            onChange={(e) => handleInputChange("city", e.target.value)}
             className="bg-secondary/50 border-border focus:border-primary"
           />
         </div>
         <div className="space-y-2">
           <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
             <Globe className="w-4 h-4 text-muted-foreground" />
-            Nationality
+            Nationality <span className="text-destructive">*</span>
           </Label>
           <Select
             value={formData.nationality}
-            onValueChange={(value) => updateFormData({ nationality: value })}
+            onValueChange={(value) => {
+              updateFormData({ nationality: value });
+              setTouched((prev) => ({ ...prev, nationality: true }));
+            }}
           >
-            <SelectTrigger className="bg-secondary/50 border-border">
+            <SelectTrigger className={`bg-secondary/50 border-border ${errors.nationality ? "border-destructive" : ""}`}>
               <SelectValue placeholder="Select country" />
             </SelectTrigger>
             <SelectContent className="bg-card border-border max-h-60">
@@ -119,6 +195,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
               ))}
             </SelectContent>
           </Select>
+          <FormFieldError error={errors.nationality || null} />
         </div>
       </div>
 
@@ -126,16 +203,20 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="university" className="text-sm font-medium flex items-center gap-2">
           <GraduationCap className="w-4 h-4 text-muted-foreground" />
-          University
+          University <span className="text-destructive">*</span>
         </Label>
         <Input
           id="university"
+          name="organization"
           type="text"
+          autoComplete="organization"
           placeholder="Your university name"
           value={formData.university}
-          onChange={(e) => updateFormData({ university: e.target.value })}
-          className="bg-secondary/50 border-border focus:border-primary"
+          onChange={(e) => handleInputChange("university", e.target.value)}
+          onBlur={() => handleBlur("university")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.university ? "border-destructive" : ""}`}
         />
+        <FormFieldError error={errors.university || null} />
       </div>
 
       {/* Department of Study */}
@@ -149,7 +230,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           type="text"
           placeholder="e.g., Computer Science, Business Administration"
           value={formData.department_of_study}
-          onChange={(e) => updateFormData({ department_of_study: e.target.value })}
+          onChange={(e) => handleInputChange("department_of_study", e.target.value)}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>

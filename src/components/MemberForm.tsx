@@ -11,7 +11,7 @@ import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3ZpuopWA1VIXqIbAdejWZKMaI54rwodb4ktR9chJTY0t5gjT1O6AT3Yfs7XpACAAJ/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKCr4NnF6EqF0F6WCR-WbQrZl9JLzeVAZwAlJrwPTWxzpiXTaFkstzGE5krRdUfAGY/exec";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -29,6 +29,7 @@ export interface MemberFormData {
   // Step 1 - matching backend field names exactly
   full_name: string;
   email: string;
+  contact_number: string;
   city: string;
   nationality: string;
   university: string;
@@ -51,6 +52,7 @@ export interface MemberFormData {
 const initialFormData: MemberFormData = {
   full_name: "",
   email: "",
+  contact_number: "",
   city: "",
   nationality: "",
   university: "",
@@ -96,7 +98,10 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         return !!(
           formData.full_name.trim() &&
           formData.email.trim() &&
-          validateEmail(formData.email)
+          validateEmail(formData.email) &&
+          formData.contact_number.trim() &&
+          formData.nationality.trim() &&
+          formData.university.trim()
         );
       case 2:
         return formData.interests.length > 0;
@@ -143,17 +148,18 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     const payload = {
       formType: "member",
       data: {
-        full_name: formData.full_name,
-        email: formData.email,
-        city: formData.city || null,
-        nationality: formData.nationality || null,
-        university: formData.university || null,
-        department_of_study: formData.department_of_study || null,
-        interests: formData.interests,
-        community_vibe: formData.community_vibe,
-        source: getFinalSource(),
-        consent_data_storage: formData.consent_data_storage,
-        consent_updates: formData.consent_updates,
+        Full_Name: formData.full_name,
+        Email: formData.email,
+        Contact_Number: formData.contact_number,
+        City: formData.city || null,
+        Nationality: formData.nationality,
+        University: formData.university,
+        Department_of_Study: formData.department_of_study || null,
+        Interests: formData.interests.length > 0 ? formData.interests : null,
+        Community_Vibe: formData.community_vibe,
+        Source: getFinalSource(),
+        Data_Consent: formData.consent_data_storage,
+        Updates_Consent: formData.consent_updates,
       },
       details: null,
     };

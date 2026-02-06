@@ -15,7 +15,7 @@ import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3ZpuopWA1VIXqIbAdejWZKMaI54rwodb4ktR9chJTY0t5gjT1O6AT3Yfs7XpACAAJ/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKCr4NnF6EqF0F6WCR-WbQrZl9JLzeVAZwAlJrwPTWxzpiXTaFkstzGE5krRdUfAGY/exec";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
