@@ -18,7 +18,7 @@ import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
 import { validateEmail, validateUrl } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3ZpuopWA1VIXqIbAdejWZKMaI54rwodb4ktR9chJTY0t5gjT1O6AT3Yfs7XpACAAJ/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbzKCr4NnF6EqF0F6WCR-WbQrZl9JLzeVAZwAlJrwPTWxzpiXTaFkstzGE5krRdUfAGY/exec";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
@@ -267,17 +267,17 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
     const payload = {
       formType: "collaborator",
       data: {
-        org_name: formData.org_name,
+        organization_name: formData.org_name,
         contact_name: formData.contact_name,
         role_title: formData.role_title || null,
         email: formData.email,
         website: formData.website || null,
         location: formData.location || null,
-        org_type: formData.org_type || null,
-        collab_type: formData.collab_type,
+        organization_type: formData.org_type || null,
+        collaboration_type: formData.collab_type.length > 0 ? formData.collab_type : [],
         preferred_timeline: formData.preferred_timeline || null,
         budget_range: formData.budget_range || null,
-        success_definition: formData.success_definition || null,
+        success_metric: formData.success_definition || null,
         additional_notes: formData.additional_notes || null,
         consent_data_storage: formData.consent_data_storage,
       },

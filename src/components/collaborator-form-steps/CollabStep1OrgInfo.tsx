@@ -11,7 +11,7 @@ import {
 import { Building2, User, Briefcase, Mail, Globe, MapPin } from "lucide-react";
 import { validateEmail, validateUrl, getEmailError, getUrlError, getRequiredError } from "@/lib/validation";
 import FormFieldError from "../shared/FormFieldError";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Step1Props {
   formData: CollaboratorFormData;
@@ -32,6 +32,11 @@ const orgTypes = [
 const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  
+  // Refs for autofill detection
+  const orgNameRef = useRef<HTMLInputElement>(null);
+  const contactNameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const newErrors: Record<string, string | null> = {};
@@ -50,8 +55,36 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
     setErrors(newErrors);
   }, [formData, touched]);
 
+  // Autofill detection
+  useEffect(() => {
+    const checkAutofill = () => {
+      if (orgNameRef.current && orgNameRef.current.value && !formData.org_name) {
+        updateFormData({ org_name: orgNameRef.current.value });
+      }
+      if (contactNameRef.current && contactNameRef.current.value && !formData.contact_name) {
+        updateFormData({ contact_name: contactNameRef.current.value });
+      }
+      if (emailRef.current && emailRef.current.value && !formData.email) {
+        updateFormData({ email: emailRef.current.value });
+      }
+    };
+    
+    checkAutofill();
+    const timer = setTimeout(checkAutofill, 100);
+    const timer2 = setTimeout(checkAutofill, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer2);
+    };
+  }, []);
+
   const handleBlur = (field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleInputChange = (field: keyof CollaboratorFormData, value: string) => {
+    updateFormData({ [field]: value });
   };
 
   return (
@@ -71,11 +104,14 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           Organization Name <span className="text-destructive">*</span>
         </Label>
         <Input
+          ref={orgNameRef}
           id="org_name"
+          name="organization"
           type="text"
+          autoComplete="organization"
           placeholder="Your organization or company name"
           value={formData.org_name}
-          onChange={(e) => updateFormData({ org_name: e.target.value })}
+          onChange={(e) => handleInputChange("org_name", e.target.value)}
           onBlur={() => handleBlur("org_name")}
           className={`bg-secondary/50 border-border focus:border-primary ${errors.org_name ? "border-destructive" : ""}`}
         />
@@ -89,11 +125,14 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           Contact Name <span className="text-destructive">*</span>
         </Label>
         <Input
+          ref={contactNameRef}
           id="contact_name"
+          name="name"
           type="text"
+          autoComplete="name"
           placeholder="Your full name"
           value={formData.contact_name}
-          onChange={(e) => updateFormData({ contact_name: e.target.value })}
+          onChange={(e) => handleInputChange("contact_name", e.target.value)}
           onBlur={() => handleBlur("contact_name")}
           className={`bg-secondary/50 border-border focus:border-primary ${errors.contact_name ? "border-destructive" : ""}`}
         />
@@ -108,10 +147,12 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
         </Label>
         <Input
           id="role_title"
+          name="job-title"
           type="text"
+          autoComplete="organization-title"
           placeholder="e.g. Partnership Manager"
           value={formData.role_title}
-          onChange={(e) => updateFormData({ role_title: e.target.value })}
+          onChange={(e) => handleInputChange("role_title", e.target.value)}
           className="bg-secondary/50 border-border focus:border-primary"
         />
       </div>
@@ -123,11 +164,14 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           Email <span className="text-destructive">*</span>
         </Label>
         <Input
+          ref={emailRef}
           id="email"
+          name="email"
           type="email"
+          autoComplete="email"
           placeholder="you@organization.com"
           value={formData.email}
-          onChange={(e) => updateFormData({ email: e.target.value })}
+          onChange={(e) => handleInputChange("email", e.target.value)}
           onBlur={() => handleBlur("email")}
           className={`bg-secondary/50 border-border focus:border-primary ${errors.email ? "border-destructive" : ""}`}
         />
@@ -143,10 +187,12 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           </Label>
           <Input
             id="website"
+            name="url"
             type="url"
+            autoComplete="url"
             placeholder="https://yourwebsite.com"
             value={formData.website}
-            onChange={(e) => updateFormData({ website: e.target.value })}
+            onChange={(e) => handleInputChange("website", e.target.value)}
             onBlur={() => handleBlur("website")}
             className={`bg-secondary/50 border-border focus:border-primary ${errors.website ? "border-destructive" : ""}`}
           />
@@ -159,10 +205,12 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
           </Label>
           <Input
             id="location"
+            name="address"
             type="text"
+            autoComplete="address-level2"
             placeholder="City, Country"
             value={formData.location}
-            onChange={(e) => updateFormData({ location: e.target.value })}
+            onChange={(e) => handleInputChange("location", e.target.value)}
             className="bg-secondary/50 border-border focus:border-primary"
           />
         </div>
