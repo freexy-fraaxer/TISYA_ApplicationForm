@@ -164,6 +164,8 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
       details: null,
     };
 
+    console.log("Member form submitting payload:", JSON.stringify(payload, null, 2));
+
     try {
       const response = await fetch(API_ENDPOINT, {
         method: "POST",
@@ -171,7 +173,27 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      // Check for HTML response (error page)
+      const contentType = response.headers.get("content-type");
+      const responseText = await response.text();
+      
+      console.log("Response status:", response.status);
+      console.log("Response content-type:", contentType);
+      console.log("Response body:", responseText.substring(0, 500));
+
+      // Check if response is HTML (error page) instead of JSON
+      if (!contentType?.includes("application/json") && responseText.trim().startsWith("<!")) {
+        throw new Error("API returned an error page. Please try again.");
+      }
+
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error("Invalid response from server");
+      }
+
+      console.log("Parsed result:", result);
 
       // Handle success: false from backend
       if (!result.success) {
