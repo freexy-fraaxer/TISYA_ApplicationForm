@@ -1,8 +1,12 @@
 import { memo, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+interface WaveBackgroundProps {
+  isStatic?: boolean;
+}
+
 // Memoized to prevent re-renders when parent state changes
-const WaveBackground = memo(() => {
+const WaveBackground = memo(({ isStatic = false }: WaveBackgroundProps) => {
   const isMobile = useIsMobile();
   const [isReduced, setIsReduced] = useState(false);
 
@@ -53,8 +57,8 @@ const WaveBackground = memo(() => {
           </linearGradient>
         </defs>
 
-        {/* Static waves on mobile/reduced motion, CSS animated on desktop */}
-        {!isMobile && !isReduced ? (
+        {/* Static waves when isStatic prop is true, or on mobile/reduced motion */}
+        {!isMobile && !isReduced && !isStatic ? (
           <>
             {/* Wave layers using CSS animations with transform only - contained */}
             <g className="wave-layer wave-layer-slow">
@@ -112,8 +116,8 @@ const WaveBackground = memo(() => {
         )}
       </svg>
 
-      {/* Subtle glow orbs - GPU layer, contained paint */}
-      {!isMobile && !isReduced && (
+      {/* Subtle glow orbs - GPU layer, contained paint - hide when static */}
+      {!isMobile && !isReduced && !isStatic && (
         <>
           <div
             className="absolute w-[600px] h-[600px] rounded-full orb-pulse"
