@@ -7,6 +7,7 @@ import MemberForm from "@/components/MemberForm";
 import CollaboratorForm from "@/components/CollaboratorForm";
 import { AnimatePresence, motion } from "framer-motion";
 import { SoundProvider } from "@/contexts/SoundContext";
+import { BackgroundEffectsProvider, useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
 // Memoized page transition wrapper
 const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
@@ -25,17 +26,13 @@ PageTransition.displayName = 'PageTransition';
 
 type Screen = "home" | "operators" | "members" | "collaborator";
 
-const Index = () => {
+const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
   const [showRoleSelection, setShowRoleSelection] = useState(false);
-  const [backgroundBlurred, setBackgroundBlurred] = useState(false);
-  const [backgroundPulse, setBackgroundPulse] = useState(false);
+  const { backgroundBlurred, setBackgroundBlurred, triggerPulse, isPulsing } = useBackgroundEffects();
 
   const handleJoinClick = () => {
-    // Trigger pulse animation
-    setBackgroundPulse(true);
-    setTimeout(() => setBackgroundPulse(false), 600);
-    // Enable blur
+    triggerPulse();
     setBackgroundBlurred(true);
     setShowRoleSelection(true);
   };
@@ -63,6 +60,7 @@ const Index = () => {
   const handleBackToHome = () => {
     setCurrentScreen("home");
     setShowRoleSelection(false);
+    setBackgroundBlurred(false);
   };
 
   // Memoize handlers to prevent prop changes causing re-renders
@@ -76,57 +74,65 @@ const Index = () => {
   }), []);
 
   return (
-    <SoundProvider>
-      <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background with blur and pulse effects */}
-        <div 
-          className={`transition-all duration-500 ${backgroundBlurred ? 'blur-md' : ''} ${backgroundPulse ? 'animate-heartbeat-pulse' : ''}`}
-          style={{ 
-            position: 'fixed', 
-            inset: 0, 
-            zIndex: 0,
-          }}
-        >
-          <WaveBackground />
-        </div>
-
-        {/* Main Content - simplified transitions using opacity only */}
-        <AnimatePresence mode="wait">
-          {currentScreen === "home" && (
-            <PageTransition keyProp="home">
-              <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
-            </PageTransition>
-          )}
-
-          {currentScreen === "operators" && (
-            <PageTransition keyProp="operators">
-              <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
-            </PageTransition>
-          )}
-
-          {currentScreen === "members" && (
-            <PageTransition keyProp="members">
-              <MemberForm onBack={memoizedHandlers.handleBackToHome} />
-            </PageTransition>
-          )}
-
-          {currentScreen === "collaborator" && (
-            <PageTransition keyProp="collaborator">
-              <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
-            </PageTransition>
-          )}
-        </AnimatePresence>
-
-        {/* Role Selection Overlay */}
-        <RoleSelection
-          isOpen={showRoleSelection}
-          onClose={memoizedHandlers.handleCloseRoles}
-          onSelectOperators={memoizedHandlers.handleSelectOperators}
-          onSelectMembers={memoizedHandlers.handleSelectMembers}
-          onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
-        />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Background with blur and pulse effects */}
+      <div 
+        className={`transition-all duration-500 ${backgroundBlurred ? 'blur-2xl saturate-50' : ''} ${isPulsing ? 'animate-heartbeat-pulse' : ''}`}
+        style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          zIndex: 0,
+        }}
+      >
+        <WaveBackground />
       </div>
-    </SoundProvider>
+
+      {/* Main Content - simplified transitions using opacity only */}
+      <AnimatePresence mode="wait">
+        {currentScreen === "home" && (
+          <PageTransition keyProp="home">
+            <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
+          </PageTransition>
+        )}
+
+        {currentScreen === "operators" && (
+          <PageTransition keyProp="operators">
+            <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
+        )}
+
+        {currentScreen === "members" && (
+          <PageTransition keyProp="members">
+            <MemberForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
+        )}
+
+        {currentScreen === "collaborator" && (
+          <PageTransition keyProp="collaborator">
+            <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
+        )}
+      </AnimatePresence>
+
+      {/* Role Selection Overlay */}
+      <RoleSelection
+        isOpen={showRoleSelection}
+        onClose={memoizedHandlers.handleCloseRoles}
+        onSelectOperators={memoizedHandlers.handleSelectOperators}
+        onSelectMembers={memoizedHandlers.handleSelectMembers}
+        onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
+      />
+    </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <BackgroundEffectsProvider>
+      <SoundProvider>
+        <IndexContent />
+      </SoundProvider>
+    </BackgroundEffectsProvider>
   );
 };
 
