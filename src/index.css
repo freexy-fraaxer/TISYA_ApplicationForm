@@ -471,12 +471,41 @@
     }
   }
 
+  /* Heartbeat pulse animation for background */
+  .animate-heartbeat-pulse {
+    animation: heartbeat-pulse 0.6s ease-out;
+  }
+
+  @keyframes heartbeat-pulse {
+    0% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    15% { 
+      transform: scale(1.02);
+      filter: brightness(1.15);
+    }
+    30% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    45% { 
+      transform: scale(1.015);
+      filter: brightness(1.1);
+    }
+    60%, 100% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+  }
+
   /* Reduce motion for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     .wave-layer,
     .wave-line,
     .orb-pulse,
-    .orb-pulse-slow {
+    .orb-pulse-slow,
+    .animate-heartbeat-pulse {
       animation: none !important;
     }
   }

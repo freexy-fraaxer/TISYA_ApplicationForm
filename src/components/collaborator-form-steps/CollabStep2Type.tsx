@@ -8,7 +8,6 @@ import {
   Mic,
   Camera,
   DollarSign,
-  Users,
   MoreHorizontal,
 } from "lucide-react";
 
@@ -23,7 +22,6 @@ const collabTypes = [
   { id: "Speaker Partner", label: "Speaker Partner", description: "Participate as a speaker or panelist", icon: Mic },
   { id: "Media Partner", label: "Media Partner", description: "Content sharing and cross-promotion", icon: Camera },
   { id: "Sponsor", label: "Sponsor", description: "Financial or in-kind support", icon: DollarSign },
-  { id: "Community Partner", label: "Community Partner", description: "Community engagement collaboration", icon: Users },
   { id: "Other", label: "Other", description: "Something else in mind", icon: MoreHorizontal },
 ];
 
