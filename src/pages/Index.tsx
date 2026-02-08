@@ -73,18 +73,21 @@ const IndexContent = () => {
     handleBackToHome,
   }), []);
 
+  // Determine if we're in a form (not on home screen)
+  const isInForm = currentScreen !== "home";
+
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background with blur and pulse effects */}
+      {/* Animated Background with pulse effects - static waves in forms, animated on home */}
       <div 
-        className={`transition-all duration-500 ${backgroundBlurred ? 'blur-2xl saturate-50' : ''} ${isPulsing ? 'animate-heartbeat-pulse' : ''}`}
+        className={`transition-all duration-500 ${isPulsing ? 'animate-heartbeat-pulse' : ''}`}
         style={{ 
           position: 'fixed', 
           inset: 0, 
           zIndex: 0,
         }}
       >
-        <WaveBackground />
+        <WaveBackground isStatic={isInForm} />
       </div>
 
       {/* Main Content - simplified transitions using opacity only */}

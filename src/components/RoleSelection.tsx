@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import RoleCard from "./RoleCard";
-import { Users, Wrench, Handshake, GraduationCap, X, ArrowLeft } from "lucide-react";
+import { Users, Wrench, Handshake, GraduationCap, X } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 
 // Import role card background images
@@ -204,18 +204,6 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.div>
             </div>
 
-            {/* Back button */}
-            <motion.button
-              className="mt-8 mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200"
-              onClick={handleClose}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              whileHover={{ x: -5 }}
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to home</span>
-            </motion.button>
           </motion.div>
         </motion.div>
       )}
