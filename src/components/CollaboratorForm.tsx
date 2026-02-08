@@ -18,7 +18,7 @@ import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
 import { validateEmail, validateUrl } from "@/lib/validation";
 
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxoXDLZMTRM6NS0xX0m9y2K4DLIeBkXuJ9r2j9hejyRoK-Ps6QgzqvXyFy4kwGEPScT/exec";
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx3aQP-PvCg6_6HLgV5jwNUufqvUZC2OlTah5hT4thH7SpSgv1E9FQeZHysng_IKLl9/exec";
 
 export interface CollaboratorFormData {
   // Step 1 - Organization Info
