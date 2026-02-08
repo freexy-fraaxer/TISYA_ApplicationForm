@@ -28,13 +28,21 @@ type Screen = "home" | "operators" | "members" | "collaborator";
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
   const [showRoleSelection, setShowRoleSelection] = useState(false);
+  const [backgroundBlurred, setBackgroundBlurred] = useState(false);
+  const [backgroundPulse, setBackgroundPulse] = useState(false);
 
   const handleJoinClick = () => {
+    // Trigger pulse animation
+    setBackgroundPulse(true);
+    setTimeout(() => setBackgroundPulse(false), 600);
+    // Enable blur
+    setBackgroundBlurred(true);
     setShowRoleSelection(true);
   };
 
   const handleCloseRoles = () => {
     setShowRoleSelection(false);
+    setBackgroundBlurred(false);
   };
 
   const handleSelectOperators = () => {
@@ -70,8 +78,17 @@ const Index = () => {
   return (
     <SoundProvider>
       <div className="min-h-screen relative overflow-hidden">
-        {/* Animated Background - memoized, won't re-render */}
-        <WaveBackground />
+        {/* Animated Background with blur and pulse effects */}
+        <div 
+          className={`transition-all duration-500 ${backgroundBlurred ? 'blur-md' : ''} ${backgroundPulse ? 'animate-heartbeat-pulse' : ''}`}
+          style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            zIndex: 0,
+          }}
+        >
+          <WaveBackground />
+        </div>
 
         {/* Main Content - simplified transitions using opacity only */}
         <AnimatePresence mode="wait">

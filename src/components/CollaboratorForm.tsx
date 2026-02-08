@@ -12,7 +12,7 @@ import CollabStepProjectDetails from "./collaborator-form-steps/CollabStepProjec
 import CollabStepSpeakerDetails from "./collaborator-form-steps/CollabStepSpeakerDetails";
 import CollabStepMediaDetails from "./collaborator-form-steps/CollabStepMediaDetails";
 import CollabStepSponsorDetails from "./collaborator-form-steps/CollabStepSponsorDetails";
-import CollabStepCommunityDetails from "./collaborator-form-steps/CollabStepCommunityDetails";
+
 import CollabStepOtherDetails from "./collaborator-form-steps/CollabStepOtherDetails";
 import CollabStep4Final from "./collaborator-form-steps/CollabStep4Final";
 import CollaboratorSuccessScreen from "./shared/CollaboratorSuccessScreen";
@@ -166,7 +166,6 @@ const COLLAB_TYPE_PAGES = [
   "Speaker Partner",
   "Media Partner",
   "Sponsor",
-  "Community Partner",
   "Other",
 ] as const;
 
@@ -325,13 +324,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
           what_they_expect: formData.what_they_expect || null,
           brand_exposure: formData.brand_exposure || null,
         } : null,
-        community: formData.collab_type.includes("Community Partner") ? {
-          community_collab_type: formData.community_collab_type || null,
-          community_size: formData.community_size || null,
-          community_target_audience: formData.community_target_audience || null,
-          planned_activities: formData.planned_activities || null,
-          community_success: formData.community_success || null,
-        } : null,
         other: formData.collab_type.includes("Other") ? {
           collab_description: formData.collab_description || null,
           expectations: formData.expectations || null,
@@ -398,8 +390,6 @@ const CollaboratorForm = ({ onBack }: CollaboratorFormProps) => {
         return <CollabStepMediaDetails formData={formData} updateFormData={updateFormData} />;
       case "Sponsor":
         return <CollabStepSponsorDetails formData={formData} updateFormData={updateFormData} />;
-      case "Community Partner":
-        return <CollabStepCommunityDetails formData={formData} updateFormData={updateFormData} />;
       case "Other":
         return <CollabStepOtherDetails formData={formData} updateFormData={updateFormData} />;
       case "final":
