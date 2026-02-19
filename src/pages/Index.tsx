@@ -5,11 +5,12 @@ import RoleSelection from "@/components/RoleSelection";
 import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
 import CollaboratorForm from "@/components/CollaboratorForm";
+import AmbassadorForm from "@/components/AmbassadorForm";
+import CountryUnionForm from "@/components/CountryUnionForm";
 import { AnimatePresence, motion } from "framer-motion";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { BackgroundEffectsProvider, useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
-// Memoized page transition wrapper
 const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
   <motion.div
     key={keyProp}
@@ -24,7 +25,7 @@ const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode;
 ));
 PageTransition.displayName = 'PageTransition';
 
-type Screen = "home" | "operators" | "members" | "collaborator";
+type Screen = "home" | "operators" | "members" | "collaborator" | "ambassador" | "countryunion";
 
 const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
@@ -42,20 +43,11 @@ const IndexContent = () => {
     setBackgroundBlurred(false);
   };
 
-  const handleSelectOperators = () => {
-    setShowRoleSelection(false);
-    setCurrentScreen("operators");
-  };
-
-  const handleSelectMembers = () => {
-    setShowRoleSelection(false);
-    setCurrentScreen("members");
-  };
-
-  const handleSelectCollaborator = () => {
-    setShowRoleSelection(false);
-    setCurrentScreen("collaborator");
-  };
+  const handleSelectOperators = () => { setShowRoleSelection(false); setCurrentScreen("operators"); };
+  const handleSelectMembers = () => { setShowRoleSelection(false); setCurrentScreen("members"); };
+  const handleSelectCollaborator = () => { setShowRoleSelection(false); setCurrentScreen("collaborator"); };
+  const handleSelectAmbassador = () => { setShowRoleSelection(false); setCurrentScreen("ambassador"); };
+  const handleSelectCountryUnion = () => { setShowRoleSelection(false); setCurrentScreen("countryunion"); };
 
   const handleBackToHome = () => {
     setCurrentScreen("home");
@@ -63,67 +55,69 @@ const IndexContent = () => {
     setBackgroundBlurred(false);
   };
 
-  // Memoize handlers to prevent prop changes causing re-renders
   const memoizedHandlers = useMemo(() => ({
     handleJoinClick,
     handleCloseRoles,
     handleSelectOperators,
     handleSelectMembers,
     handleSelectCollaborator,
+    handleSelectAmbassador,
+    handleSelectCountryUnion,
     handleBackToHome,
   }), []);
 
-  // Determine if we're in a form (not on home screen)
   const isInForm = currentScreen !== "home";
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background with pulse effects - static waves in forms, animated on home */}
       <div 
         className={`transition-all duration-500 ${isPulsing ? 'animate-heartbeat-pulse' : ''}`}
-        style={{ 
-          position: 'fixed', 
-          inset: 0, 
-          zIndex: 0,
-        }}
+        style={{ position: 'fixed', inset: 0, zIndex: 0 }}
       >
         <WaveBackground isStatic={isInForm} />
       </div>
 
-      {/* Main Content - simplified transitions using opacity only */}
       <AnimatePresence mode="wait">
         {currentScreen === "home" && (
           <PageTransition keyProp="home">
             <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
           </PageTransition>
         )}
-
         {currentScreen === "operators" && (
           <PageTransition keyProp="operators">
             <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
           </PageTransition>
         )}
-
         {currentScreen === "members" && (
           <PageTransition keyProp="members">
             <MemberForm onBack={memoizedHandlers.handleBackToHome} />
           </PageTransition>
         )}
-
         {currentScreen === "collaborator" && (
           <PageTransition keyProp="collaborator">
             <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
           </PageTransition>
         )}
+        {currentScreen === "ambassador" && (
+          <PageTransition keyProp="ambassador">
+            <AmbassadorForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
+        )}
+        {currentScreen === "countryunion" && (
+          <PageTransition keyProp="countryunion">
+            <CountryUnionForm onBack={memoizedHandlers.handleBackToHome} />
+          </PageTransition>
+        )}
       </AnimatePresence>
 
-      {/* Role Selection Overlay */}
       <RoleSelection
         isOpen={showRoleSelection}
         onClose={memoizedHandlers.handleCloseRoles}
         onSelectOperators={memoizedHandlers.handleSelectOperators}
         onSelectMembers={memoizedHandlers.handleSelectMembers}
         onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
+        onSelectAmbassador={memoizedHandlers.handleSelectAmbassador}
+        onSelectCountryUnion={memoizedHandlers.handleSelectCountryUnion}
       />
     </div>
   );

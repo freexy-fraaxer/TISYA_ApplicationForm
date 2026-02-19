@@ -68,7 +68,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           <HeroButton onClick={handleJoinClick} size="lg">
-            Join TİSYA
+            Get Involved
             <svg
               className="w-5 h-5"
               fill="none"
