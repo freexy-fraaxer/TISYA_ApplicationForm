@@ -24,12 +24,24 @@ interface AmbassadorFormProps {
   onBack: () => void;
 }
 
+const ambassadorTypes = [
+  "Country Ambassador",
+  "Campus Ambassador",
+  "City Ambassador",
+  "Regional Ambassador",
+  "Community Ambassador",
+  "Other",
+];
+
 interface AmbassadorFormData {
+  ambassador_type: string;
+  ambassador_type_other: string;
   full_name: string;
   email: string;
   phone: string;
   country: string;
   city: string;
+  institution: string;
   linkedin: string;
   previous_involvement: boolean;
   involvement_details: string;
@@ -40,11 +52,14 @@ interface AmbassadorFormData {
 }
 
 const initialData: AmbassadorFormData = {
+  ambassador_type: "",
+  ambassador_type_other: "",
   full_name: "",
   email: "",
   phone: "",
   country: "",
   city: "",
+  institution: "",
   linkedin: "",
   previous_involvement: false,
   involvement_details: "",
@@ -72,6 +87,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
   useEffect(() => {
     const e: Record<string, string | null> = {};
+    if (touched.ambassador_type) e.ambassador_type = formData.ambassador_type ? null : "Ambassador type is required";
+    if (touched.ambassador_type_other && formData.ambassador_type === "Other") e.ambassador_type_other = getRequiredError(formData.ambassador_type_other, "This field");
     if (touched.full_name) e.full_name = getRequiredError(formData.full_name, "Full name");
     if (touched.email) e.email = getEmailError(formData.email);
     if (touched.phone) e.phone = getRequiredError(formData.phone, "Phone number");
@@ -82,6 +99,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   }, [formData, touched]);
 
   const canSubmit =
+    formData.ambassador_type &&
+    (formData.ambassador_type !== "Other" || formData.ambassador_type_other.trim()) &&
     formData.full_name.trim() &&
     formData.email.trim() &&
     validateEmail(formData.email) &&
@@ -125,7 +144,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Application Received!</h2>
           <p className="text-muted-foreground mb-8">
-            Thank you for your interest in becoming a Country Ambassador. We'll review your application and get back to you soon.
+            Thank you for your interest in becoming an Ambassador. We'll review your application and get back to you soon.
           </p>
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
@@ -162,13 +181,59 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Country Ambassador</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Ambassador Application</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Represent TISYA in your country. As an ambassador, you'll be the local voice of the alliance — organizing events, building networks, and driving impact on the ground.
+            Ambassadors represent TISYA within a defined scope — such as a country, campus, city, region, or community. Please select the type of representation you are applying for.
           </p>
         </div>
 
         <div className="space-y-5">
+          {/* Ambassador Type */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium flex items-center gap-2">
+              <Globe className="w-4 h-4 text-muted-foreground" />
+              Ambassador Type <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.ambassador_type}
+              onValueChange={(v) => {
+                update({ ambassador_type: v, ambassador_type_other: v !== "Other" ? "" : formData.ambassador_type_other });
+                setTouched((prev) => ({ ...prev, ambassador_type: true }));
+              }}
+            >
+              <SelectTrigger className={`bg-secondary/50 border-border ${errors.ambassador_type ? "border-destructive" : ""}`}>
+                <SelectValue placeholder="Select ambassador type" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                {ambassadorTypes.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormFieldError error={errors.ambassador_type || null} />
+          </div>
+
+          <AnimatePresence>
+            {formData.ambassador_type === "Other" && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden space-y-2"
+              >
+                <Label className="text-sm font-medium">Please specify <span className="text-destructive">*</span></Label>
+                <Input
+                  placeholder="Describe your ambassador type"
+                  value={formData.ambassador_type_other}
+                  onChange={(e) => update({ ambassador_type_other: e.target.value })}
+                  onBlur={() => handleBlur("ambassador_type_other")}
+                  className={`bg-secondary/50 border-border focus:border-primary ${errors.ambassador_type_other ? "border-destructive" : ""}`}
+                />
+                <FormFieldError error={errors.ambassador_type_other || null} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Full Name */}
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
@@ -258,6 +323,29 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             </div>
           </div>
 
+          {/* Institution */}
+          <AnimatePresence>
+            {["Campus Ambassador", "Community Ambassador"].includes(formData.ambassador_type) && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden space-y-2"
+              >
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  {formData.ambassador_type === "Campus Ambassador" ? "University / Institution" : "Organization / Community"}
+                </Label>
+                <Input
+                  placeholder={formData.ambassador_type === "Campus Ambassador" ? "e.g. Harvard University" : "e.g. Local Youth Council"}
+                  value={formData.institution}
+                  onChange={(e) => update({ institution: e.target.value })}
+                  className="bg-secondary/50 border-border focus:border-primary"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* LinkedIn */}
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
@@ -306,7 +394,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Why Ambassador */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              Why do you want to become a Country Ambassador? <span className="text-destructive">*</span>
+              Why do you want to become an Ambassador? <span className="text-destructive">*</span>
             </Label>
             <Textarea
               placeholder="Share your motivation..."
