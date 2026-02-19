@@ -92,9 +92,11 @@ const CollabStep1OrgInfo = ({ formData, updateFormData }: Step1Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Collaboration Request
+          Partner / Sponsor
         </h2>
-        <p className="text-muted-foreground">Tell us about your organization</p>
+        <p className="text-muted-foreground text-sm max-w-md mx-auto">
+          This form is for financial or strategic partnerships. If you are a country organization seeking affiliation, please use the Register Your Organization form instead.
+        </p>
       </div>
 
       {/* Organization Name */}

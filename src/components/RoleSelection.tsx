@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import RoleCard from "./RoleCard";
-import { Users, Wrench, Handshake, GraduationCap, X } from "lucide-react";
+import { Users, Wrench, Handshake, GraduationCap, X, Flag, Building2 } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 
 // Import role card background images
@@ -16,9 +16,11 @@ interface RoleSelectionProps {
   onSelectOperators: () => void;
   onSelectMembers: () => void;
   onSelectCollaborator: () => void;
+  onSelectAmbassador: () => void;
+  onSelectCountryUnion: () => void;
 }
 
-const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator }: RoleSelectionProps) => {
+const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator, onSelectAmbassador, onSelectCountryUnion }: RoleSelectionProps) => {
   const { 
     playAmbientTone, 
     playBack,
@@ -29,7 +31,6 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     playInternSelect
   } = useSound();
 
-  // Disable body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -42,7 +43,6 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     };
   }, [isOpen, playAmbientTone]);
 
-  // Handler with role-specific sound
   const handlePathfinderSelect = () => {
     playPathfinderSelect();
     onSelectMembers();
@@ -56,6 +56,16 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
   const handleCollaboratorSelect = () => {
     playCollaboratorSelect();
     onSelectCollaborator();
+  };
+
+  const handleAmbassadorSelect = () => {
+    playCollaboratorSelect();
+    onSelectAmbassador();
+  };
+
+  const handleCountryUnionSelect = () => {
+    playCollaboratorSelect();
+    onSelectCountryUnion();
   };
 
   const handleInternHover = () => {
@@ -76,12 +86,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          style={{ 
-            isolation: 'isolate',
-            willChange: 'opacity'
-          }}
+          style={{ isolation: 'isolate', willChange: 'opacity' }}
         >
-          {/* Backdrop with stronger blur and dark overlay */}
+          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-[101]"
             initial={{ opacity: 0 }}
@@ -97,9 +104,9 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
             }}
           />
 
-          {/* Content - higher z-index to stay above backdrop with scale-in animation */}
+          {/* Content */}
           <motion.div
-            className="relative z-[102] w-full max-w-4xl py-6 max-h-[90vh] overflow-y-auto"
+            className="relative z-[102] w-full max-w-5xl py-6 max-h-[90vh] overflow-y-auto"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -124,7 +131,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                Choose your role
+                Get Involved
               </motion.h2>
               <motion.p
                 className="text-muted-foreground text-base"
@@ -132,12 +139,12 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                Select a path to begin your journey.
+                Choose how you'd like to join TISYA.
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - 2x2 on both mobile and desktop */}
-            <div className="grid grid-cols-2 gap-3 md:gap-5 max-w-3xl mx-auto px-2 md:px-4">
+            {/* Role Cards Grid - 3x2 */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 max-w-4xl mx-auto px-2 md:px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -177,9 +184,41 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 onMouseEnter={playHover}
               >
                 <RoleCard
-                  title="Collaborator"
-                  label="Partner"
-                  description="Partner with TISYA for events, initiatives, and opportunities."
+                  title="Ambassador"
+                  label="Individual"
+                  description="Represent TISYA in your country and lead locally."
+                  icon={<Flag className="w-5 h-5 md:w-6 md:h-6" />}
+                  backgroundImage={collaboratorBg}
+                  onClick={handleAmbassadorSelect}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                onMouseEnter={playHover}
+              >
+                <RoleCard
+                  title="Country Union"
+                  label="Organization"
+                  description="Register your NGO, union, or institution for affiliation."
+                  icon={<Building2 className="w-5 h-5 md:w-6 md:h-6" />}
+                  backgroundImage={operatorBg}
+                  onClick={handleCountryUnionSelect}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onMouseEnter={playHover}
+              >
+                <RoleCard
+                  title="Partner / Sponsor"
+                  label="Business"
+                  description="Propose financial or strategic partnerships with TISYA."
                   icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
                   onClick={handleCollaboratorSelect}
@@ -189,7 +228,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
+                transition={{ delay: 0.45 }}
                 onMouseEnter={handleInternHover}
               >
                 <RoleCard
@@ -203,7 +242,6 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 />
               </motion.div>
             </div>
-
           </motion.div>
         </motion.div>
       )}
