@@ -54,26 +54,26 @@ const HeroButton = ({
         scale: disabled ? 1 : 1.03,
         y: disabled ? 0 : -2,
       }}
-      whileTap={{ scale: disabled ? 1 : 0.97 }}
+      whileTap={{ scale: disabled ? 1 : 0.95 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Animated glow pulse for primary buttons */}
+      {/* Shimmer sweep for primary buttons */}
       {variant === "primary" && !disabled && (
         <motion.span
-          className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0"
-          animate={{
-            x: ["-100%", "100%"],
-          }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent"
+          initial={{ x: "-100%" }}
+          animate={{ x: "200%" }}
           transition={{
-            duration: 2,
+            duration: 1.5,
             repeat: Infinity,
-            repeatDelay: 2,
+            repeatDelay: 3,
             ease: "easeInOut",
           }}
+          style={{ willChange: "transform" }}
         />
       )}
 
-      {/* Hover glow effect */}
+      {/* Hover overlay */}
       <motion.span
         className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent opacity-0"
         whileHover={{ opacity: 1 }}
