@@ -53,10 +53,11 @@ const SocialLinks = ({ className = "" }: SocialLinksProps) => {
           target="_blank"
           rel="noopener noreferrer"
           className="w-10 h-10 rounded-full bg-secondary/50 border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-300"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 * index }}
-          whileHover={{ scale: 1.1 }}
+          initial={{ opacity: 0, y: 8, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.08 * index, duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+          whileHover={{ scale: 1.15, y: -2 }}
+          whileTap={{ scale: 0.9 }}
           title={social.name}
         >
           {social.icon}
