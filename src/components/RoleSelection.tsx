@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import RoleCard from "./RoleCard";
-import { Users, Wrench, Handshake, GraduationCap, X, Flag, Building2 } from "lucide-react";
+import { Users, Wrench, GraduationCap, X, Flag, Building2 } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 
 // Import role card background images
@@ -9,25 +9,26 @@ import pathfinderBg from "@/assets/role-pathfinder.png";
 import operatorBg from "@/assets/role-operator.png";
 import collaboratorBg from "@/assets/role-collaborator.png";
 import internBg from "@/assets/role-intern.png";
+import countryUnionBg from "@/assets/role-countryunion.png";
 
 interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectOperators: () => void;
   onSelectMembers: () => void;
-  onSelectCollaborator: () => void;
   onSelectAmbassador: () => void;
   onSelectCountryUnion: () => void;
 }
 
-const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator, onSelectAmbassador, onSelectCountryUnion }: RoleSelectionProps) => {
+const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectAmbassador, onSelectCountryUnion }: RoleSelectionProps) => {
   const { 
     playAmbientTone, 
     playBack,
     playHover,
     playPathfinderSelect, 
     playOperatorSelect, 
-    playCollaboratorSelect,
+    playAmbassadorSelect,
+    playCountryUnionSelect,
     playInternSelect
   } = useSound();
 
@@ -53,18 +54,13 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     onSelectOperators();
   };
 
-  const handleCollaboratorSelect = () => {
-    playCollaboratorSelect();
-    onSelectCollaborator();
-  };
-
   const handleAmbassadorSelect = () => {
-    playCollaboratorSelect();
+    playAmbassadorSelect();
     onSelectAmbassador();
   };
 
   const handleCountryUnionSelect = () => {
-    playCollaboratorSelect();
+    playCountryUnionSelect();
     onSelectCountryUnion();
   };
 
@@ -143,7 +139,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - 3x2 */}
+            {/* Role Cards Grid - 2x3 on mobile, adapt on desktop */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 max-w-4xl mx-auto px-2 md:px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -186,7 +182,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 <RoleCard
                   title="Ambassador"
                   label="Individual"
-                  description="Represent TISYA in your country and lead locally."
+                  description="Represent TISYA across your country, campus, or community."
                   icon={<Flag className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
                   onClick={handleAmbassadorSelect}
@@ -204,24 +200,8 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   label="Organization"
                   description="Register your NGO, union, or institution for affiliation."
                   icon={<Building2 className="w-5 h-5 md:w-6 md:h-6" />}
-                  backgroundImage={operatorBg}
+                  backgroundImage={countryUnionBg}
                   onClick={handleCountryUnionSelect}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.35, duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-                onMouseEnter={playHover}
-              >
-                <RoleCard
-                  title="Partner / Sponsor"
-                  label="Business"
-                  description="Propose financial or strategic partnerships with TISYA."
-                  icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
-                  backgroundImage={collaboratorBg}
-                  onClick={handleCollaboratorSelect}
                 />
               </motion.div>
 

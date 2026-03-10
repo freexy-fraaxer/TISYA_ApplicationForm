@@ -4,7 +4,6 @@ import HomePage from "@/components/HomePage";
 import RoleSelection from "@/components/RoleSelection";
 import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
-import CollaboratorForm from "@/components/CollaboratorForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
 import CountryUnionForm from "@/components/CountryUnionForm";
 import SplashScreen from "@/components/SplashScreen";
@@ -26,7 +25,7 @@ const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode;
 ));
 PageTransition.displayName = 'PageTransition';
 
-type Screen = "home" | "operators" | "members" | "collaborator" | "ambassador" | "countryunion";
+type Screen = "home" | "operators" | "members" | "ambassador" | "countryunion";
 
 const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
@@ -52,7 +51,6 @@ const IndexContent = () => {
 
   const handleSelectOperators = () => { setShowRoleSelection(false); setCurrentScreen("operators"); };
   const handleSelectMembers = () => { setShowRoleSelection(false); setCurrentScreen("members"); };
-  const handleSelectCollaborator = () => { setShowRoleSelection(false); setCurrentScreen("collaborator"); };
   const handleSelectAmbassador = () => { setShowRoleSelection(false); setCurrentScreen("ambassador"); };
   const handleSelectCountryUnion = () => { setShowRoleSelection(false); setCurrentScreen("countryunion"); };
 
@@ -67,7 +65,6 @@ const IndexContent = () => {
     handleCloseRoles,
     handleSelectOperators,
     handleSelectMembers,
-    handleSelectCollaborator,
     handleSelectAmbassador,
     handleSelectCountryUnion,
     handleBackToHome,
@@ -102,11 +99,6 @@ const IndexContent = () => {
             <MemberForm onBack={memoizedHandlers.handleBackToHome} />
           </PageTransition>
         )}
-        {currentScreen === "collaborator" && (
-          <PageTransition keyProp="collaborator">
-            <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
-          </PageTransition>
-        )}
         {currentScreen === "ambassador" && (
           <PageTransition keyProp="ambassador">
             <AmbassadorForm onBack={memoizedHandlers.handleBackToHome} />
@@ -124,7 +116,6 @@ const IndexContent = () => {
         onClose={memoizedHandlers.handleCloseRoles}
         onSelectOperators={memoizedHandlers.handleSelectOperators}
         onSelectMembers={memoizedHandlers.handleSelectMembers}
-        onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
         onSelectAmbassador={memoizedHandlers.handleSelectAmbassador}
         onSelectCountryUnion={memoizedHandlers.handleSelectCountryUnion}
       />
