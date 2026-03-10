@@ -15,7 +15,7 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useSound = () => {
+export const useSound = (): SoundContextType => {
   const context = useContext(SoundContext);
   if (!context) {
     throw new Error("useSound must be used within a SoundProvider");
