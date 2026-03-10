@@ -139,7 +139,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
               </motion.p>
             </div>
 
-            {/* Role Cards Grid - 3x2 */}
+            {/* Role Cards Grid - 2x3 on mobile, adapt on desktop */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 max-w-4xl mx-auto px-2 md:px-4">
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -182,7 +182,7 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                 <RoleCard
                   title="Ambassador"
                   label="Individual"
-                  description="Represent TISYA in your country and lead locally."
+                  description="Represent TISYA across your country, campus, or community."
                   icon={<Flag className="w-5 h-5 md:w-6 md:h-6" />}
                   backgroundImage={collaboratorBg}
                   onClick={handleAmbassadorSelect}
@@ -200,24 +200,8 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
                   label="Organization"
                   description="Register your NGO, union, or institution for affiliation."
                   icon={<Building2 className="w-5 h-5 md:w-6 md:h-6" />}
-                  backgroundImage={operatorBg}
+                  backgroundImage={countryUnionBg}
                   onClick={handleCountryUnionSelect}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.35, duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-                onMouseEnter={playHover}
-              >
-                <RoleCard
-                  title="Partner / Sponsor"
-                  label="Business"
-                  description="Propose financial or strategic partnerships with TISYA."
-                  icon={<Handshake className="w-5 h-5 md:w-6 md:h-6" />}
-                  backgroundImage={collaboratorBg}
-                  onClick={handleCollaboratorSelect}
                 />
               </motion.div>
 

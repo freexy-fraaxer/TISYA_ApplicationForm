@@ -116,7 +116,6 @@ const IndexContent = () => {
         onClose={memoizedHandlers.handleCloseRoles}
         onSelectOperators={memoizedHandlers.handleSelectOperators}
         onSelectMembers={memoizedHandlers.handleSelectMembers}
-        onSelectCollaborator={memoizedHandlers.handleSelectCollaborator}
         onSelectAmbassador={memoizedHandlers.handleSelectAmbassador}
         onSelectCountryUnion={memoizedHandlers.handleSelectCountryUnion}
       />
