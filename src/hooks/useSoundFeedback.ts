@@ -220,24 +220,49 @@ export const useSoundFeedback = () => {
     });
   }, []);
 
-  // Collaborator - handshake/partnership flourish
-  const playCollaboratorSelect = useCallback(() => {
+  // Ambassador - heroic brass-like fanfare (leadership)
+  const playAmbassadorSelect = useCallback(() => {
     if (!isEnabledRef.current || !audioContextRef.current) return;
     const ctx = audioContextRef.current;
     const now = ctx.currentTime;
 
-    // Two-part handshake sound
-    [392, 523.25].forEach((freq, i) => { // G4, C5 - partnership resolution
+    // Bold ascending power chord - D4, F#4, A4, D5
+    const notes = [293.66, 369.99, 440, 587.33];
+    notes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, now + i * 0.1);
-      gain.gain.setValueAtTime(0.12, now + i * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(freq, now + i * 0.07);
+      gain.gain.setValueAtTime(0, now + i * 0.07);
+      gain.gain.linearRampToValueAtTime(0.08, now + i * 0.07 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.3);
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.start(now + i * 0.1);
-      osc.stop(now + i * 0.1 + 0.25);
+      osc.start(now + i * 0.07);
+      osc.stop(now + i * 0.07 + 0.35);
+    });
+  }, []);
+
+  // Country Union - deep resonant gong/bell (institutional gravitas)
+  const playCountryUnionSelect = useCallback(() => {
+    if (!isEnabledRef.current || !audioContextRef.current) return;
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    // Deep bell tone with harmonics - E3, B3, E4
+    const tones = [164.81, 246.94, 329.63];
+    tones.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(i === 0 ? 0.15 : 0.08, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.65);
     });
   }, []);
 
