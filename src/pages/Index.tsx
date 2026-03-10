@@ -51,7 +51,6 @@ const IndexContent = () => {
 
   const handleSelectOperators = () => { setShowRoleSelection(false); setCurrentScreen("operators"); };
   const handleSelectMembers = () => { setShowRoleSelection(false); setCurrentScreen("members"); };
-  const handleSelectCollaborator = () => { setShowRoleSelection(false); setCurrentScreen("collaborator"); };
   const handleSelectAmbassador = () => { setShowRoleSelection(false); setCurrentScreen("ambassador"); };
   const handleSelectCountryUnion = () => { setShowRoleSelection(false); setCurrentScreen("countryunion"); };
 
@@ -66,7 +65,6 @@ const IndexContent = () => {
     handleCloseRoles,
     handleSelectOperators,
     handleSelectMembers,
-    handleSelectCollaborator,
     handleSelectAmbassador,
     handleSelectCountryUnion,
     handleBackToHome,
