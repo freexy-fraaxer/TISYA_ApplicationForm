@@ -20,14 +20,15 @@ interface RoleSelectionProps {
   onSelectCountryUnion: () => void;
 }
 
-const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectCollaborator, onSelectAmbassador, onSelectCountryUnion }: RoleSelectionProps) => {
+const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, onSelectAmbassador, onSelectCountryUnion }: RoleSelectionProps) => {
   const { 
     playAmbientTone, 
     playBack,
     playHover,
     playPathfinderSelect, 
     playOperatorSelect, 
-    playCollaboratorSelect,
+    playAmbassadorSelect,
+    playCountryUnionSelect,
     playInternSelect
   } = useSound();
 
