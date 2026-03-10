@@ -4,7 +4,6 @@ import HomePage from "@/components/HomePage";
 import RoleSelection from "@/components/RoleSelection";
 import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
-import CollaboratorForm from "@/components/CollaboratorForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
 import CountryUnionForm from "@/components/CountryUnionForm";
 import SplashScreen from "@/components/SplashScreen";
