@@ -99,11 +99,6 @@ const IndexContent = () => {
             <MemberForm onBack={memoizedHandlers.handleBackToHome} />
           </PageTransition>
         )}
-        {currentScreen === "collaborator" && (
-          <PageTransition keyProp="collaborator">
-            <CollaboratorForm onBack={memoizedHandlers.handleBackToHome} />
-          </PageTransition>
-        )}
         {currentScreen === "ambassador" && (
           <PageTransition keyProp="ambassador">
             <AmbassadorForm onBack={memoizedHandlers.handleBackToHome} />
