@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import RoleCard from "./RoleCard";
-import { Users, Wrench, Handshake, GraduationCap, X, Flag, Building2 } from "lucide-react";
+import { Users, Wrench, GraduationCap, X, Flag, Building2 } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 
 // Import role card background images
@@ -9,13 +9,13 @@ import pathfinderBg from "@/assets/role-pathfinder.png";
 import operatorBg from "@/assets/role-operator.png";
 import collaboratorBg from "@/assets/role-collaborator.png";
 import internBg from "@/assets/role-intern.png";
+import countryUnionBg from "@/assets/role-countryunion.png";
 
 interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectOperators: () => void;
   onSelectMembers: () => void;
-  onSelectCollaborator: () => void;
   onSelectAmbassador: () => void;
   onSelectCountryUnion: () => void;
 }
