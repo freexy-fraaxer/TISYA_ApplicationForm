@@ -25,7 +25,7 @@ const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode;
 ));
 PageTransition.displayName = 'PageTransition';
 
-type Screen = "home" | "operators" | "members" | "collaborator" | "ambassador" | "countryunion";
+type Screen = "home" | "operators" | "members" | "ambassador" | "countryunion";
 
 const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
