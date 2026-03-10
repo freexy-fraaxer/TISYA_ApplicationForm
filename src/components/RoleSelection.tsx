@@ -54,18 +54,13 @@ const RoleSelection = ({ isOpen, onClose, onSelectOperators, onSelectMembers, on
     onSelectOperators();
   };
 
-  const handleCollaboratorSelect = () => {
-    playCollaboratorSelect();
-    onSelectCollaborator();
-  };
-
   const handleAmbassadorSelect = () => {
-    playCollaboratorSelect();
+    playAmbassadorSelect();
     onSelectAmbassador();
   };
 
   const handleCountryUnionSelect = () => {
-    playCollaboratorSelect();
+    playCountryUnionSelect();
     onSelectCountryUnion();
   };
 
