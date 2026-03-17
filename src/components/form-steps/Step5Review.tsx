@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import PreSubmitSummary from "../shared/PreSubmitSummary";
+import CommitmentModal from "../shared/CommitmentModal";
 
 interface Step5Props {
   formData: FormData;
@@ -92,6 +93,13 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
           </div>
         </div>
       </div>
+
+      {/* Commitment Checkbox */}
+      <CommitmentModal
+        roleName="Operator"
+        checked={formData.consent_commitment}
+        onCheckedChange={(checked) => updateFormData({ consent_commitment: checked })}
+      />
 
       {/* Consent Checkboxes */}
       <div className="space-y-4">
