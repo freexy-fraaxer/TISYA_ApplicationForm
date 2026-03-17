@@ -251,7 +251,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
             type="button"
             onClick={() => updateFormData({ 
               previous_volunteering: false,
-              previous_volunteering_experience: "" // Clear experience when "No"
+              previous_volunteering_experience: ""
             })}
             className={cn(
               "chip px-6",
@@ -262,7 +262,6 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
           </button>
         </div>
         
-        {/* Conditional experience textarea */}
         {formData.previous_volunteering === true && (
           <div className="mt-3 space-y-2">
             <Label className="text-sm font-medium text-muted-foreground">
@@ -283,6 +282,28 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Project Experience - NEW REQUIRED FIELD */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">
+          Tell us about something you've actually worked on <span className="text-destructive">*</span>
+        </Label>
+        <HelperText>A project, event, initiative — anything. What was your role?</HelperText>
+        <Textarea
+          placeholder="e.g. I organized a campus cleanup with 50 volunteers, handled logistics and outreach..."
+          value={formData.project_experience}
+          onChange={(e) => {
+            if (e.target.value.length <= 600) {
+              updateFormData({ project_experience: e.target.value });
+            }
+          }}
+          className="bg-secondary/50 border-border focus:border-primary min-h-[100px]"
+        />
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>{formData.project_experience.length < 400 ? `${400 - formData.project_experience.length} more chars needed` : "✓ Good length"}</span>
+          <span>{formData.project_experience.length}/600</span>
+        </div>
       </div>
 
       {/* Additional Info */}

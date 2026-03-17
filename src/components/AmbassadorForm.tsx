@@ -18,6 +18,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
+import CommitmentModal from "./shared/CommitmentModal";
+import HelperText from "./shared/HelperText";
+import { cn } from "@/lib/utils";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 
 interface AmbassadorFormProps {
@@ -27,15 +30,35 @@ interface AmbassadorFormProps {
 const ambassadorTypes = [
   "Country Ambassador",
   "Campus Ambassador",
-  "City Ambassador",
   "Regional Ambassador",
   "Community Ambassador",
-  "Other",
 ];
+
+const reachOptions = [
+  "University students",
+  "International students",
+  "Student communities",
+  "NGOs / organizations",
+  "Event organizers / spaces",
+];
+
+const presenceOptions = [
+  "I create content",
+  "I speak / present",
+  "I organize people",
+  "I connect people",
+  "I don't yet, but want to",
+];
+
+const dynamicWhyQuestions: Record<string, string> = {
+  "Country Ambassador": "How would you bring together students from your country in Türkiye under TİSYA?",
+  "Campus Ambassador": "How would you introduce TİSYA in your university?",
+  "Regional Ambassador": "How would you build a TİSYA presence in your city?",
+  "Community Ambassador": "How would you connect your existing community with TİSYA?",
+};
 
 interface AmbassadorFormData {
   ambassador_type: string;
-  ambassador_type_other: string;
   full_name: string;
   email: string;
   phone: string;
@@ -45,15 +68,17 @@ interface AmbassadorFormData {
   linkedin: string;
   previous_involvement: boolean;
   involvement_details: string;
+  reach_network: string[];
+  presence: string[];
   why_ambassador: string;
   experience: string;
+  consent_commitment: boolean;
   consent: boolean;
   honeypot: string;
 }
 
 const initialData: AmbassadorFormData = {
   ambassador_type: "",
-  ambassador_type_other: "",
   full_name: "",
   email: "",
   phone: "",
@@ -63,14 +88,17 @@ const initialData: AmbassadorFormData = {
   linkedin: "",
   previous_involvement: false,
   involvement_details: "",
+  reach_network: [],
+  presence: [],
   why_ambassador: "",
   experience: "",
+  consent_commitment: false,
   consent: false,
   honeypot: "",
 };
 
 const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
-  const { playBack } = useSound();
+  const { playBack, playTick } = useSound();
   const [formData, setFormData] = useState<AmbassadorFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -85,10 +113,19 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
 
+  const toggleChip = (field: "reach_network" | "presence", value: string) => {
+    playTick();
+    const current = formData[field];
+    if (current.includes(value)) {
+      update({ [field]: current.filter((v) => v !== value) });
+    } else {
+      update({ [field]: [...current, value] });
+    }
+  };
+
   useEffect(() => {
     const e: Record<string, string | null> = {};
     if (touched.ambassador_type) e.ambassador_type = formData.ambassador_type ? null : "Ambassador type is required";
-    if (touched.ambassador_type_other && formData.ambassador_type === "Other") e.ambassador_type_other = getRequiredError(formData.ambassador_type_other, "This field");
     if (touched.full_name) e.full_name = getRequiredError(formData.full_name, "Full name");
     if (touched.email) e.email = getEmailError(formData.email);
     if (touched.phone) e.phone = getRequiredError(formData.phone, "Phone number");
@@ -100,7 +137,6 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
   const canSubmit =
     formData.ambassador_type &&
-    (formData.ambassador_type !== "Other" || formData.ambassador_type_other.trim()) &&
     formData.full_name.trim() &&
     formData.email.trim() &&
     validateEmail(formData.email) &&
@@ -108,11 +144,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     formData.country &&
     formData.why_ambassador.trim() &&
     formData.experience.trim() &&
+    formData.consent_commitment &&
     formData.consent;
 
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
-    // No backend yet — just show success
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
@@ -124,6 +160,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     playBack();
     onBack();
   };
+
+  const whyQuestion = dynamicWhyQuestions[formData.ambassador_type] || "Why do you want to become an Ambassador?";
 
   if (isSuccess) {
     return (
@@ -144,7 +182,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Application Received!</h2>
           <p className="text-muted-foreground mb-8">
-            Thank you for your interest in becoming an Ambassador. We'll review your application and get back to you soon.
+            Thank you for stepping up as an Ambassador. We'll review your application and get back to you soon.
           </p>
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
@@ -181,9 +219,9 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Ambassador Application</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Become an Ambassador</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Ambassadors represent TISYA within a defined scope — such as a country, campus, city, region, or community. Please select the type of representation you are applying for.
+            Ambassadors represent TİSYA within a defined scope — a country, campus, region, or community. Pick your lane and show us what you've got.
           </p>
         </div>
 
@@ -197,7 +235,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             <Select
               value={formData.ambassador_type}
               onValueChange={(v) => {
-                update({ ambassador_type: v, ambassador_type_other: v !== "Other" ? "" : formData.ambassador_type_other });
+                update({ ambassador_type: v, why_ambassador: "" });
                 setTouched((prev) => ({ ...prev, ambassador_type: true }));
               }}
             >
@@ -212,27 +250,6 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             </Select>
             <FormFieldError error={errors.ambassador_type || null} />
           </div>
-
-          <AnimatePresence>
-            {formData.ambassador_type === "Other" && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden space-y-2"
-              >
-                <Label className="text-sm font-medium">Please specify <span className="text-destructive">*</span></Label>
-                <Input
-                  placeholder="Describe your ambassador type"
-                  value={formData.ambassador_type_other}
-                  onChange={(e) => update({ ambassador_type_other: e.target.value })}
-                  onBlur={() => handleBlur("ambassador_type_other")}
-                  className={`bg-secondary/50 border-border focus:border-primary ${errors.ambassador_type_other ? "border-destructive" : ""}`}
-                />
-                <FormFieldError error={errors.ambassador_type_other || null} />
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Full Name */}
           <div className="space-y-2">
@@ -323,7 +340,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             </div>
           </div>
 
-          {/* Institution */}
+          {/* Institution - conditional */}
           <AnimatePresence>
             {["Campus Ambassador", "Community Ambassador"].includes(formData.ambassador_type) && (
               <motion.div
@@ -337,7 +354,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
                   {formData.ambassador_type === "Campus Ambassador" ? "University / Institution" : "Organization / Community"}
                 </Label>
                 <Input
-                  placeholder={formData.ambassador_type === "Campus Ambassador" ? "e.g. Harvard University" : "e.g. Local Youth Council"}
+                  placeholder={formData.ambassador_type === "Campus Ambassador" ? "e.g. Istanbul University" : "e.g. Local Youth Council"}
                   value={formData.institution}
                   onChange={(e) => update({ institution: e.target.value })}
                   className="bg-secondary/50 border-border focus:border-primary"
@@ -364,7 +381,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">
-                Have you previously been involved with TISYA?
+                Have you been involved with TİSYA before?
               </Label>
               <Switch
                 checked={formData.previous_involvement}
@@ -380,7 +397,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
                   className="overflow-hidden"
                 >
                   <Textarea
-                    placeholder="Describe your involvement..."
+                    placeholder="Tell us what you did..."
                     value={formData.involvement_details}
                     onChange={(e) => update({ involvement_details: e.target.value })}
                     className="bg-secondary/50 border-border focus:border-primary"
@@ -391,39 +408,110 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             </AnimatePresence>
           </div>
 
-          {/* Why Ambassador */}
+          {/* Your Reach & Network */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">
+              Who do you have access to?
+            </Label>
+            <HelperText>Pick all that apply — this helps us understand your reach.</HelperText>
+            <div className="flex flex-wrap gap-2">
+              {reachOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => toggleChip("reach_network", option)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-300",
+                    formData.reach_network.includes(option)
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border/50 bg-secondary/30 text-muted-foreground hover:border-primary/50"
+                  )}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Your Presence */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">
+              How do you usually engage with people?
+            </Label>
+            <HelperText>No wrong answer — we want to know your style.</HelperText>
+            <div className="flex flex-wrap gap-2">
+              {presenceOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => toggleChip("presence", option)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all duration-300",
+                    formData.presence.includes(option)
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border/50 bg-secondary/30 text-muted-foreground hover:border-primary/50"
+                  )}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dynamic Why Question */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              Why do you want to become an Ambassador? <span className="text-destructive">*</span>
+              {whyQuestion} <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder="Share your motivation..."
+              placeholder="Be specific — we love real answers over polished ones."
               value={formData.why_ambassador}
-              onChange={(e) => update({ why_ambassador: e.target.value })}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  update({ why_ambassador: e.target.value });
+                }
+              }}
               onBlur={() => handleBlur("why_ambassador")}
               className={`bg-secondary/50 border-border focus:border-primary ${errors.why_ambassador ? "border-destructive" : ""}`}
               rows={4}
             />
-            <FormFieldError error={errors.why_ambassador || null} />
+            <div className="flex justify-between">
+              <FormFieldError error={errors.why_ambassador || null} />
+              <span className="text-xs text-muted-foreground">{formData.why_ambassador.length}/500</span>
+            </div>
           </div>
 
           {/* Experience */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              What experience makes you suitable for this role? <span className="text-destructive">*</span>
+              What experience makes you right for this? <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder="Relevant leadership, community, or organizational experience..."
+              placeholder="Leadership, community work, events you've run — anything relevant."
               value={formData.experience}
-              onChange={(e) => update({ experience: e.target.value })}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  update({ experience: e.target.value });
+                }
+              }}
               onBlur={() => handleBlur("experience")}
               className={`bg-secondary/50 border-border focus:border-primary ${errors.experience ? "border-destructive" : ""}`}
               rows={4}
             />
-            <FormFieldError error={errors.experience || null} />
+            <div className="flex justify-between">
+              <FormFieldError error={errors.experience || null} />
+              <span className="text-xs text-muted-foreground">{formData.experience.length}/500</span>
+            </div>
           </div>
 
-          {/* Consent */}
+          {/* Commitment Checkbox */}
+          <CommitmentModal
+            roleName="Ambassador"
+            checked={formData.consent_commitment}
+            onCheckedChange={(checked) => update({ consent_commitment: checked })}
+          />
+
+          {/* Data Consent */}
           <div className="flex items-start gap-3 pt-2">
             <Checkbox
               id="ambassador-consent"
@@ -432,7 +520,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               className="mt-1"
             />
             <Label htmlFor="ambassador-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              I consent to TISYA storing my data for the purpose of this application. <span className="text-destructive">*</span>
+              I consent to TİSYA storing my data for this application. <span className="text-destructive">*</span>
             </Label>
           </div>
         </div>

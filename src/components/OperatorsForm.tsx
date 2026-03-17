@@ -39,7 +39,7 @@ const OPERATOR_MICROCOPY = [
 ];
 
 export interface FormData {
-  // Step 1 - matching backend field names exactly
+  // Step 1
   full_name: string;
   email: string;
   contact_number: string;
@@ -78,12 +78,14 @@ export interface FormData {
   working_style: string[];
   previous_volunteering: boolean | null;
   previous_volunteering_experience: string;
+  project_experience: string;
   additional_info: string;
   
   // Step 4b - Fun Tags
   fun_tags: string[];
   
   // Step 5
+  consent_commitment: boolean;
   consent_data_storage: boolean;
   consent_updates: boolean;
   
@@ -122,8 +124,10 @@ const initialFormData: FormData = {
   working_style: [],
   previous_volunteering: null,
   previous_volunteering_experience: "",
+  project_experience: "",
   additional_info: "",
   fun_tags: [],
+  consent_commitment: false,
   consent_data_storage: false,
   consent_updates: false,
   honeypot: "",
@@ -152,7 +156,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
-    // Clear error when user makes changes
     if (submitError) setSubmitError(null);
   };
 
@@ -182,12 +185,13 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           formData.impact_preference &&
           formData.involvement_level &&
           formData.hours_per_week &&
-          formData.previous_volunteering !== null
+          formData.previous_volunteering !== null &&
+          formData.project_experience.trim().length >= 400
         );
       case 6:
-        return true; // Fun tags are optional
+        return true;
       case 7:
-        return formData.consent_data_storage;
+        return formData.consent_data_storage && formData.consent_commitment;
       default:
         return true;
     }
@@ -210,7 +214,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
   };
 
   const handleSubmit = async () => {
-    // Prevent duplicate submissions
     if (!canProceed || formData.honeypot || isSubmitting) return;
 
     setIsSubmitting(true);
@@ -249,8 +252,10 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         working_style: formData.working_style.length > 0 ? formData.working_style : null,
         previous_volunteering: formData.previous_volunteering,
         previous_volunteering_experience: formData.previous_volunteering === true ? (formData.previous_volunteering_experience || null) : null,
+        project_experience: formData.project_experience,
         additional_info: formData.additional_info || null,
         fun_tags: formData.fun_tags.length > 0 ? formData.fun_tags : null,
+        consent_commitment: formData.consent_commitment,
         consent_data_storage: formData.consent_data_storage,
         consent_updates: formData.consent_updates,
       },
@@ -266,12 +271,10 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
 
       const result = await response.json();
 
-      // Handle success: false from backend
       if (!result.success) {
         throw new Error(result.error || result.message || "Submission failed");
       }
 
-      // Use the referenceId returned by the API
       setApplicationId(result.referenceId || null);
       setIsSuccess(true);
     } catch (error) {
@@ -321,7 +324,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Back to roles button */}
         <motion.button
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
           onClick={handleBackToRoles}
@@ -331,7 +333,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           <span>Back to roles</span>
         </motion.button>
 
-        {/* Progress Section */}
         <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
@@ -339,7 +340,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           completedMicrocopy={OPERATOR_MICROCOPY}
         />
 
-        {/* Hidden honeypot field */}
         <input
           type="text"
           name="honeypot"
@@ -350,7 +350,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           autoComplete="off"
         />
 
-        {/* Form Steps */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -364,7 +363,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Error message */}
         {submitError && (
           <motion.div
             className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm"
@@ -375,7 +373,6 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           </motion.div>
         )}
 
-        {/* Navigation */}
         <div className="flex justify-between mt-8">
           <HeroButton
             variant="ghost"

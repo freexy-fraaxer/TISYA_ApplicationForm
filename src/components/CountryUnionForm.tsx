@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
+import CommitmentModal from "./shared/CommitmentModal";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 
 interface CountryUnionFormProps {
@@ -33,6 +34,9 @@ interface CountryUnionFormData {
   website: string;
   scope_of_work: string;
   why_affiliate: string;
+  student_challenges: string;
+  first_steps: string;
+  consent_commitment: boolean;
   consent: boolean;
   honeypot: string;
 }
@@ -48,6 +52,9 @@ const initialData: CountryUnionFormData = {
   website: "",
   scope_of_work: "",
   why_affiliate: "",
+  student_challenges: "",
+  first_steps: "",
+  consent_commitment: false,
   consent: false,
   honeypot: "",
 };
@@ -83,6 +90,8 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
     if (touched.org_type) e.org_type = formData.org_type ? null : "Organization type is required";
     if (touched.contact_name) e.contact_name = getRequiredError(formData.contact_name, "Contact person name");
     if (touched.contact_email) e.contact_email = getEmailError(formData.contact_email);
+    if (touched.student_challenges) e.student_challenges = getRequiredError(formData.student_challenges, "This field");
+    if (touched.first_steps) e.first_steps = getRequiredError(formData.first_steps, "This field");
     setErrors(e);
   }, [formData, touched]);
 
@@ -93,6 +102,9 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
     formData.contact_name.trim() &&
     formData.contact_email.trim() &&
     validateEmail(formData.contact_email) &&
+    formData.student_challenges.trim() &&
+    formData.first_steps.trim() &&
+    formData.consent_commitment &&
     formData.consent;
 
   const handleSubmit = async () => {
@@ -128,7 +140,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Registration Received!</h2>
           <p className="text-muted-foreground mb-8">
-            Thank you for registering your organization. Our team will review your submission and reach out to discuss the affiliation process.
+            Thank you for registering your organization. Our team will review your submission and reach out to discuss next steps.
           </p>
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
@@ -167,7 +179,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-foreground mb-2">Register Your Organization</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            This form is for country unions, NGOs, academic institutions, and youth organizations seeking long-term structural affiliation with TISYA. This is not for sponsorships — if you're looking to sponsor or partner, please use the Partner / Sponsor form instead.
+            For country unions, NGOs, academic institutions, and youth organizations seeking structural affiliation with TİSYA. Not a sponsorship form — this is about long-term partnership.
           </p>
         </div>
 
@@ -318,7 +330,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium">Scope of Work</Label>
             <Textarea
-              placeholder="Describe your organization's main activities and areas of focus..."
+              placeholder="What does your organization do? Main activities and focus areas..."
               value={formData.scope_of_work}
               onChange={(e) => update({ scope_of_work: e.target.value })}
               className="bg-secondary/50 border-border focus:border-primary"
@@ -328,7 +340,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
 
           {/* Why Affiliate */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Why do you want to affiliate with TISYA?</Label>
+            <Label className="text-sm font-medium">Why do you want to affiliate with TİSYA?</Label>
             <Textarea
               placeholder="Share your vision for this affiliation..."
               value={formData.why_affiliate}
@@ -338,7 +350,60 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             />
           </div>
 
-          {/* Consent */}
+          {/* Student Challenges - NEW */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              What challenges do students from your country face in Türkiye? <span className="text-destructive">*</span>
+            </Label>
+            <Textarea
+              placeholder="Housing, language barriers, cultural adjustment, lack of community — be real about it."
+              value={formData.student_challenges}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  update({ student_challenges: e.target.value });
+                }
+              }}
+              onBlur={() => handleBlur("student_challenges")}
+              className={`bg-secondary/50 border-border focus:border-primary ${errors.student_challenges ? "border-destructive" : ""}`}
+              rows={4}
+            />
+            <div className="flex justify-between">
+              <FormFieldError error={errors.student_challenges || null} />
+              <span className="text-xs text-muted-foreground">{formData.student_challenges.length}/500</span>
+            </div>
+          </div>
+
+          {/* First Steps - NEW */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              If approved, what would your first steps be in collaboration with TİSYA? <span className="text-destructive">*</span>
+            </Label>
+            <Textarea
+              placeholder="Outreach plan, event ideas, community building — what would you do in the first 30 days?"
+              value={formData.first_steps}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  update({ first_steps: e.target.value });
+                }
+              }}
+              onBlur={() => handleBlur("first_steps")}
+              className={`bg-secondary/50 border-border focus:border-primary ${errors.first_steps ? "border-destructive" : ""}`}
+              rows={4}
+            />
+            <div className="flex justify-between">
+              <FormFieldError error={errors.first_steps || null} />
+              <span className="text-xs text-muted-foreground">{formData.first_steps.length}/500</span>
+            </div>
+          </div>
+
+          {/* Commitment Checkbox */}
+          <CommitmentModal
+            roleName="Country Union"
+            checked={formData.consent_commitment}
+            onCheckedChange={(checked) => update({ consent_commitment: checked })}
+          />
+
+          {/* Data Consent */}
           <div className="flex items-start gap-3 pt-2">
             <Checkbox
               id="union-consent"
@@ -347,7 +412,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
               className="mt-1"
             />
             <Label htmlFor="union-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              I consent to TISYA storing this data for affiliation purposes. <span className="text-destructive">*</span>
+              I consent to TİSYA storing this data for affiliation purposes. <span className="text-destructive">*</span>
             </Label>
           </div>
         </div>

@@ -1,17 +1,18 @@
-import { useRef } from "react";
 import { MemberFormData } from "../MemberForm";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
+  Sparkles,
   Users,
   Calendar,
-  Lightbulb,
-  Rocket,
-  Globe,
   Camera,
-  FolderKanban,
+  Rocket,
+  GraduationCap,
+  Search,
+  Heart,
+  Hammer,
+  HelpCircle,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
@@ -21,38 +22,37 @@ interface Step2Props {
   updateFormData: (updates: Partial<MemberFormData>) => void;
 }
 
-const interestZones = [
-  { id: "Community", label: "Community", icon: Users },
+const attentionOptions = [
+  { id: "explore_opportunities", label: "I want to explore opportunities", icon: Search },
+  { id: "meet_people", label: "I want to meet people", icon: Heart },
+  { id: "build_something", label: "I want to build something", icon: Hammer },
+  { id: "just_curious", label: "I'm just curious", icon: HelpCircle },
+];
+
+const participationOptions = [
   { id: "Events", label: "Events", icon: Calendar },
-  { id: "Skills", label: "Skills", icon: Lightbulb },
-  { id: "Opportunities", label: "Opportunities", icon: Rocket },
-  { id: "Diplomacy", label: "Diplomacy", icon: Globe },
-  { id: "Media", label: "Media", icon: Camera },
-  { id: "Projects", label: "Projects", icon: FolderKanban },
+  { id: "Media / Content", label: "Media / Content", icon: Camera },
+  { id: "Projects / Startups", label: "Projects / Startups", icon: Rocket },
+  { id: "Community", label: "Community", icon: Users },
+  { id: "Learning / Skill-building", label: "Learning / Skill-building", icon: GraduationCap },
 ];
 
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
-  const { playSliderTick, playTick } = useSound();
-  const lastTickValue = useRef(formData.community_vibe);
+  const { playTick } = useSound();
 
-  const toggleZone = (zone: string) => {
+  const selectAttention = (id: string) => {
     playTick();
-    const current = formData.interests;
-    if (current.includes(zone)) {
-      updateFormData({ interests: current.filter((z) => z !== zone) });
-    } else {
-      updateFormData({ interests: [...current, zone] });
-    }
+    updateFormData({ attention_reason: id });
   };
 
-  const handleSliderChange = (value: number[]) => {
-    const newValue = value[0];
-    // Play tick sound every 10 units of change
-    if (Math.abs(newValue - lastTickValue.current) >= 10) {
-      playSliderTick();
-      lastTickValue.current = newValue;
+  const toggleParticipation = (id: string) => {
+    playTick();
+    const current = formData.interests;
+    if (current.includes(id)) {
+      updateFormData({ interests: current.filter((z) => z !== id) });
+    } else {
+      updateFormData({ interests: [...current, id] });
     }
-    updateFormData({ community_vibe: newValue });
   };
 
   return (
@@ -60,28 +60,83 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Find your space
+          Your Vibe
         </h2>
         <p className="text-muted-foreground">
-          What brings you here?
+          No wrong answers — just be honest
         </p>
       </div>
 
-      {/* Interest Zones Grid */}
+      {/* What caught your attention - Single Select */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium">
-          What are you interested in? <span className="text-destructive">*</span>
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-muted-foreground" />
+          What caught your attention about TİSYA? <span className="text-destructive">*</span>
         </Label>
-        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {interestZones.map((zone, index) => {
-            const Icon = zone.icon;
-            const isSelected = formData.interests.includes(zone.id);
+        <HelperText>Pick the one that fits best.</HelperText>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {attentionOptions.map((option, index) => {
+            const Icon = option.icon;
+            const isSelected = formData.attention_reason === option.id;
             return (
               <motion.button
-                key={zone.id}
+                key={option.id}
                 type="button"
-                onClick={() => toggleZone(zone.id)}
+                onClick={() => selectAttention(option.id)}
+                className={cn(
+                  "p-4 rounded-xl border-2 transition-all duration-300 flex items-center gap-3 text-left",
+                  isSelected
+                    ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(56,189,248,0.15)]"
+                    : "border-border/50 bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50"
+                )}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div
+                  className={cn(
+                    "w-10 h-10 rounded-lg flex items-center justify-center transition-colors shrink-0",
+                    isSelected ? "bg-primary/20" : "bg-secondary"
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "w-5 h-5",
+                      isSelected ? "text-primary" : "text-muted-foreground"
+                    )}
+                  />
+                </div>
+                <span
+                  className={cn(
+                    "text-sm font-medium",
+                    isSelected ? "text-primary" : "text-foreground"
+                  )}
+                >
+                  {option.label}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* What would you like to be part of - Multi Select */}
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">
+          What would you like to be part of? <span className="text-destructive">*</span>
+        </Label>
+        <HelperText>Pick as many as you like.</HelperText>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {participationOptions.map((option, index) => {
+            const Icon = option.icon;
+            const isSelected = formData.interests.includes(option.id);
+            return (
+              <motion.button
+                key={option.id}
+                type="button"
+                onClick={() => toggleParticipation(option.id)}
                 className={cn(
                   "p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2",
                   isSelected
@@ -109,37 +164,15 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
                 </div>
                 <span
                   className={cn(
-                    "text-sm font-medium",
+                    "text-sm font-medium text-center",
                     isSelected ? "text-primary" : "text-foreground"
                   )}
                 >
-                  {zone.label}
+                  {option.label}
                 </span>
               </motion.button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Community Vibe Slider */}
-      <div className="space-y-4">
-        <Label className="text-sm font-medium">
-          How social are you in communities?
-        </Label>
-        <HelperText>Life happens, just be honest.</HelperText>
-        <div className="space-y-3">
-          <div className="flex justify-between text-xs">
-            <span className="text-muted-foreground">Quiet</span>
-            <span className="text-muted-foreground">Social</span>
-          </div>
-          <Slider
-            value={[formData.community_vibe]}
-            onValueChange={handleSliderChange}
-            min={0}
-            max={100}
-            step={1}
-            className="w-full"
-          />
         </div>
       </div>
     </div>

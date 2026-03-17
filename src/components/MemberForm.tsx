@@ -27,7 +27,7 @@ const MEMBER_MICROCOPY = [
 ];
 
 export interface MemberFormData {
-  // Step 1 - matching backend field names exactly
+  // Step 1
   full_name: string;
   email: string;
   contact_number: string;
@@ -37,8 +37,8 @@ export interface MemberFormData {
   department_of_study: string;
   
   // Step 2
+  attention_reason: string;
   interests: string[];
-  community_vibe: number;
   
   // Step 3
   referral_source: string[];
@@ -58,8 +58,8 @@ const initialFormData: MemberFormData = {
   nationality: "",
   university: "",
   department_of_study: "",
+  attention_reason: "",
   interests: [],
-  community_vibe: 50,
   referral_source: [],
   source_other: "",
   consent_data_storage: false,
@@ -90,7 +90,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
 
   const updateFormData = (updates: Partial<MemberFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
-    // Clear error when user makes changes
     if (submitError) setSubmitError(null);
   };
 
@@ -106,7 +105,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           formData.university.trim()
         );
       case 2:
-        return formData.interests.length > 0;
+        return !!(formData.attention_reason && formData.interests.length > 0);
       case 3:
         return formData.consent_data_storage;
       default:
@@ -131,19 +130,17 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   };
 
   const handleSubmit = async () => {
-    // Prevent duplicate submissions
     if (!canProceed || formData.honeypot || isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
 
-    // Determine final source value: if "Other" is selected, use source_other text
     const getFinalSource = () => {
       if (formData.referral_source.includes("Other") && formData.source_other.trim()) {
         return formData.source_other.trim();
       }
       if (formData.referral_source.length > 0) {
-        return formData.referral_source[0]; // Single selection
+        return formData.referral_source[0];
       }
       return null;
     };
@@ -158,8 +155,8 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         Nationality: formData.nationality,
         University: formData.university,
         Department_of_Study: formData.department_of_study || null,
+        Attention_Reason: formData.attention_reason,
         Interests: formData.interests.length > 0 ? formData.interests : null,
-        Community_Vibe: formData.community_vibe,
         Source: getFinalSource(),
         Data_Consent: formData.consent_data_storage,
         Updates_Consent: formData.consent_updates,
@@ -176,7 +173,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         body: JSON.stringify(payload),
       });
 
-      // Check for HTML response (error page)
       const contentType = response.headers.get("content-type");
       const responseText = await response.text();
       
@@ -184,7 +180,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
       console.log("Response content-type:", contentType);
       console.log("Response body:", responseText.substring(0, 500));
 
-      // Check if response is HTML (error page) instead of JSON
       if (!contentType?.includes("application/json") && responseText.trim().startsWith("<!")) {
         throw new Error("API returned an error page. Please try again.");
       }
@@ -198,13 +193,10 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
 
       console.log("Parsed result:", result);
 
-      // Handle success: false from backend
       if (!result.success) {
         throw new Error(result.error || result.message || "Submission failed");
       }
 
-      // Backend handles email confirmation - no frontend email sending
-      // Members do NOT show referenceId
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
@@ -218,7 +210,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     return <MemberSuccessScreen onBack={onBack} />;
   }
 
-  // Optimized step transitions - opacity only to prevent layout reflow
   const stepVariants = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -233,7 +224,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Back to roles button */}
         <motion.button
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
           onClick={handleBackToRoles}
@@ -243,7 +233,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           <span>Back to roles</span>
         </motion.button>
 
-        {/* Progress Section */}
         <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
@@ -251,7 +240,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           completedMicrocopy={MEMBER_MICROCOPY}
         />
 
-        {/* Hidden honeypot field */}
         <input
           type="text"
           name="honeypot"
@@ -262,7 +250,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           autoComplete="off"
         />
 
-        {/* Form Steps */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -284,7 +271,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Error message */}
         {submitError && (
           <motion.div
             className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm"
@@ -295,7 +281,6 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           </motion.div>
         )}
 
-        {/* Navigation */}
         <div className="flex justify-between mt-8">
           <HeroButton
             variant="ghost"
