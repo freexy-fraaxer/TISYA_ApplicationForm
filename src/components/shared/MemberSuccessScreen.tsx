@@ -64,21 +64,39 @@ const MemberSuccessScreen = ({ onBack }: MemberSuccessScreenProps) => {
 
         {/* Success Message */}
         <motion.h2
-          className="text-2xl md:text-3xl font-bold text-foreground mb-4"
+          className="text-2xl md:text-3xl font-bold text-foreground mb-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          Welcome to the Community!
+          Welcome to TISYA
         </motion.h2>
+
+        <motion.p
+          className="text-lg text-primary/80 font-medium mb-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+        >
+          You are now part of The Alliance
+        </motion.p>
+
+        <motion.p
+          className="text-xs text-muted-foreground/60 mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          Path: Pathfinder
+        </motion.p>
 
         <motion.p
           className="text-muted-foreground mb-8"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.55 }}
         >
-          You're now part of TISYA. Connect with fellow Pathfinders and stay updated on everything happening in our community.
+          Connect with fellow Pathfinders and stay updated on everything happening in our community.
         </motion.p>
 
         {/* WhatsApp Community Button */}

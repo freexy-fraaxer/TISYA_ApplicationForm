@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
-import { ArrowLeft, Check, Loader2, Building2, Mail, Phone, Globe, MapPin, User } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Building2, Mail, Phone, Globe, User } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { Input } from "@/components/ui/input";
@@ -16,66 +16,69 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
-import CommitmentModal from "./shared/CommitmentModal";
-import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 
-interface CountryUnionFormProps {
+interface PartnerSponsorFormProps {
   onBack: () => void;
 }
 
-interface CountryUnionFormData {
+interface PartnerFormData {
   org_name: string;
-  country: string;
-  city: string;
   org_type: string;
   contact_name: string;
   contact_email: string;
   contact_phone: string;
   website: string;
-  scope_of_work: string;
-  why_affiliate: string;
-  student_challenges: string;
-  first_steps: string;
-  consent_commitment: boolean;
+  partnership_interest: string;
+  how_support: string;
+  message: string;
   consent: boolean;
   honeypot: string;
 }
 
-const initialData: CountryUnionFormData = {
+const initialData: PartnerFormData = {
   org_name: "",
-  country: "",
-  city: "",
   org_type: "",
   contact_name: "",
   contact_email: "",
   contact_phone: "",
   website: "",
-  scope_of_work: "",
-  why_affiliate: "",
-  student_challenges: "",
-  first_steps: "",
-  consent_commitment: false,
+  partnership_interest: "",
+  how_support: "",
+  message: "",
   consent: false,
   honeypot: "",
 };
 
 const ORG_TYPES = [
-  "Youth Organization",
-  "Union",
-  "NGO",
+  "Corporate / Company",
+  "NGO / Non-Profit",
   "Academic Institution",
+  "Media Organization",
+  "Government Body",
+  "Individual Sponsor",
   "Other",
 ];
 
-const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
+const PARTNERSHIP_INTERESTS = [
+  "Event Sponsorship",
+  "Program Partnership",
+  "Resource Sharing",
+  "Mentorship Partnership",
+  "Media / Visibility Partnership",
+  "Financial Support",
+  "Other",
+];
+
+const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
   const { playBack } = useSound();
-  const [formData, setFormData] = useState<CountryUnionFormData>(initialData);
+  const [formData, setFormData] = useState<PartnerFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
-  const update = (updates: Partial<CountryUnionFormData>) => {
+  const update = (updates: Partial<PartnerFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
   };
 
@@ -86,30 +89,24 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   useEffect(() => {
     const e: Record<string, string | null> = {};
     if (touched.org_name) e.org_name = getRequiredError(formData.org_name, "Organization name");
-    if (touched.country) e.country = formData.country ? null : "Country is required";
-    if (touched.org_type) e.org_type = formData.org_type ? null : "Organization type is required";
-    if (touched.contact_name) e.contact_name = getRequiredError(formData.contact_name, "Contact person name");
+    if (touched.contact_name) e.contact_name = getRequiredError(formData.contact_name, "Contact name");
     if (touched.contact_email) e.contact_email = getEmailError(formData.contact_email);
-    if (touched.student_challenges) e.student_challenges = getRequiredError(formData.student_challenges, "This field");
-    if (touched.first_steps) e.first_steps = getRequiredError(formData.first_steps, "This field");
+    if (touched.how_support) e.how_support = getRequiredError(formData.how_support, "This field");
     setErrors(e);
   }, [formData, touched]);
 
   const canSubmit =
     formData.org_name.trim() &&
-    formData.country &&
-    formData.org_type &&
     formData.contact_name.trim() &&
     formData.contact_email.trim() &&
     validateEmail(formData.contact_email) &&
-    formData.student_challenges.trim() &&
-    formData.first_steps.trim() &&
-    formData.consent_commitment &&
+    formData.how_support.trim() &&
     formData.consent;
 
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
+    // TODO: Wire to actual endpoint
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -138,9 +135,11 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
           >
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-foreground mb-4">Registration Received!</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to TISYA</h2>
+          <p className="text-lg text-primary/80 font-medium mb-4">You are now part of The Alliance</p>
+          <p className="text-muted-foreground mb-2 text-sm">Path: Partner / Sponsor</p>
           <p className="text-muted-foreground mb-8">
-            Thank you for registering your organization. Our team will review your submission and reach out to discuss next steps.
+            We'll review your inquiry and reach out to discuss collaboration opportunities.
           </p>
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
@@ -165,9 +164,6 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
           <span>Back to paths</span>
         </motion.button>
 
-        <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
-          Mission Progress
-        </p>
         <input
           type="text"
           name="honeypot"
@@ -180,21 +176,24 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Register Your Organization</h2>
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/70 mb-2">
+            Mission Progress: Step 1 of 1
+          </p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Partner / Sponsor</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            For country unions, NGOs, academic institutions, and youth organizations seeking structural affiliation with TİSYA. Not a sponsorship form — this is about long-term partnership.
+            Collaborate with TISYA as an organization or sponsor. Tell us about your vision.
           </p>
         </div>
 
         <div className="space-y-5">
-          {/* Organization Name */}
+          {/* Org Name */}
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Building2 className="w-4 h-4 text-muted-foreground" />
               Organization Name <span className="text-destructive">*</span>
             </Label>
             <Input
-              placeholder="Your organization's name"
+              placeholder="Your organization"
               value={formData.org_name}
               onChange={(e) => update({ org_name: e.target.value })}
               onBlur={() => handleBlur("org_name")}
@@ -203,59 +202,14 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             <FormFieldError error={errors.org_name || null} />
           </div>
 
-          {/* Country & City */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium flex items-center gap-2">
-                <Globe className="w-4 h-4 text-muted-foreground" />
-                Country <span className="text-destructive">*</span>
-              </Label>
-              <Select
-                value={formData.country}
-                onValueChange={(v) => {
-                  update({ country: v });
-                  setTouched((prev) => ({ ...prev, country: true }));
-                }}
-              >
-                <SelectTrigger className={`bg-secondary/50 border-border ${errors.country ? "border-destructive" : ""}`}>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent className="bg-card border-border max-h-60">
-                  {countries.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormFieldError error={errors.country || null} />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-muted-foreground" />
-                City
-              </Label>
-              <Input
-                placeholder="City"
-                value={formData.city}
-                onChange={(e) => update({ city: e.target.value })}
-                className="bg-secondary/50 border-border focus:border-primary"
-              />
-            </div>
-          </div>
-
-          {/* Organization Type */}
+          {/* Org Type */}
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Building2 className="w-4 h-4 text-muted-foreground" />
-              Organization Type <span className="text-destructive">*</span>
+              Organization Type
             </Label>
-            <Select
-              value={formData.org_type}
-              onValueChange={(v) => {
-                update({ org_type: v });
-                setTouched((prev) => ({ ...prev, org_type: true }));
-              }}
-            >
-              <SelectTrigger className={`bg-secondary/50 border-border ${errors.org_type ? "border-destructive" : ""}`}>
+            <Select value={formData.org_type} onValueChange={(v) => update({ org_type: v })}>
+              <SelectTrigger className="bg-secondary/50 border-border">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
@@ -264,14 +218,13 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
                 ))}
               </SelectContent>
             </Select>
-            <FormFieldError error={errors.org_type || null} />
           </div>
 
-          {/* Contact Person */}
+          {/* Contact Name */}
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <User className="w-4 h-4 text-muted-foreground" />
-              Contact Person Name <span className="text-destructive">*</span>
+              Contact Person <span className="text-destructive">*</span>
             </Label>
             <Input
               placeholder="Primary contact name"
@@ -288,7 +241,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             <div className="space-y-2">
               <Label className="text-sm font-medium flex items-center gap-2">
                 <Mail className="w-4 h-4 text-muted-foreground" />
-                Contact Email <span className="text-destructive">*</span>
+                Email <span className="text-destructive">*</span>
               </Label>
               <Input
                 type="email"
@@ -303,7 +256,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             <div className="space-y-2">
               <Label className="text-sm font-medium flex items-center gap-2">
                 <Phone className="w-4 h-4 text-muted-foreground" />
-                Contact Phone
+                Phone
               </Label>
               <Input
                 type="tel"
@@ -322,100 +275,71 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
               Website
             </Label>
             <Input
-              placeholder="https://yourorganization.org"
+              placeholder="https://yourorg.com"
               value={formData.website}
               onChange={(e) => update({ website: e.target.value })}
               className="bg-secondary/50 border-border focus:border-primary"
             />
           </div>
 
-          {/* Scope of Work */}
+          {/* Partnership Interest */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Scope of Work</Label>
-            <Textarea
-              placeholder="What does your organization do? Main activities and focus areas..."
-              value={formData.scope_of_work}
-              onChange={(e) => update({ scope_of_work: e.target.value })}
-              className="bg-secondary/50 border-border focus:border-primary"
-              rows={4}
-            />
+            <Label className="text-sm font-medium">Partnership Interest</Label>
+            <Select value={formData.partnership_interest} onValueChange={(v) => update({ partnership_interest: v })}>
+              <SelectTrigger className="bg-secondary/50 border-border">
+                <SelectValue placeholder="What type of partnership?" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                {PARTNERSHIP_INTERESTS.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Why Affiliate */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Why do you want to affiliate with TİSYA?</Label>
-            <Textarea
-              placeholder="Share your vision for this affiliation..."
-              value={formData.why_affiliate}
-              onChange={(e) => update({ why_affiliate: e.target.value })}
-              className="bg-secondary/50 border-border focus:border-primary"
-              rows={4}
-            />
-          </div>
-
-          {/* Student Challenges - NEW */}
+          {/* How Support */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              What challenges do students from your country face in Türkiye? <span className="text-destructive">*</span>
+              How would you like to support or collaborate with TISYA? <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder="Housing, language barriers, cultural adjustment, lack of community — be real about it."
-              value={formData.student_challenges}
+              placeholder="Tell us your vision for this partnership — what you can bring and what you hope to achieve."
+              value={formData.how_support}
               onChange={(e) => {
-                if (e.target.value.length <= 500) {
-                  update({ student_challenges: e.target.value });
-                }
+                if (e.target.value.length <= 500) update({ how_support: e.target.value });
               }}
-              onBlur={() => handleBlur("student_challenges")}
-              className={`bg-secondary/50 border-border focus:border-primary ${errors.student_challenges ? "border-destructive" : ""}`}
+              onBlur={() => handleBlur("how_support")}
+              className={`bg-secondary/50 border-border focus:border-primary ${errors.how_support ? "border-destructive" : ""}`}
               rows={4}
             />
             <div className="flex justify-between">
-              <FormFieldError error={errors.student_challenges || null} />
-              <span className="text-xs text-muted-foreground">{formData.student_challenges.length}/500</span>
+              <FormFieldError error={errors.how_support || null} />
+              <span className="text-xs text-muted-foreground">{formData.how_support.length}/500</span>
             </div>
           </div>
 
-          {/* First Steps - NEW */}
+          {/* Additional Message */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium">
-              If approved, what would your first steps be in collaboration with TİSYA? <span className="text-destructive">*</span>
-            </Label>
+            <Label className="text-sm font-medium">Anything else?</Label>
             <Textarea
-              placeholder="Outreach plan, event ideas, community building — what would you do in the first 30 days?"
-              value={formData.first_steps}
-              onChange={(e) => {
-                if (e.target.value.length <= 500) {
-                  update({ first_steps: e.target.value });
-                }
-              }}
-              onBlur={() => handleBlur("first_steps")}
-              className={`bg-secondary/50 border-border focus:border-primary ${errors.first_steps ? "border-destructive" : ""}`}
-              rows={4}
+              placeholder="Additional context, questions, or ideas..."
+              value={formData.message}
+              onChange={(e) => update({ message: e.target.value })}
+              className="bg-secondary/50 border-border focus:border-primary"
+              rows={3}
             />
-            <div className="flex justify-between">
-              <FormFieldError error={errors.first_steps || null} />
-              <span className="text-xs text-muted-foreground">{formData.first_steps.length}/500</span>
-            </div>
           </div>
 
-          {/* Commitment Checkbox */}
-          <CommitmentModal
-            roleName="Country Union"
-            checked={formData.consent_commitment}
-            onCheckedChange={(checked) => update({ consent_commitment: checked })}
-          />
-
-          {/* Data Consent */}
+          {/* Consent */}
           <div className="flex items-start gap-3 pt-2">
             <Checkbox
-              id="union-consent"
+              id="partner-consent"
               checked={formData.consent}
               onCheckedChange={(v) => update({ consent: v === true })}
               className="mt-1"
             />
-            <Label htmlFor="union-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              I consent to TİSYA storing this data for affiliation purposes. <span className="text-destructive">*</span>
+            <Label htmlFor="partner-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+              I consent to TISYA storing this data for partnership purposes. <span className="text-destructive">*</span>
             </Label>
           </div>
         </div>
@@ -439,7 +363,7 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
               </>
             ) : (
               <>
-                Register Organization
+                Complete Registration
                 <Check className="w-4 h-4" />
               </>
             )}
@@ -450,4 +374,4 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   );
 };
 
-export default CountryUnionForm;
+export default PartnerSponsorForm;

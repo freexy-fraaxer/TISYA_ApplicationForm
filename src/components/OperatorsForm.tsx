@@ -330,8 +330,12 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
           whileHover={{ x: -5 }}
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to roles</span>
+          <span>Back to paths</span>
         </motion.button>
+
+        <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
+          Mission Progress
+        </p>
 
         <FormProgressBar
           currentStep={currentStep}
@@ -409,7 +413,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
                 </>
               ) : (
                 <>
-                  Submit Application
+                  Complete Registration
                   <Check className="w-4 h-4" />
                 </>
               )}

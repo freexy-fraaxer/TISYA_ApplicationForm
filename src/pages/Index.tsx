@@ -1,11 +1,14 @@
-import { useState, useMemo, memo, useEffect } from "react";
+import { useState, useMemo, memo, useEffect, useCallback } from "react";
 import WaveBackground from "@/components/WaveBackground";
 import HomePage from "@/components/HomePage";
 import RoleSelection from "@/components/RoleSelection";
+import SystemTransition from "@/components/SystemTransition";
+import MissionBrief from "@/components/MissionBrief";
 import OperatorsForm from "@/components/OperatorsForm";
 import MemberForm from "@/components/MemberForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
 import CountryUnionForm from "@/components/CountryUnionForm";
+import PartnerSponsorForm from "@/components/PartnerSponsorForm";
 import SplashScreen from "@/components/SplashScreen";
 import { AnimatePresence, motion } from "framer-motion";
 import { SoundProvider } from "@/contexts/SoundContext";
@@ -25,13 +28,16 @@ const PageTransition = memo(({ children, keyProp }: { children: React.ReactNode;
 ));
 PageTransition.displayName = 'PageTransition';
 
-type Screen = "home" | "operators" | "members" | "ambassador" | "countryunion";
+type Screen = "home" | "operators" | "members" | "ambassador" | "countryunion" | "partner";
+type MissionRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
 
 const IndexContent = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
   const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
-  const { backgroundBlurred, setBackgroundBlurred, triggerPulse, isPulsing } = useBackgroundEffects();
+  const [showSystemTransition, setShowSystemTransition] = useState(false);
+  const [missionRole, setMissionRole] = useState<MissionRole | null>(null);
+  const { setBackgroundBlurred, triggerPulse, isPulsing } = useBackgroundEffects();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2200);
@@ -40,41 +46,50 @@ const IndexContent = () => {
 
   const handleJoinClick = () => {
     triggerPulse();
+    setShowSystemTransition(true);
+  };
+
+  const handleSystemTransitionComplete = useCallback(() => {
+    setShowSystemTransition(false);
     setBackgroundBlurred(true);
     setShowRoleSelection(true);
-  };
+  }, [setBackgroundBlurred]);
 
   const handleCloseRoles = () => {
     setShowRoleSelection(false);
     setBackgroundBlurred(false);
   };
 
-  const handleSelectOperators = () => { setShowRoleSelection(false); setCurrentScreen("operators"); };
-  const handleSelectMembers = () => { setShowRoleSelection(false); setCurrentScreen("members"); };
-  const handleSelectAmbassador = () => { setShowRoleSelection(false); setCurrentScreen("ambassador"); };
-  const handleSelectCountryUnion = () => { setShowRoleSelection(false); setCurrentScreen("countryunion"); };
+  const handleSelectRole = (role: MissionRole) => {
+    setShowRoleSelection(false);
+    setMissionRole(role);
+  };
+
+  const handleAcceptMission = () => {
+    if (missionRole) {
+      setCurrentScreen(missionRole);
+      setMissionRole(null);
+    }
+  };
+
+  const handleBackFromMission = () => {
+    setMissionRole(null);
+    setShowRoleSelection(true);
+  };
 
   const handleBackToHome = () => {
     setCurrentScreen("home");
     setShowRoleSelection(false);
     setBackgroundBlurred(false);
+    setMissionRole(null);
   };
-
-  const memoizedHandlers = useMemo(() => ({
-    handleJoinClick,
-    handleCloseRoles,
-    handleSelectOperators,
-    handleSelectMembers,
-    handleSelectAmbassador,
-    handleSelectCountryUnion,
-    handleBackToHome,
-  }), []);
 
   const isInForm = currentScreen !== "home";
 
   return (
     <div className="min-h-screen relative overflow-hidden">
       <SplashScreen isVisible={showSplash} />
+      <SystemTransition isActive={showSystemTransition} onComplete={handleSystemTransitionComplete} />
 
       <div 
         className={`transition-all duration-500 ${isPulsing ? 'animate-heartbeat-pulse' : ''}`}
@@ -84,40 +99,55 @@ const IndexContent = () => {
       </div>
 
       <AnimatePresence mode="wait">
-        {currentScreen === "home" && (
+        {currentScreen === "home" && !missionRole && (
           <PageTransition keyProp="home">
-            <HomePage onJoinClick={memoizedHandlers.handleJoinClick} />
+            <HomePage onJoinClick={handleJoinClick} />
+          </PageTransition>
+        )}
+        {missionRole && currentScreen === "home" && (
+          <PageTransition keyProp={`mission-${missionRole}`}>
+            <MissionBrief
+              role={missionRole}
+              onAccept={handleAcceptMission}
+              onBack={handleBackFromMission}
+            />
           </PageTransition>
         )}
         {currentScreen === "operators" && (
           <PageTransition keyProp="operators">
-            <OperatorsForm onBack={memoizedHandlers.handleBackToHome} />
+            <OperatorsForm onBack={handleBackToHome} />
           </PageTransition>
         )}
         {currentScreen === "members" && (
           <PageTransition keyProp="members">
-            <MemberForm onBack={memoizedHandlers.handleBackToHome} />
+            <MemberForm onBack={handleBackToHome} />
           </PageTransition>
         )}
         {currentScreen === "ambassador" && (
           <PageTransition keyProp="ambassador">
-            <AmbassadorForm onBack={memoizedHandlers.handleBackToHome} />
+            <AmbassadorForm onBack={handleBackToHome} />
           </PageTransition>
         )}
         {currentScreen === "countryunion" && (
           <PageTransition keyProp="countryunion">
-            <CountryUnionForm onBack={memoizedHandlers.handleBackToHome} />
+            <CountryUnionForm onBack={handleBackToHome} />
+          </PageTransition>
+        )}
+        {currentScreen === "partner" && (
+          <PageTransition keyProp="partner">
+            <PartnerSponsorForm onBack={handleBackToHome} />
           </PageTransition>
         )}
       </AnimatePresence>
 
       <RoleSelection
         isOpen={showRoleSelection}
-        onClose={memoizedHandlers.handleCloseRoles}
-        onSelectOperators={memoizedHandlers.handleSelectOperators}
-        onSelectMembers={memoizedHandlers.handleSelectMembers}
-        onSelectAmbassador={memoizedHandlers.handleSelectAmbassador}
-        onSelectCountryUnion={memoizedHandlers.handleSelectCountryUnion}
+        onClose={handleCloseRoles}
+        onSelectOperators={() => handleSelectRole("operators")}
+        onSelectMembers={() => handleSelectRole("members")}
+        onSelectAmbassador={() => handleSelectRole("ambassador")}
+        onSelectCountryUnion={() => handleSelectRole("countryunion")}
+        onSelectPartner={() => handleSelectRole("partner")}
       />
     </div>
   );
