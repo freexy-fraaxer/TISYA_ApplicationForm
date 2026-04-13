@@ -62,12 +62,20 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
             />
           </motion.div>
 
-          {/* Title with word-by-word reveal */}
-          <motion.h1
-            className="text-3xl font-bold text-foreground mb-4 glow-text md:text-2xl text-center"
+          {/* Subtitle */}
+          <motion.p
+            className="text-sm font-mono uppercase tracking-[0.2em] text-primary/60 mb-3"
             variants={itemVariants}
           >
-            {"WELCOME TO THE ALLIANCE".split(" ").map((word, i) => (
+            Welcome to The Alliance
+          </motion.p>
+
+          {/* Main Title */}
+          <motion.h1
+            className="text-3xl md:text-4xl font-bold text-foreground mb-4 glow-text text-center"
+            variants={itemVariants}
+          >
+            {"Choose Your Path".split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 className="inline-block mr-[0.3em]"
@@ -84,7 +92,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
             ))}
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Tagline */}
           <motion.p
             className="text-muted-foreground text-lg mb-8"
             variants={itemVariants}
@@ -95,7 +103,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
           {/* CTA Button */}
           <motion.div className="mb-8" variants={itemVariants}>
             <HeroButton onClick={handleJoinClick} size="lg">
-              Get Involved
+              Join TISYA
               <svg
                 className="w-5 h-5"
                 fill="none"
