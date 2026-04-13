@@ -236,6 +236,8 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
           Mission Progress
         </p>
+
+        <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
           steps={MEMBER_STEPS}

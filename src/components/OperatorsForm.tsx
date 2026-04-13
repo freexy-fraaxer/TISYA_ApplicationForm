@@ -336,6 +336,8 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
           Mission Progress
         </p>
+
+        <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
           steps={OPERATOR_STEPS}
