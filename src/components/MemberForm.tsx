@@ -230,10 +230,12 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           whileHover={{ x: -5 }}
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to roles</span>
+          <span>Back to paths</span>
         </motion.button>
 
-        <FormProgressBar
+        <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
+          Mission Progress
+        </p>
           currentStep={currentStep}
           totalSteps={totalSteps}
           steps={MEMBER_STEPS}
@@ -317,7 +319,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
                 </>
               ) : (
                 <>
-                  Join as Pathfinder
+                  Complete Registration
                   <Check className="w-4 h-4" />
                 </>
               )}
