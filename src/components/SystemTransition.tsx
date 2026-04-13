@@ -21,7 +21,7 @@ const SystemTransition = ({ isActive, onComplete }: SystemTransitionProps) => {
       return;
     }
 
-    const timers: NodeJS.Timeout[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
     LINES.forEach((_, i) => {
       timers.push(setTimeout(() => setVisibleLines(i + 1), 400 + i * 500));
     });
