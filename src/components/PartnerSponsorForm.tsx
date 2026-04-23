@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
-import { ArrowLeft, Check, Loader2, Building2, Mail, Phone, Globe, User } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Building2, Mail, Phone, Globe, User, X } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { Input } from "@/components/ui/input";
