@@ -1,5 +1,6 @@
 import { MemberFormData } from "../MemberForm";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
@@ -8,11 +9,14 @@ import {
   Calendar,
   Camera,
   Rocket,
-  GraduationCap,
+  Wrench,
+  Compass,
+  Handshake,
   Search,
   Heart,
   Hammer,
   HelpCircle,
+  Eye,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
@@ -23,18 +27,20 @@ interface Step2Props {
 }
 
 const attentionOptions = [
-  { id: "explore_opportunities", label: "I want to explore opportunities", icon: Search },
-  { id: "meet_people", label: "I want to meet people", icon: Heart },
-  { id: "build_something", label: "I want to build something", icon: Hammer },
-  { id: "just_curious", label: "I'm just curious", icon: HelpCircle },
+  { id: "I want to explore opportunities", label: "I want to explore opportunities", icon: Search },
+  { id: "I want to meet people", label: "I want to meet people", icon: Heart },
+  { id: "I want to build something", label: "I want to build something", icon: Hammer },
+  { id: "I'm just curious", label: "I'm just curious", icon: HelpCircle },
 ];
 
-const participationOptions = [
-  { id: "Events", label: "Events", icon: Calendar },
-  { id: "Media / Content", label: "Media / Content", icon: Camera },
-  { id: "Projects / Startups", label: "Projects / Startups", icon: Rocket },
+const interestOptions = [
   { id: "Community", label: "Community", icon: Users },
-  { id: "Learning / Skill-building", label: "Learning / Skill-building", icon: GraduationCap },
+  { id: "Events", label: "Events", icon: Calendar },
+  { id: "Skills", label: "Skills", icon: Wrench },
+  { id: "Opportunities", label: "Opportunities", icon: Compass },
+  { id: "Diplomacy", label: "Diplomacy", icon: Handshake },
+  { id: "Media", label: "Media", icon: Camera },
+  { id: "Projects", label: "Projects", icon: Rocket },
 ];
 
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
@@ -45,7 +51,7 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
     updateFormData({ attention_reason: id });
   };
 
-  const toggleParticipation = (id: string) => {
+  const toggleInterest = (id: string) => {
     playTick();
     const current = formData.interests;
     if (current.includes(id)) {
@@ -67,11 +73,11 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         </p>
       </div>
 
-      {/* What caught your attention - Single Select */}
+      {/* What made you feel like TİSYA is for you - Single Select */}
       <div className="space-y-3">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-muted-foreground" />
-          What caught your attention about TİSYA? <span className="text-destructive">*</span>
+          What made you feel like TİSYA is for you? <span className="text-destructive">*</span>
         </Label>
         <HelperText>Pick the one that fits best.</HelperText>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -122,21 +128,21 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
         </div>
       </div>
 
-      {/* What would you like to be part of - Multi Select */}
+      {/* What are you interested in - Multi Select */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          What would you like to be part of? <span className="text-destructive">*</span>
+          What are you interested in? <span className="text-destructive">*</span>
         </Label>
-        <HelperText>Pick as many as you like.</HelperText>
+        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {participationOptions.map((option, index) => {
+          {interestOptions.map((option, index) => {
             const Icon = option.icon;
             const isSelected = formData.interests.includes(option.id);
             return (
               <motion.button
                 key={option.id}
                 type="button"
-                onClick={() => toggleParticipation(option.id)}
+                onClick={() => toggleInterest(option.id)}
                 className={cn(
                   "p-4 rounded-xl border-2 transition-all duration-300 flex flex-col items-center gap-2",
                   isSelected
@@ -173,6 +179,32 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
               </motion.button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Social Level Slider */}
+      <div className="space-y-4">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Eye className="w-4 h-4 text-muted-foreground" />
+          How do you usually show up in communities?
+        </Label>
+        <HelperText>Be honest — there's no right answer.</HelperText>
+
+        <div className="p-5 rounded-xl border-2 border-border/50 bg-secondary/30 space-y-4">
+          <Slider
+            min={1}
+            max={5}
+            step={1}
+            value={[formData.social_level]}
+            onValueChange={(value) => updateFormData({ social_level: value[0] })}
+          />
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>I observe more</span>
+            <span className="text-primary font-mono font-semibold text-sm">
+              {formData.social_level}
+            </span>
+            <span>I lead and engage</span>
+          </div>
         </div>
       </div>
     </div>
