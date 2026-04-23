@@ -54,54 +54,16 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
           className="flex flex-col items-center"
         >
           {/* Logo */}
-          <motion.div className="mb-8" variants={itemVariants}>
+          <motion.div className="mb-10" variants={itemVariants}>
             <img
               src={tisyaLogo}
               alt="TISYA Logo"
-              className="h-20 md:h-28 w-auto mx-auto drop-shadow-[0_0_15px_rgba(56,189,248,0.3)]"
+              className="h-24 md:h-32 w-auto mx-auto drop-shadow-[0_0_25px_rgba(56,189,248,0.4)]"
             />
           </motion.div>
 
-          {/* Subtitle */}
-          <motion.p
-            className="text-sm font-mono uppercase tracking-[0.2em] text-primary/60 mb-3"
-            variants={itemVariants}
-          >
-            Welcome to The Alliance
-          </motion.p>
-
-          {/* Main Title */}
-          <motion.h1
-            className="text-3xl md:text-4xl font-bold text-foreground mb-4 glow-text text-center"
-            variants={itemVariants}
-          >
-            {"Choose Your Path".split(" ").map((word, i) => (
-              <motion.span
-                key={i}
-                className="inline-block mr-[0.3em]"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.4 + i * 0.08,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-              >
-                {word}
-              </motion.span>
-            ))}
-          </motion.h1>
-
-          {/* Tagline */}
-          <motion.p
-            className="text-muted-foreground text-lg mb-8"
-            variants={itemVariants}
-          >
-            Pick your path. Build with TİSYA.
-          </motion.p>
-
           {/* CTA Button */}
-          <motion.div className="mb-8" variants={itemVariants}>
+          <motion.div className="mb-10" variants={itemVariants}>
             <HeroButton onClick={handleJoinClick} size="lg">
               Join TISYA
               <svg
