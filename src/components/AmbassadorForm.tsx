@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
-import { ArrowLeft, Check, Loader2, User, Mail, Phone, MapPin, Globe, Linkedin } from "lucide-react";
+import { ArrowLeft, Check, Loader2, User, Mail, Phone, MapPin, Globe, Linkedin, X } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { Input } from "@/components/ui/input";
