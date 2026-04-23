@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
-import { ArrowLeft, Check, Loader2, User, Mail, Phone, MapPin, Globe, Linkedin } from "lucide-react";
+import { ArrowLeft, Check, Loader2, User, Mail, Phone, MapPin, Globe, Linkedin, X } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { Input } from "@/components/ui/input";
@@ -198,14 +198,17 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <motion.button
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
-          onClick={handleBack}
-          whileHover={{ x: -5 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to paths</span>
-        </motion.button>
+        <div className="flex items-center justify-end mb-6">
+          <motion.button
+            className="p-2 rounded-full bg-secondary/50 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/30 transition-colors duration-150"
+            onClick={handleBack}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Close form"
+          >
+            <X className="w-5 h-5" />
+          </motion.button>
+        </div>
 
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
           Mission Progress
