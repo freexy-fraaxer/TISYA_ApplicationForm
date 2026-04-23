@@ -302,18 +302,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
           </motion.div>
         )}
 
-        <div className="flex justify-between mt-8">
-          <HeroButton
-            variant="ghost"
-            size="md"
-            onClick={handlePrev}
-            disabled={currentStep === 1}
-            className={currentStep === 1 ? "opacity-50 cursor-not-allowed" : ""}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Previous
-          </HeroButton>
-
+        <div className="flex justify-end mt-8">
           {currentStep < totalSteps ? (
             <HeroButton
               size="md"
