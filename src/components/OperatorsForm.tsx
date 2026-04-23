@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, X } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import FormProgressBar from "./shared/FormProgressBar";
