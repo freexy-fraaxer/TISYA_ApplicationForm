@@ -137,31 +137,33 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const getFinalSource = () => {
+    const getAcquisitionChannel = () => {
       if (formData.referral_source.includes("Other") && formData.source_other.trim()) {
         return formData.source_other.trim();
       }
       if (formData.referral_source.length > 0) {
         return formData.referral_source[0];
       }
-      return null;
+      return "";
     };
 
     const payload = {
       formType: "member",
       data: {
-        Full_Name: formData.full_name,
-        Email: formData.email,
-        Contact_Number: formData.contact_number,
-        City: formData.city || null,
-        Nationality: formData.nationality,
-        University: formData.university,
-        Department_of_Study: formData.department_of_study || null,
-        Attention_Reason: formData.attention_reason,
-        Interests: formData.interests.length > 0 ? formData.interests : null,
-        Source: getFinalSource(),
-        Data_Consent: formData.consent_data_storage,
-        Updates_Consent: formData.consent_updates,
+        source_form_version: "v2_pathfinder",
+        full_name: formData.full_name,
+        email: formData.email,
+        contact_number: formData.contact_number,
+        city: formData.city || "",
+        nationality: formData.nationality,
+        university: formData.university,
+        department_of_study: formData.department_of_study || "",
+        interests: formData.interests,
+        attention_reason: formData.attention_reason,
+        social_level: formData.social_level,
+        acquisition_channel: getAcquisitionChannel(),
+        data_consent: formData.consent_data_storage,
+        updates_consent: formData.consent_updates,
       },
       details: null,
     };
