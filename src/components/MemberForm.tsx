@@ -39,6 +39,7 @@ export interface MemberFormData {
   // Step 2
   attention_reason: string;
   interests: string[];
+  social_level: number;
   
   // Step 3
   referral_source: string[];
@@ -60,6 +61,7 @@ const initialFormData: MemberFormData = {
   department_of_study: "",
   attention_reason: "",
   interests: [],
+  social_level: 3,
   referral_source: [],
   source_other: "",
   consent_data_storage: false,
