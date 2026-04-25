@@ -176,21 +176,52 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           Choose your Impact Zone
         </h2>
         <p className="text-muted-foreground">
-          Select one or more areas where you'd like to contribute
+          Pick where you'd like to focus first — and what else interests you
         </p>
       </div>
 
-      {/* Impact Zones Grid */}
+      {/* Primary Impact Zone (single select) */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Star className="w-4 h-4 text-primary" />
+          Select your PRIMARY area <span className="text-destructive">*</span>
+        </Label>
+        <HelperText>This is where you want to focus most of your time.</HelperText>
+        <Select
+          value={formData.primary_impact_zone}
+          onValueChange={setPrimaryZone}
+        >
+          <SelectTrigger className="bg-secondary/50 border-border">
+            <SelectValue placeholder="Select your primary impact zone" />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border">
+            {impactZones.map((zone) => (
+              <SelectItem key={zone.id} value={zone.id}>
+                {zone.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <p className="text-xs text-center text-primary/60 italic">
+        This helps us match you to the right team
+      </p>
+
+      {/* Other Impact Zones */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          Impact Zones <span className="text-destructive">*</span>
+          Other areas you're interested in
         </Label>
-        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
+        <HelperText>Optional — pick any extras you'd like to support.</HelperText>
         <div className="space-y-3">
           {impactZones.map((zone, index) => {
-            const Icon = zone.icon;
+            const isPrimary = formData.primary_impact_zone === zone.id;
             const isSelected = formData.impact_zones.includes(zone.id);
             const currentSkills = getSkillsForZone(zone.skillsField);
+            const Icon = zone.icon;
+
+            if (isPrimary) return null;
 
             return (
               <div key={zone.id} className="space-y-2">
