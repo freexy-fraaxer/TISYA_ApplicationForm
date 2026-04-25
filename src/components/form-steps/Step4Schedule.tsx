@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Clock, Zap, Calendar, Compass, Hammer, HeartHandshake, Megaphone } from "lucide-react";
+import { Clock, Zap, Calendar, Hammer, HeartHandshake, Megaphone } from "lucide-react";
 import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
 
