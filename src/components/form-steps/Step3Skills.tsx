@@ -276,6 +276,27 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
           </div>
         </div>
       </div>
+
+      {/* Work Preference */}
+      <div className="space-y-3 pt-2">
+        <Label className="text-sm font-medium">Work Preference</Label>
+        <HelperText>How do you do your best work?</HelperText>
+        <div className="flex flex-wrap gap-2">
+          {workPreferences.map((pref) => (
+            <button
+              key={pref}
+              type="button"
+              onClick={() => updateFormData({ work_preference: pref })}
+              className={cn(
+                "chip",
+                formData.work_preference === pref && "selected"
+              )}
+            >
+              {pref}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
