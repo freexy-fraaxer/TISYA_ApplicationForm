@@ -39,9 +39,8 @@ const howFoundOptions = [
 ];
 
 const currentStatusOptions = ["Student", "Graduate", "Working", "Other"];
+const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
-
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
   useEffect(() => {
