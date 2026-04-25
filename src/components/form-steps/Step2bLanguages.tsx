@@ -114,6 +114,25 @@ const Step2bLanguages = ({ formData, updateFormData }: Step2bProps) => {
           </SelectContent>
         </Select>
       </div>
+
+      {/* Language proficiency */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Language Proficiency</Label>
+        <HelperText>Write like: English (Fluent), Turkish (Intermediate)</HelperText>
+        <Textarea
+          placeholder="English (Fluent), Turkish (Intermediate)"
+          value={formData.language_proficiency}
+          onChange={(e) => {
+            if (e.target.value.length <= 300) {
+              updateFormData({ language_proficiency: e.target.value });
+            }
+          }}
+          className="bg-secondary/50 border-border focus:border-primary min-h-[70px]"
+        />
+        <div className="text-xs text-muted-foreground text-right">
+          {formData.language_proficiency.length}/300
+        </div>
+      </div>
     </div>
   );
 };
