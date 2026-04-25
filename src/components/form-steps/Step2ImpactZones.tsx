@@ -120,7 +120,18 @@ const impactZones = [
 ];
 
 const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
+  const setPrimaryZone = (zoneId: string) => {
+    // Remove from "other" interests if present
+    const updatedOthers = formData.impact_zones.filter((z) => z !== zoneId);
+    updateFormData({
+      primary_impact_zone: zoneId,
+      impact_zones: updatedOthers,
+    });
+  };
+
   const toggleZone = (zone: string) => {
+    // Block adding primary zone as a secondary interest
+    if (zone === formData.primary_impact_zone) return;
     const current = formData.impact_zones;
     if (current.includes(zone)) {
       updateFormData({ impact_zones: current.filter((z) => z !== zone) });
