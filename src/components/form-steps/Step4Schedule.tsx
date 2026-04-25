@@ -250,7 +250,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
               Tell us about your experience
             </Label>
             <Textarea
-              placeholder="What did you do? What did you learn?"
+              placeholder="What did you do? What was your role?"
               value={formData.previous_volunteering_experience}
               onChange={(e) => {
                 if (e.target.value.length <= 500) {
@@ -266,25 +266,43 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         )}
       </div>
 
-      {/* Project Experience - NEW REQUIRED FIELD */}
+      {/* Project Experience */}
       <div className="space-y-2">
         <Label className="text-sm font-medium">
-          Tell us about something you've actually worked on <span className="text-destructive">*</span>
+          Tell us about something you worked on
         </Label>
-        <HelperText>A project, event, initiative — anything. What was your role?</HelperText>
+        <HelperText>Optional but recommended — keep it short.</HelperText>
         <Textarea
-          placeholder="e.g. I organized a campus cleanup with 50 volunteers, handled logistics and outreach..."
+          placeholder="What was the project? What did you personally do?"
           value={formData.project_experience}
           onChange={(e) => {
             if (e.target.value.length <= 600) {
               updateFormData({ project_experience: e.target.value });
             }
           }}
-          className="bg-secondary/50 border-border focus:border-primary min-h-[100px]"
+          className="bg-secondary/50 border-border focus:border-primary min-h-[90px]"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{formData.project_experience.length < 400 ? `${400 - formData.project_experience.length} more chars needed` : "✓ Good length"}</span>
-          <span>{formData.project_experience.length}/600</span>
+        <div className="text-xs text-muted-foreground text-right">
+          {formData.project_experience.length}/600
+        </div>
+      </div>
+
+      {/* Portfolio / Links */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Portfolio / Links</Label>
+        <HelperText>Optional — share anything that shows your work.</HelperText>
+        <Textarea
+          placeholder="Drive, Notion, GitHub, Instagram, etc."
+          value={formData.portfolio_links}
+          onChange={(e) => {
+            if (e.target.value.length <= 400) {
+              updateFormData({ portfolio_links: e.target.value });
+            }
+          }}
+          className="bg-secondary/50 border-border focus:border-primary min-h-[60px]"
+        />
+        <div className="text-xs text-muted-foreground text-right">
+          {formData.portfolio_links.length}/400
         </div>
       </div>
 
