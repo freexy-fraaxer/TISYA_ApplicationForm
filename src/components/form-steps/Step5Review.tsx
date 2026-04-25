@@ -84,8 +84,8 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
             </div>
           </div>
           <div>
-            <span className="text-muted-foreground">Involvement:</span>
-            <p className="font-medium text-foreground">{formData.involvement_level}</p>
+            <span className="text-muted-foreground">Commitment:</span>
+            <p className="font-medium text-foreground">{formData.commitment_duration}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Hours/week:</span>

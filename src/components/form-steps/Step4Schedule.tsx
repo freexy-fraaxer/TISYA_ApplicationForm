@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Clock, Zap, Calendar, Compass, Hammer, HeartHandshake, Megaphone } from "lucide-react";
+import { Clock, Zap, Calendar, Hammer, HeartHandshake, Megaphone } from "lucide-react";
 import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
 
@@ -14,31 +14,10 @@ interface Step4Props {
   updateFormData: (updates: Partial<FormData>) => void;
 }
 
-const involvementLevels = [
-  {
-    id: "Flexible / occasional",
-    label: "Flexible / occasional",
-    description: "Drop in when I can",
-    icon: Compass,
-  },
-  {
-    id: "Project-based",
-    label: "Project-based",
-    description: "Focused on specific tasks",
-    icon: Zap,
-  },
-  {
-    id: "Consistent weekly",
-    label: "Consistent weekly",
-    description: "Regular commitment",
-    icon: Calendar,
-  },
-  {
-    id: "Exploring for now",
-    label: "Exploring for now",
-    description: "Just getting started",
-    icon: Clock,
-  },
+const commitmentDurations = [
+  { id: "1 month", label: "1 month", description: "Try it out", icon: Clock },
+  { id: "3 months", label: "3 months", description: "Short-term project", icon: Zap },
+  { id: "6+ months", label: "6+ months", description: "Long-term commitment", icon: Calendar },
 ];
 
 const impactStyles = [
@@ -98,44 +77,47 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </p>
       </div>
 
-      {/* Involvement Level */}
+      <p className="text-xs text-center text-primary/60 italic -mt-4">
+        Be realistic — this helps us assign you properly
+      </p>
+
+      {/* Commitment Duration */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          Involvement Level <span className="text-destructive">*</span>
+          Commitment Duration <span className="text-destructive">*</span>
         </Label>
-        <div className="grid grid-cols-2 gap-3">
-          {involvementLevels.map((level) => {
+        <HelperText>How long can you commit for?</HelperText>
+        <div className="grid grid-cols-3 gap-3">
+          {commitmentDurations.map((level) => {
             const Icon = level.icon;
-            const isSelected = formData.involvement_level === level.id;
+            const isSelected = formData.commitment_duration === level.id;
             return (
               <motion.button
                 key={level.id}
                 type="button"
-                onClick={() => updateFormData({ involvement_level: level.id })}
-                className={cn("zone-card text-left p-4", isSelected && "selected")}
+                onClick={() => updateFormData({ commitment_duration: level.id })}
+                className={cn("zone-card text-left p-3", isSelected && "selected")}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1">
                   <Icon
                     className={cn(
-                      "w-5 h-5",
+                      "w-4 h-4",
                       isSelected ? "text-primary" : "text-muted-foreground"
                     )}
                   />
-                  <div>
-                    <h3
-                      className={cn(
-                        "font-medium text-sm",
-                        isSelected ? "text-primary" : "text-foreground"
-                      )}
-                    >
-                      {level.label}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {level.description}
-                    </p>
-                  </div>
+                  <h3
+                    className={cn(
+                      "font-medium text-sm",
+                      isSelected ? "text-primary" : "text-foreground"
+                    )}
+                  >
+                    {level.label}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {level.description}
+                  </p>
                 </div>
               </motion.button>
             );
@@ -268,7 +250,7 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
               Tell us about your experience
             </Label>
             <Textarea
-              placeholder="What did you do? What did you learn?"
+              placeholder="What did you do? What was your role?"
               value={formData.previous_volunteering_experience}
               onChange={(e) => {
                 if (e.target.value.length <= 500) {
@@ -284,25 +266,43 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         )}
       </div>
 
-      {/* Project Experience - NEW REQUIRED FIELD */}
+      {/* Project Experience */}
       <div className="space-y-2">
         <Label className="text-sm font-medium">
-          Tell us about something you've actually worked on <span className="text-destructive">*</span>
+          Tell us about something you worked on
         </Label>
-        <HelperText>A project, event, initiative — anything. What was your role?</HelperText>
+        <HelperText>Optional but recommended — keep it short.</HelperText>
         <Textarea
-          placeholder="e.g. I organized a campus cleanup with 50 volunteers, handled logistics and outreach..."
+          placeholder="What was the project? What did you personally do?"
           value={formData.project_experience}
           onChange={(e) => {
             if (e.target.value.length <= 600) {
               updateFormData({ project_experience: e.target.value });
             }
           }}
-          className="bg-secondary/50 border-border focus:border-primary min-h-[100px]"
+          className="bg-secondary/50 border-border focus:border-primary min-h-[90px]"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{formData.project_experience.length < 400 ? `${400 - formData.project_experience.length} more chars needed` : "✓ Good length"}</span>
-          <span>{formData.project_experience.length}/600</span>
+        <div className="text-xs text-muted-foreground text-right">
+          {formData.project_experience.length}/600
+        </div>
+      </div>
+
+      {/* Portfolio / Links */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">Portfolio / Links</Label>
+        <HelperText>Optional — share anything that shows your work.</HelperText>
+        <Textarea
+          placeholder="Drive, Notion, GitHub, Instagram, etc."
+          value={formData.portfolio_links}
+          onChange={(e) => {
+            if (e.target.value.length <= 400) {
+              updateFormData({ portfolio_links: e.target.value });
+            }
+          }}
+          className="bg-secondary/50 border-border focus:border-primary min-h-[60px]"
+        />
+        <div className="text-xs text-muted-foreground text-right">
+          {formData.portfolio_links.length}/400
         </div>
       </div>
 

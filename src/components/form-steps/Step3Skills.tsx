@@ -62,14 +62,24 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
   const lastVisibilityTick = useRef(formData.visibility_preference);
 
   const toggleSkill = (skill: string) => {
-    playTick();
     const current = formData.skills;
     if (current.includes(skill)) {
+      playTick();
       updateFormData({ skills: current.filter((s) => s !== skill) });
     } else {
+      // Cap at 5
+      if (current.length >= 5) return;
+      playTick();
       updateFormData({ skills: [...current, skill] });
     }
   };
+
+  const workPreferences = [
+    "Structured tasks",
+    "Creative freedom",
+    "Fast-paced work",
+    "Long-term projects",
+  ];
 
   const handleSliderChange = (
     field: keyof FormData,
@@ -88,33 +98,42 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Skills & Personality
+          Skills & Strengths
         </h2>
         <p className="text-muted-foreground">
-          What superpowers do you bring to the team?
+          Pick what you're actually comfortable doing
         </p>
       </div>
 
       {/* Skills */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium">
-          Your Skills <span className="text-destructive">*</span>
+        <Label className="text-sm font-medium flex items-center justify-between">
+          <span>Your Skills <span className="text-destructive">*</span></span>
+          <span className="text-xs text-muted-foreground font-normal">
+            {formData.skills.length}/5
+          </span>
         </Label>
-        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
+        <HelperText>Pick up to 5 — quality over quantity.</HelperText>
         <div className="flex flex-wrap gap-2">
-          {skills.map((skill) => (
-            <button
-              key={skill}
-              type="button"
-              onClick={() => toggleSkill(skill)}
-              className={cn(
-                "chip",
-                formData.skills.includes(skill) && "selected"
-              )}
-            >
-              {skill}
-            </button>
-          ))}
+          {skills.map((skill) => {
+            const isSelected = formData.skills.includes(skill);
+            const atCap = formData.skills.length >= 5 && !isSelected;
+            return (
+              <button
+                key={skill}
+                type="button"
+                onClick={() => toggleSkill(skill)}
+                disabled={atCap}
+                className={cn(
+                  "chip",
+                  isSelected && "selected",
+                  atCap && "opacity-40 cursor-not-allowed"
+                )}
+              >
+                {skill}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -255,6 +274,27 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               {getVisibilityLabel(formData.visibility_preference)}
             </motion.span>
           </div>
+        </div>
+      </div>
+
+      {/* Work Preference */}
+      <div className="space-y-3 pt-2">
+        <Label className="text-sm font-medium">Work Preference</Label>
+        <HelperText>How do you do your best work?</HelperText>
+        <div className="flex flex-wrap gap-2">
+          {workPreferences.map((pref) => (
+            <button
+              key={pref}
+              type="button"
+              onClick={() => updateFormData({ work_preference: pref })}
+              className={cn(
+                "chip",
+                formData.work_preference === pref && "selected"
+              )}
+            >
+              {pref}
+            </button>
+          ))}
         </div>
       </div>
     </div>

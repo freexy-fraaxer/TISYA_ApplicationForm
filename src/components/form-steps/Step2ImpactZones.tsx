@@ -1,5 +1,12 @@
 import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,6 +17,7 @@ import {
   BookOpen,
   Search,
   Settings,
+  Star,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
 
@@ -120,7 +128,18 @@ const impactZones = [
 ];
 
 const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
+  const setPrimaryZone = (zoneId: string) => {
+    // Remove from "other" interests if present
+    const updatedOthers = formData.impact_zones.filter((z) => z !== zoneId);
+    updateFormData({
+      primary_impact_zone: zoneId,
+      impact_zones: updatedOthers,
+    });
+  };
+
   const toggleZone = (zone: string) => {
+    // Block adding primary zone as a secondary interest
+    if (zone === formData.primary_impact_zone) return;
     const current = formData.impact_zones;
     if (current.includes(zone)) {
       updateFormData({ impact_zones: current.filter((z) => z !== zone) });
@@ -157,21 +176,52 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           Choose your Impact Zone
         </h2>
         <p className="text-muted-foreground">
-          Select one or more areas where you'd like to contribute
+          Pick where you'd like to focus first — and what else interests you
         </p>
       </div>
 
-      {/* Impact Zones Grid */}
+      {/* Primary Impact Zone (single select) */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Star className="w-4 h-4 text-primary" />
+          Select your PRIMARY area <span className="text-destructive">*</span>
+        </Label>
+        <HelperText>This is where you want to focus most of your time.</HelperText>
+        <Select
+          value={formData.primary_impact_zone}
+          onValueChange={setPrimaryZone}
+        >
+          <SelectTrigger className="bg-secondary/50 border-border">
+            <SelectValue placeholder="Select your primary impact zone" />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border">
+            {impactZones.map((zone) => (
+              <SelectItem key={zone.id} value={zone.id}>
+                {zone.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <p className="text-xs text-center text-primary/60 italic">
+        This helps us match you to the right team
+      </p>
+
+      {/* Other Impact Zones */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          Impact Zones <span className="text-destructive">*</span>
+          Other areas you're interested in
         </Label>
-        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
+        <HelperText>Optional — pick any extras you'd like to support.</HelperText>
         <div className="space-y-3">
           {impactZones.map((zone, index) => {
-            const Icon = zone.icon;
+            const isPrimary = formData.primary_impact_zone === zone.id;
             const isSelected = formData.impact_zones.includes(zone.id);
             const currentSkills = getSkillsForZone(zone.skillsField);
+            const Icon = zone.icon;
+
+            if (isPrimary) return null;
 
             return (
               <div key={zone.id} className="space-y-2">
@@ -247,6 +297,29 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Open to other roles */}
+      <div className="space-y-3 pt-2">
+        <Label className="text-sm font-medium">
+          Open to other roles if needed?
+        </Label>
+        <HelperText>Helps us shuffle you in if a team needs extra hands.</HelperText>
+        <div className="flex gap-2">
+          {["Yes", "Maybe", "No"].map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => updateFormData({ open_to_other_roles: opt })}
+              className={cn(
+                "chip px-6",
+                formData.open_to_other_roles === opt && "selected"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
         </div>
       </div>
     </div>

@@ -43,16 +43,20 @@ export interface FormData {
   full_name: string;
   email: string;
   contact_number: string;
+  whatsapp_number: string;
   city: string;
   nationality: string;
   university: string;
   department_of_study: string;
   education_level: string;
+  current_status: string;
   gender: string;
   referral_source: string[];
   
   // Step 2 - Impact Zones with sub-options
+  primary_impact_zone: string;
   impact_zones: string[];
+  open_to_other_roles: string;
   event_roles: string[];
   media_design_skills: string[];
   tech_skills: string[];
@@ -64,21 +68,24 @@ export interface FormData {
   // Step 2b - Languages
   languages_known: string[];
   primary_language: string;
+  language_proficiency: string;
   
-  // Step 3
+  // Step 3 - Skills & Strengths
   skills: string[];
   social_energy: number;
   planning_style: number;
   visibility_preference: number;
+  work_preference: string;
   
-  // Step 4
+  // Step 4 - Schedule
   impact_preference: string;
-  involvement_level: string;
+  commitment_duration: string;
   hours_per_week: number;
   working_style: string[];
   previous_volunteering: boolean | null;
   previous_volunteering_experience: string;
   project_experience: string;
+  portfolio_links: string;
   additional_info: string;
   
   // Step 4b - Fun Tags
@@ -97,14 +104,18 @@ const initialFormData: FormData = {
   full_name: "",
   email: "",
   contact_number: "",
+  whatsapp_number: "",
   city: "",
   nationality: "",
   university: "",
   department_of_study: "",
   education_level: "",
+  current_status: "",
   gender: "",
   referral_source: [],
+  primary_impact_zone: "",
   impact_zones: [],
+  open_to_other_roles: "",
   event_roles: [],
   media_design_skills: [],
   tech_skills: [],
@@ -114,17 +125,20 @@ const initialFormData: FormData = {
   operations_roles: [],
   languages_known: [],
   primary_language: "",
+  language_proficiency: "",
   skills: [],
   social_energy: 50,
   planning_style: 50,
   visibility_preference: 50,
+  work_preference: "",
   impact_preference: "",
-  involvement_level: "",
+  commitment_duration: "",
   hours_per_week: 3,
   working_style: [],
   previous_volunteering: null,
   previous_volunteering_experience: "",
   project_experience: "",
+  portfolio_links: "",
   additional_info: "",
   fun_tags: [],
   consent_commitment: false,
@@ -164,32 +178,33 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
       case 1:
         const emailValid = validateEmail(formData.email);
         const phoneValid = !formData.contact_number || validatePhone(formData.contact_number);
+        const whatsappValid = !formData.whatsapp_number || validatePhone(formData.whatsapp_number);
         return !!(
           formData.full_name.trim() &&
           formData.email.trim() &&
           emailValid &&
           phoneValid &&
+          whatsappValid &&
           formData.city.trim() &&
           formData.nationality.trim() &&
-          formData.university.trim() &&
+          formData.current_status &&
           formData.education_level
         );
       case 2:
-        return formData.impact_zones.length > 0;
+        return !!formData.primary_impact_zone;
       case 3:
         return !!formData.primary_language;
       case 4:
-        return formData.skills.length > 0;
+        return formData.skills.length > 0 && formData.skills.length <= 5;
       case 5:
         return !!(
           formData.impact_preference &&
-          formData.involvement_level &&
+          formData.commitment_duration &&
           formData.hours_per_week &&
-          formData.previous_volunteering !== null &&
-          formData.project_experience.trim().length >= 400
+          formData.previous_volunteering !== null
         );
       case 6:
-        return true;
+        return formData.fun_tags.length <= 5;
       case 7:
         return formData.consent_data_storage && formData.consent_commitment;
       default:
@@ -219,20 +234,28 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    const hoursLabelMap = ["1-2", "3-4", "5-7", "8-10", "10+"];
+    const hoursIdx = Math.min(Math.floor((formData.hours_per_week - 1) / 2), hoursLabelMap.length - 1);
+    const hoursLabel = hoursLabelMap[Math.max(0, hoursIdx)];
+
     const payload = {
       formType: "volunteer",
       data: {
         full_name: formData.full_name,
         email: formData.email,
         contact_number: formData.contact_number || null,
+        whatsapp_number: formData.whatsapp_number || null,
         city: formData.city,
         nationality: formData.nationality,
-        university: formData.university,
+        university: formData.university || null,
         department_of_study: formData.department_of_study || null,
         education_level: formData.education_level,
+        current_status: formData.current_status,
         gender: formData.gender || null,
         referral_source: formData.referral_source.length > 0 ? formData.referral_source : null,
-        impact_zones: formData.impact_zones,
+        primary_impact_zone: formData.primary_impact_zone,
+        impact_zones: formData.impact_zones.length > 0 ? formData.impact_zones : null,
+        open_to_other_roles: formData.open_to_other_roles || null,
         event_roles: formData.event_roles.length > 0 ? formData.event_roles : null,
         media_design_skills: formData.media_design_skills.length > 0 ? formData.media_design_skills : null,
         tech_skills: formData.tech_skills.length > 0 ? formData.tech_skills : null,
@@ -242,17 +265,21 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         operations_roles: formData.operations_roles.length > 0 ? formData.operations_roles : null,
         languages_known: formData.languages_known.length > 0 ? formData.languages_known : null,
         primary_language: formData.primary_language,
+        language_proficiency: formData.language_proficiency || null,
         skills: formData.skills,
         social_energy: formData.social_energy,
         planning_style: formData.planning_style,
         visibility_preference: formData.visibility_preference,
+        work_preference: formData.work_preference || null,
         impact_preference: formData.impact_preference,
-        involvement_level: formData.involvement_level,
+        commitment_duration: formData.commitment_duration,
         hours_per_week: formData.hours_per_week,
+        hours_per_week_label: hoursLabel,
         working_style: formData.working_style.length > 0 ? formData.working_style : null,
         previous_volunteering: formData.previous_volunteering,
         previous_volunteering_experience: formData.previous_volunteering === true ? (formData.previous_volunteering_experience || null) : null,
-        project_experience: formData.project_experience,
+        project_experience: formData.project_experience || null,
+        portfolio_links: formData.portfolio_links || null,
         additional_info: formData.additional_info || null,
         fun_tags: formData.fun_tags.length > 0 ? formData.fun_tags : null,
         consent_commitment: formData.consent_commitment,

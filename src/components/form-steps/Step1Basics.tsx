@@ -9,8 +9,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen, Briefcase, MessageCircle } from "lucide-react";
 import { countries, genderOptions, validateEmail, validatePhone, getEmailError, getPhoneError, getRequiredError } from "@/lib/validation";
+import HelperText from "../shared/HelperText";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect } from "react";
 
@@ -37,6 +38,7 @@ const howFoundOptions = [
   "Other",
 ];
 
+const currentStatusOptions = ["Student", "Graduate", "Working", "Other"];
 const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -52,14 +54,17 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
     if (touched.contact_number) {
       newErrors.contact_number = getPhoneError(formData.contact_number);
     }
+    if (touched.whatsapp_number) {
+      newErrors.whatsapp_number = getPhoneError(formData.whatsapp_number);
+    }
     if (touched.city) {
       newErrors.city = getRequiredError(formData.city, "City");
     }
     if (touched.nationality) {
       newErrors.nationality = formData.nationality ? null : "Nationality is required";
     }
-    if (touched.university) {
-      newErrors.university = getRequiredError(formData.university, "University");
+    if (touched.current_status) {
+      newErrors.current_status = formData.current_status ? null : "Current status is required";
     }
     if (touched.education_level) {
       newErrors.education_level = formData.education_level ? null : "Education level is required";
@@ -144,6 +149,25 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         <FormFieldError error={errors.contact_number || null} />
       </div>
 
+      {/* WhatsApp Number */}
+      <div className="space-y-2">
+        <Label htmlFor="whatsapp_number" className="text-sm font-medium flex items-center gap-2">
+          <MessageCircle className="w-4 h-4 text-muted-foreground" />
+          WhatsApp Number
+        </Label>
+        <HelperText>Optional — only if different from contact number.</HelperText>
+        <Input
+          id="whatsapp_number"
+          type="tel"
+          placeholder="+90 5XX XXX XXXX"
+          value={formData.whatsapp_number}
+          onChange={(e) => updateFormData({ whatsapp_number: e.target.value })}
+          onBlur={() => handleBlur("whatsapp_number")}
+          className={`bg-secondary/50 border-border focus:border-primary ${errors.whatsapp_number ? "border-destructive" : ""}`}
+        />
+        <FormFieldError error={errors.whatsapp_number || null} />
+      </div>
+
       {/* City & Nationality */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
@@ -151,6 +175,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
             <MapPin className="w-4 h-4 text-muted-foreground" />
             City <span className="text-destructive">*</span>
           </Label>
+          <HelperText>Used for event opportunities and local coordination.</HelperText>
           <Input
             id="city"
             type="text"
@@ -189,22 +214,47 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         </div>
       </div>
 
-      {/* University */}
+      {/* University (optional) */}
       <div className="space-y-2">
         <Label htmlFor="university" className="text-sm font-medium flex items-center gap-2">
           <GraduationCap className="w-4 h-4 text-muted-foreground" />
-          University <span className="text-destructive">*</span>
+          University
         </Label>
         <Input
           id="university"
           type="text"
-          placeholder="Your university name"
+          placeholder="Your university name (optional)"
           value={formData.university}
           onChange={(e) => updateFormData({ university: e.target.value })}
-          onBlur={() => handleBlur("university")}
-          className={`bg-secondary/50 border-border focus:border-primary ${errors.university ? "border-destructive" : ""}`}
+          className="bg-secondary/50 border-border focus:border-primary"
         />
-        <FormFieldError error={errors.university || null} />
+      </div>
+
+      {/* Current Status */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Briefcase className="w-4 h-4 text-muted-foreground" />
+          Current Status <span className="text-destructive">*</span>
+        </Label>
+        <Select
+          value={formData.current_status}
+          onValueChange={(value) => {
+            updateFormData({ current_status: value });
+            handleBlur("current_status");
+          }}
+        >
+          <SelectTrigger className={`bg-secondary/50 border-border ${errors.current_status ? "border-destructive" : ""}`}>
+            <SelectValue placeholder="Select your current status" />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border">
+            {currentStatusOptions.map((status) => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <FormFieldError error={errors.current_status || null} />
       </div>
 
       {/* Department */}
