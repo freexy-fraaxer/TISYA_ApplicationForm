@@ -77,44 +77,47 @@ const Step4Schedule = ({ formData, updateFormData }: Step4Props) => {
         </p>
       </div>
 
-      {/* Involvement Level */}
+      <p className="text-xs text-center text-primary/60 italic -mt-4">
+        Be realistic — this helps us assign you properly
+      </p>
+
+      {/* Commitment Duration */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          Involvement Level <span className="text-destructive">*</span>
+          Commitment Duration <span className="text-destructive">*</span>
         </Label>
-        <div className="grid grid-cols-2 gap-3">
-          {involvementLevels.map((level) => {
+        <HelperText>How long can you commit for?</HelperText>
+        <div className="grid grid-cols-3 gap-3">
+          {commitmentDurations.map((level) => {
             const Icon = level.icon;
-            const isSelected = formData.involvement_level === level.id;
+            const isSelected = formData.commitment_duration === level.id;
             return (
               <motion.button
                 key={level.id}
                 type="button"
-                onClick={() => updateFormData({ involvement_level: level.id })}
-                className={cn("zone-card text-left p-4", isSelected && "selected")}
+                onClick={() => updateFormData({ commitment_duration: level.id })}
+                className={cn("zone-card text-left p-3", isSelected && "selected")}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1">
                   <Icon
                     className={cn(
-                      "w-5 h-5",
+                      "w-4 h-4",
                       isSelected ? "text-primary" : "text-muted-foreground"
                     )}
                   />
-                  <div>
-                    <h3
-                      className={cn(
-                        "font-medium text-sm",
-                        isSelected ? "text-primary" : "text-foreground"
-                      )}
-                    >
-                      {level.label}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {level.description}
-                    </p>
-                  </div>
+                  <h3
+                    className={cn(
+                      "font-medium text-sm",
+                      isSelected ? "text-primary" : "text-foreground"
+                    )}
+                  >
+                    {level.label}
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    {level.description}
+                  </p>
                 </div>
               </motion.button>
             );
