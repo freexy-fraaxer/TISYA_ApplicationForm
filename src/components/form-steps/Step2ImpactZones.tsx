@@ -1,5 +1,12 @@
 import { FormData } from "../OperatorsForm";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,6 +17,7 @@ import {
   BookOpen,
   Search,
   Settings,
+  Star,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
 
