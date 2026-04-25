@@ -9,8 +9,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen } from "lucide-react";
+import { User, Mail, Phone, MapPin, Globe, GraduationCap, BookOpen, Briefcase, MessageCircle } from "lucide-react";
 import { countries, genderOptions, validateEmail, validatePhone, getEmailError, getPhoneError, getRequiredError } from "@/lib/validation";
+import HelperText from "../shared/HelperText";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect } from "react";
 
@@ -52,14 +53,17 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
     if (touched.contact_number) {
       newErrors.contact_number = getPhoneError(formData.contact_number);
     }
+    if (touched.whatsapp_number) {
+      newErrors.whatsapp_number = getPhoneError(formData.whatsapp_number);
+    }
     if (touched.city) {
       newErrors.city = getRequiredError(formData.city, "City");
     }
     if (touched.nationality) {
       newErrors.nationality = formData.nationality ? null : "Nationality is required";
     }
-    if (touched.university) {
-      newErrors.university = getRequiredError(formData.university, "University");
+    if (touched.current_status) {
+      newErrors.current_status = formData.current_status ? null : "Current status is required";
     }
     if (touched.education_level) {
       newErrors.education_level = formData.education_level ? null : "Education level is required";
