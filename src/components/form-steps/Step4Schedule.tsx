@@ -14,31 +14,10 @@ interface Step4Props {
   updateFormData: (updates: Partial<FormData>) => void;
 }
 
-const involvementLevels = [
-  {
-    id: "Flexible / occasional",
-    label: "Flexible / occasional",
-    description: "Drop in when I can",
-    icon: Compass,
-  },
-  {
-    id: "Project-based",
-    label: "Project-based",
-    description: "Focused on specific tasks",
-    icon: Zap,
-  },
-  {
-    id: "Consistent weekly",
-    label: "Consistent weekly",
-    description: "Regular commitment",
-    icon: Calendar,
-  },
-  {
-    id: "Exploring for now",
-    label: "Exploring for now",
-    description: "Just getting started",
-    icon: Clock,
-  },
+const commitmentDurations = [
+  { id: "1 month", label: "1 month", description: "Try it out", icon: Clock },
+  { id: "3 months", label: "3 months", description: "Short-term project", icon: Zap },
+  { id: "6+ months", label: "6+ months", description: "Long-term commitment", icon: Calendar },
 ];
 
 const impactStyles = [
