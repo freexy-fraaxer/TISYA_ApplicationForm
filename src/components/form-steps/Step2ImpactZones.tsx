@@ -299,6 +299,29 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
           })}
         </div>
       </div>
+
+      {/* Open to other roles */}
+      <div className="space-y-3 pt-2">
+        <Label className="text-sm font-medium">
+          Open to other roles if needed?
+        </Label>
+        <HelperText>Helps us shuffle you in if a team needs extra hands.</HelperText>
+        <div className="flex gap-2">
+          {["Yes", "Maybe", "No"].map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => updateFormData({ open_to_other_roles: opt })}
+              className={cn(
+                "chip px-6",
+                formData.open_to_other_roles === opt && "selected"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
