@@ -38,6 +38,7 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
     if (current.includes(tag)) {
       updateFormData({ fun_tags: current.filter((t) => t !== tag) });
     } else {
+      if (current.length >= 5) return;
       updateFormData({ fun_tags: [...current, tag] });
     }
   };
@@ -46,6 +47,7 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
     if (e.key === "Enter" && customTagInput.trim()) {
       e.preventDefault();
       const newTag = customTagInput.trim();
+      if (formData.fun_tags.length >= 5) return;
       if (!formData.fun_tags.includes(newTag)) {
         updateFormData({ fun_tags: [...formData.fun_tags, newTag] });
       }
@@ -76,25 +78,36 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
 
       {/* Fun Tags Selection */}
       <div className="space-y-3">
-        <Label className="text-sm font-medium flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-muted-foreground" />
-          Any fun tags?
+        <Label className="text-sm font-medium flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-muted-foreground" />
+            Any fun tags?
+          </span>
+          <span className="text-xs text-muted-foreground font-normal">
+            {formData.fun_tags.length}/5
+          </span>
         </Label>
-        <HelperText>Pick what describes you best, or add your own!</HelperText>
+        <HelperText>Pick up to 5, or add your own.</HelperText>
         <div className="flex flex-wrap gap-2">
-          {defaultFunTags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => toggleFunTag(tag)}
-              className={cn(
-                "chip",
-                formData.fun_tags.includes(tag) && "selected"
-              )}
-            >
-              {tag}
-            </button>
-          ))}
+          {defaultFunTags.map((tag) => {
+            const isSelected = formData.fun_tags.includes(tag);
+            const atCap = formData.fun_tags.length >= 5 && !isSelected;
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => toggleFunTag(tag)}
+                disabled={atCap}
+                className={cn(
+                  "chip",
+                  isSelected && "selected",
+                  atCap && "opacity-40 cursor-not-allowed"
+                )}
+              >
+                {tag}
+              </button>
+            );
+          })}
         </div>
       </div>
 
