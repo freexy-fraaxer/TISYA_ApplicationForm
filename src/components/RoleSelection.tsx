@@ -114,7 +114,13 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
 
       <div className="absolute inset-0 flex flex-col justify-between">
         {/* Title — top */}
-        <div className="pt-6 md:pt-10 px-3 text-center">
+        <div
+          className="pt-20 md:pt-24 text-center"
+          style={{
+            paddingLeft: "14px",
+            paddingRight: index === total - 1 ? "14px" : `${SLANT + 14}px`,
+          }}
+        >
           <h3
             className="font-extrabold uppercase tracking-[0.08em] leading-[1.05] text-foreground"
             style={{
@@ -152,7 +158,13 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
         )}
 
         {/* Description — bottom */}
-        <div className="pb-6 md:pb-10 px-3 md:px-5 text-center">
+        <div
+          className="pb-7 md:pb-10 text-center"
+          style={{
+            paddingLeft: index === 0 ? "16px" : `${SLANT + 16}px`,
+            paddingRight: "16px",
+          }}
+        >
           <p
             className="text-[11px] md:text-[13px] leading-snug font-medium"
             style={{
