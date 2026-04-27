@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { useSound } from "@/contexts/SoundContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import pathfinderBg from "@/assets/role-pathfinder.png";
-import operatorBg from "@/assets/role-operator.png";
-import collaboratorBg from "@/assets/role-collaborator.png";
-import internBg from "@/assets/role-intern.png";
-import partnerBg from "@/assets/role-countryunion.png"; // globe image reused for Partner/Sponsor
+import pathfinderBg from "@/assets/role-pathfinder-v2.png";
+import operatorBg from "@/assets/role-operator-v2.png";
+import partnerBg from "@/assets/role-partner-v2.png";
+import internBg from "@/assets/role-intern-v2.png";
+import ambassadorBg from "@/assets/role-ambassador-v2.png";
 
 interface RoleSelectionProps {
   isOpen: boolean;
@@ -21,22 +21,10 @@ interface RoleSelectionProps {
   onSelectPartner: () => void;
 }
 
-type AccentKey = "violet" | "magenta" | "gold" | "emerald" | "cyan";
-
-// Each accent in HSL — bright neon to match the reference
-const ACCENTS: Record<AccentKey, { glow: string; text: string }> = {
-  violet:  { glow: "270 95% 65%", text: "275 100% 88%" },
-  magenta: { glow: "340 95% 60%", text: "345 100% 88%" },
-  gold:    { glow: "42 100% 60%", text: "45 100% 85%" },
-  emerald: { glow: "140 90% 55%", text: "140 100% 85%" },
-  cyan:    { glow: "190 100% 60%", text: "190 100% 85%" },
-};
-
 interface PanelProps {
   title: string;
   description: string;
   image: string;
-  accent: AccentKey;
   disabled?: boolean;
   comingSoon?: boolean;
   onClick?: () => void;
@@ -48,7 +36,6 @@ const RolePanel = ({
   title,
   description,
   image,
-  accent,
   disabled = false,
   comingSoon = false,
   onClick,
@@ -56,11 +43,6 @@ const RolePanel = ({
   delay = 0,
 }: PanelProps) => {
   const isMobile = useIsMobile();
-  const a = ACCENTS[accent];
-
-  // Chamfered frame using clip-path (cuts top-left & bottom-right corners)
-  const chamfer =
-    "polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px)";
 
   return (
     <motion.button
@@ -75,121 +57,115 @@ const RolePanel = ({
         duration: 0.5,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       }}
-      whileHover={!disabled && !isMobile ? { y: -6 } : undefined}
-      whileTap={!disabled ? { scale: 0.985 } : undefined}
+      whileHover={!disabled && !isMobile ? { y: -4 } : undefined}
+      whileTap={!disabled ? { scale: 0.99 } : undefined}
       className={cn(
-        "group relative flex-1 min-w-0 text-left focus:outline-none h-full",
+        "group relative flex-1 min-w-0 text-left focus:outline-none h-full overflow-hidden",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
       style={{ willChange: "transform" }}
     >
-      {/* Outer accent halo (subtle on edges, intense on hover) */}
+      {/* Background image fills entire panel */}
       <div
-        className="absolute -inset-[2px] pointer-events-none transition-opacity duration-300 opacity-60 group-hover:opacity-100"
+        className={cn(
+          "absolute inset-0 bg-center bg-cover transition-transform duration-700",
+          !disabled && "group-hover:scale-[1.04]",
+          disabled && "grayscale opacity-50"
+        )}
+        style={{ backgroundImage: `url(${image})` }}
+      />
+
+      {/* Subtle dark gradient for text legibility */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          clipPath: chamfer,
-          background: `hsl(${a.glow})`,
-          boxShadow: `0 0 30px hsl(${a.glow} / 0.7), 0 0 60px hsl(${a.glow} / 0.4)`,
-          filter: "blur(0.5px)",
+          background:
+            "linear-gradient(180deg, hsl(220 60% 4% / 0.55) 0%, hsl(220 60% 4% / 0.15) 35%, hsl(220 60% 4% / 0.25) 60%, hsl(220 60% 4% / 0.92) 100%)",
         }}
       />
 
-      {/* Inner panel body — full-bleed image */}
-      <div
-        className={cn(
-          "relative overflow-hidden h-full w-full",
-          disabled && "grayscale-[60%] opacity-85"
-        )}
-        style={{
-          clipPath: chamfer,
-          background: "hsl(220 50% 5%)",
-        }}
-      >
-        {/* Background image fills entire panel */}
+      {/* Hover sheen */}
+      {!disabled && (
         <div
-          className="absolute inset-0 bg-center bg-cover transition-transform duration-700 group-hover:scale-[1.05]"
-          style={{ backgroundImage: `url(${image})` }}
-        />
-
-        {/* Vertical accent gradient overlay (kisses the edges with neon color) */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `linear-gradient(180deg, hsl(${a.glow} / 0.25) 0%, transparent 25%, transparent 60%, hsl(220 60% 5% / 0.85) 100%)`,
-          }}
-        />
-
-        {/* Edge-only accent neon sheen (sides) */}
-        <div
-          className="absolute inset-y-0 left-0 w-[3px] pointer-events-none"
-          style={{
-            background: `hsl(${a.glow})`,
-            boxShadow: `0 0 14px hsl(${a.glow}), 0 0 28px hsl(${a.glow} / 0.7)`,
-          }}
-        />
-        <div
-          className="absolute inset-y-0 right-0 w-[3px] pointer-events-none"
-          style={{
-            background: `hsl(${a.glow})`,
-            boxShadow: `0 0 14px hsl(${a.glow}), 0 0 28px hsl(${a.glow} / 0.7)`,
-          }}
-        />
-
-        {/* Top dark bar to anchor the title */}
-        <div
-          className="absolute inset-x-0 top-0 h-[28%] pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{
             background:
-              "linear-gradient(180deg, hsl(220 60% 5% / 0.55) 0%, transparent 100%)",
+              "linear-gradient(180deg, hsl(var(--primary) / 0.18) 0%, transparent 40%, transparent 60%, hsl(var(--primary) / 0.12) 100%)",
           }}
         />
+      )}
 
-        {/* Coming Soon ribbon */}
-        {comingSoon && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30">
-            <div
-              className="px-2.5 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm"
-              style={{
-                background: "hsl(220 30% 8% / 0.9)",
-                color: "hsl(var(--foreground) / 0.9)",
-                border: "1px solid hsl(var(--foreground) / 0.25)",
-              }}
-            >
-              Locked
-            </div>
+      {/* Coming Soon ribbon */}
+      {comingSoon && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
+          <div
+            className="px-3 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm backdrop-blur-md"
+            style={{
+              background: "hsl(220 30% 6% / 0.75)",
+              color: "hsl(var(--foreground) / 0.92)",
+              border: "1px solid hsl(var(--foreground) / 0.3)",
+            }}
+          >
+            Locked
           </div>
-        )}
-
-        {/* Title — upper third */}
-        <div className="absolute inset-x-0 top-[14%] md:top-[16%] z-10 px-3 text-center">
-          <h3
-            className="font-extrabold uppercase tracking-[0.06em] leading-[1.05]"
-            style={{
-              fontSize: "clamp(0.95rem, 1.4vw, 1.45rem)",
-              color: `hsl(${a.text})`,
-              textShadow: `0 0 12px hsl(${a.glow}), 0 0 24px hsl(${a.glow} / 0.7), 0 2px 6px hsl(220 60% 5% / 0.9)`,
-            }}
-          >
-            {title}
-          </h3>
         </div>
+      )}
 
-        {/* Description — lower third */}
-        <div className="absolute inset-x-0 bottom-5 md:bottom-7 z-10 px-3 md:px-4 text-center">
-          <p
-            className="text-[10px] md:text-[11.5px] leading-snug font-medium"
-            style={{
-              color: "hsl(0 0% 100% / 0.92)",
-              textShadow: "0 1px 6px hsl(220 60% 5% / 0.95), 0 0 12px hsl(220 60% 5% / 0.85)",
-            }}
-          >
-            {description}
-          </p>
-        </div>
+      {/* Title — upper area */}
+      <div className="absolute inset-x-0 top-[10%] md:top-[12%] z-10 px-3 text-center">
+        <h3
+          className="font-extrabold uppercase tracking-[0.08em] leading-[1.05] text-foreground"
+          style={{
+            fontSize: "clamp(1rem, 1.5vw, 1.65rem)",
+            textShadow:
+              "0 0 14px hsl(var(--primary) / 0.6), 0 2px 8px hsl(220 60% 3% / 0.95)",
+          }}
+        >
+          {title}
+        </h3>
+      </div>
+
+      {/* Description — bottom */}
+      <div className="absolute inset-x-0 bottom-6 md:bottom-8 z-10 px-4 md:px-5 text-center">
+        <p
+          className="text-[11px] md:text-[13px] leading-snug font-medium"
+          style={{
+            color: "hsl(0 0% 100% / 0.95)",
+            textShadow: "0 1px 6px hsl(220 60% 3% / 0.98), 0 0 14px hsl(220 60% 3% / 0.9)",
+          }}
+        >
+          {description}
+        </p>
       </div>
     </motion.button>
   );
 };
+
+// Zigzag vertical divider rendered between panels
+const ZigzagDivider = () => (
+  <div
+    className="hidden lg:block absolute inset-y-0 w-[2px] z-20 pointer-events-none"
+    style={{
+      // converted to inline placement via parent positioning
+    }}
+  >
+    <svg
+      className="h-full w-[14px] -translate-x-1/2"
+      viewBox="0 0 14 100"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline
+        points="7,0 0,5 14,10 0,15 14,20 0,25 14,30 0,35 14,40 0,45 14,50 0,55 14,60 0,65 14,70 0,75 14,80 0,85 14,90 0,95 7,100"
+        fill="none"
+        stroke="hsl(var(--primary) / 0.85)"
+        strokeWidth="0.8"
+        vectorEffect="non-scaling-stroke"
+        style={{ filter: "drop-shadow(0 0 4px hsl(var(--primary) / 0.7))" }}
+      />
+    </svg>
+  </div>
+);
 
 const RoleSelection = ({
   isOpen,
@@ -205,7 +181,6 @@ const RoleSelection = ({
     playHover,
     playPathfinderSelect,
     playOperatorSelect,
-    playAmbassadorSelect,
     playCountryUnionSelect,
     playInternSelect,
   } = useSound();
@@ -227,11 +202,14 @@ const RoleSelection = ({
     onClose();
   };
 
+  // Suppress unused (Ambassador is locked now)
+  void onSelectAmbassador;
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 md:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex flex-col"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -249,122 +227,155 @@ const RoleSelection = ({
             style={{
               backdropFilter: "blur(24px)",
               WebkitBackdropFilter: "blur(24px)",
-              backgroundColor: "rgba(5, 10, 25, 0.65)",
+              backgroundColor: "rgba(5, 10, 25, 0.7)",
             }}
           />
 
-          {/* Content */}
+          {/* Content — fills entire screen */}
           <motion.div
-            className="relative z-[102] w-full max-w-[1320px] py-4 max-h-[95vh] overflow-y-auto"
-            initial={{ opacity: 0, scale: 0.96, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: 10 }}
+            className="relative z-[102] flex flex-col w-full h-full"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           >
-            {/* Close button */}
-            <motion.button
-              className="absolute -top-1 right-2 md:right-4 p-2.5 rounded-full bg-secondary/60 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/40 transition-colors duration-150 z-[103]"
-              onClick={handleClose}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </motion.button>
-
-            {/* Header — top-left, like reference */}
-            <div className="mb-5 md:mb-7 px-2 md:px-4">
-              <motion.h2
-                className="text-2xl md:text-4xl font-extrabold uppercase tracking-[0.14em] text-foreground inline-block"
+            {/* Header bar */}
+            <div className="flex items-center justify-between px-4 md:px-8 pt-4 md:pt-6 pb-3 md:pb-4 shrink-0">
+              <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                style={{
-                  textShadow:
-                    "0 0 14px hsl(var(--primary) / 0.5), 0 0 28px hsl(var(--primary) / 0.25)",
-                }}
               >
-                Choose Your Path
-              </motion.h2>
-              <motion.div
-                className="mt-2 h-[2px] w-full max-w-[260px] md:max-w-[360px] rounded-full"
-                initial={{ scaleX: 0, originX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.25, duration: 0.55 }}
-                style={{
-                  background: "linear-gradient(90deg, hsl(var(--primary)), transparent)",
-                  boxShadow: "0 0 10px hsl(var(--primary) / 0.7)",
-                }}
-              />
+                <h2
+                  className="text-xl md:text-3xl font-extrabold uppercase tracking-[0.14em] text-foreground"
+                  style={{
+                    textShadow:
+                      "0 0 14px hsl(var(--primary) / 0.55), 0 0 28px hsl(var(--primary) / 0.25)",
+                  }}
+                >
+                  Choose Your Path
+                </h2>
+                <motion.div
+                  className="mt-2 h-[2px] w-full max-w-[220px] md:max-w-[320px] rounded-full"
+                  initial={{ scaleX: 0, originX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.25, duration: 0.55 }}
+                  style={{
+                    background: "linear-gradient(90deg, hsl(var(--primary)), transparent)",
+                    boxShadow: "0 0 10px hsl(var(--primary) / 0.7)",
+                  }}
+                />
+              </motion.div>
+
+              <motion.button
+                className="p-2.5 rounded-full bg-secondary/60 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/40 transition-colors duration-150"
+                onClick={handleClose}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </motion.button>
             </div>
 
-            {/* Panels row — edge-to-edge, no gaps (reference style) */}
-            <div className="px-2 md:px-4">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 h-[420px] md:h-[520px] lg:h-[560px]">
-                <RolePanel
-                  title="Pathfinder"
-                  description="Seek uncharted lands and lead the way. Unlock new territories."
-                  image={pathfinderBg}
-                  accent="violet"
-                  delay={0.1}
-                  onHover={playHover}
-                  onClick={() => {
-                    playPathfinderSelect();
-                    onSelectMembers();
-                  }}
-                />
-                <RolePanel
-                  title="Opportunist"
-                  description="Maximize gains and discover hidden treasure. Find the edge."
-                  image={operatorBg}
-                  accent="magenta"
-                  delay={0.15}
-                  onHover={playHover}
-                  onClick={() => {
-                    playOperatorSelect();
-                    onSelectOperators();
-                  }}
-                />
-                <RolePanel
-                  title="Partner / Sponsor"
-                  description="Build powerful alliances and provide key support. Accelerate growth."
-                  image={partnerBg}
-                  accent="gold"
-                  delay={0.2}
-                  onHover={playHover}
-                  onClick={() => {
-                    playCountryUnionSelect();
-                    onSelectPartner();
-                  }}
-                />
-                <RolePanel
-                  title="Intern"
-                  description="Gain valuable experience and assist key projects. Learn the ropes."
-                  image={internBg}
-                  accent="emerald"
-                  delay={0.25}
-                  disabled
-                  comingSoon
-                  onHover={playInternSelect}
-                />
-                <RolePanel
-                  title="Ambassador"
-                  description="Represent the interests of your faction. Foster diplomacy and influence."
-                  image={collaboratorBg}
-                  accent="cyan"
-                  delay={0.3}
-                  onHover={playHover}
-                  onClick={() => {
-                    playAmbassadorSelect();
-                    onSelectAmbassador();
-                  }}
-                />
+            {/* Outer container with neon border surrounding the connected cards */}
+            <div className="flex-1 px-3 md:px-6 pb-4 md:pb-6 min-h-0">
+              <div
+                className="relative h-full w-full overflow-hidden"
+                style={{
+                  border: "1.5px solid hsl(var(--primary) / 0.7)",
+                  boxShadow:
+                    "0 0 24px hsl(var(--primary) / 0.35), inset 0 0 30px hsl(var(--primary) / 0.12)",
+                  borderRadius: "4px",
+                }}
+              >
+                {/* Panels grid — connected, no gaps */}
+                <div className="relative h-full w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0">
+                  <div className="relative h-full">
+                    <RolePanel
+                      title="Pathfinder"
+                      description="Discover opportunities and navigate the TISYA network."
+                      image={pathfinderBg}
+                      delay={0.1}
+                      onHover={playHover}
+                      onClick={() => {
+                        playPathfinderSelect();
+                        onSelectMembers();
+                      }}
+                    />
+                  </div>
+
+                  <div className="relative h-full">
+                    {/* Zigzag divider on left edge */}
+                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
+                      <ZigzagDivider />
+                    </div>
+                    <RolePanel
+                      title="Opportunist"
+                      description="Create, manage, and bring ideas to life as an operator."
+                      image={operatorBg}
+                      delay={0.15}
+                      onHover={playHover}
+                      onClick={() => {
+                        playOperatorSelect();
+                        onSelectOperators();
+                      }}
+                    />
+                  </div>
+
+                  <div className="relative h-full">
+                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
+                      <ZigzagDivider />
+                    </div>
+                    <RolePanel
+                      title="Partner / Sponsor"
+                      description="Build powerful alliances and provide key support."
+                      image={partnerBg}
+                      delay={0.2}
+                      onHover={playHover}
+                      onClick={() => {
+                        playCountryUnionSelect();
+                        onSelectPartner();
+                      }}
+                    />
+                  </div>
+
+                  <div className="relative h-full">
+                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
+                      <ZigzagDivider />
+                    </div>
+                    <RolePanel
+                      title="Intern"
+                      description="Gain valuable experience and assist key projects."
+                      image={internBg}
+                      delay={0.25}
+                      disabled
+                      comingSoon
+                      onHover={playInternSelect}
+                    />
+                  </div>
+
+                  <div className="relative h-full">
+                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
+                      <ZigzagDivider />
+                    </div>
+                    <RolePanel
+                      title="Ambassador"
+                      description="Represent TISYA across your campus or country."
+                      image={ambassadorBg}
+                      delay={0.3}
+                      disabled
+                      comingSoon
+                      onHover={playHover}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Footer hint */}
             <motion.div
-              className="mt-5 md:mt-7 flex items-center justify-end gap-4 px-2 md:px-4 text-[10px] md:text-xs font-mono uppercase tracking-[0.2em]"
+              className="flex items-center justify-end gap-4 px-4 md:px-8 pb-3 md:pb-4 text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] shrink-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
