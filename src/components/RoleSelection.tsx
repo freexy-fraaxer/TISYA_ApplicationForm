@@ -62,7 +62,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
       whileHover={!disabled && !isMobile ? { y: -6 } : undefined}
       whileTap={!disabled ? { scale: 0.99 } : undefined}
       className={cn(
-        "group relative h-full text-left focus:outline-none overflow-hidden",
+        "group relative block h-full w-full text-left focus:outline-none overflow-hidden",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
       style={{
