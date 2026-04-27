@@ -306,6 +306,7 @@ const RoleSelection = ({
   onSelectAmbassador,
   onSelectPartner,
 }: RoleSelectionProps) => {
+  const isMobile = useIsMobile();
   const {
     playAmbientTone,
     playBack,
