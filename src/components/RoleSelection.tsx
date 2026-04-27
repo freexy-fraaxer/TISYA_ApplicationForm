@@ -423,8 +423,15 @@ const RoleSelection = ({
             exit={{ opacity: 0, scale: 0.985 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           >
-            {/* Header bar (overlay style, doesn't steal panel height) */}
-            <div className="absolute top-0 inset-x-0 z-[110] flex items-start justify-between px-4 md:px-8 pt-4 md:pt-6 pointer-events-none">
+            {/* Header bar */}
+            <div
+              className={cn(
+                "z-[110] flex items-start justify-between px-4 md:px-8 pointer-events-none",
+                isMobile
+                  ? "relative pt-5 pb-5"
+                  : "absolute top-0 inset-x-0 pt-4 md:pt-6"
+              )}
+            >
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -432,7 +439,7 @@ const RoleSelection = ({
                 className="pointer-events-auto"
               >
                 <h2
-                  className="text-lg md:text-2xl font-extrabold uppercase tracking-[0.18em] text-foreground"
+                  className="font-extrabold uppercase tracking-[0.16em] md:tracking-[0.18em] text-foreground text-base md:text-2xl"
                   style={{
                     textShadow:
                       "0 0 14px hsl(var(--primary) / 0.55), 0 2px 10px hsl(220 60% 3% / 0.9)",
@@ -441,7 +448,7 @@ const RoleSelection = ({
                   Choose Your Path
                 </h2>
                 <motion.div
-                  className="mt-2 h-[2px] w-[160px] md:w-[220px] rounded-full"
+                  className="mt-2 h-[2px] w-[120px] md:w-[220px] rounded-full"
                   initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.25, duration: 0.55 }}
@@ -464,18 +471,28 @@ const RoleSelection = ({
               </motion.button>
             </div>
 
-            {/* Full-screen tilted slabs row */}
-            <div className="relative flex-1 flex w-full h-full overflow-hidden">
-              {roles.map((role, i) => (
-                <div
-                  key={role.key}
-                  className="relative h-full"
-                  style={{ flex: "1 1 0%", minWidth: 0 }}
-                >
-                  <RolePanel role={role} index={i} total={roles.length} />
+            {/* Body */}
+            {isMobile ? (
+              <div className="relative flex-1 w-full overflow-y-auto px-4 pb-8 pt-1">
+                <div className="flex flex-col gap-4">
+                  {roles.map((role, i) => (
+                    <MobileRoleCard key={role.key} role={role} index={i} />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="relative flex-1 flex w-full h-full overflow-hidden">
+                {roles.map((role, i) => (
+                  <div
+                    key={role.key}
+                    className="relative h-full"
+                    style={{ flex: "1 1 0%", minWidth: 0 }}
+                  >
+                    <RolePanel role={role} index={i} total={roles.length} />
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
