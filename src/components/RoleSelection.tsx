@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { useSound } from "@/contexts/SoundContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-import pathfinderBg from "@/assets/role-pathfinder-v2.png";
-import operatorBg from "@/assets/role-operator-v2.png";
-import partnerBg from "@/assets/role-partner-v2.png";
-import internBg from "@/assets/role-intern-v2.png";
-import ambassadorBg from "@/assets/role-ambassador-v2.png";
+import pathfinderBg from "@/assets/role-pathfinder-v3.png";
+import operatorBg from "@/assets/role-operator-v3.png";
+import partnerBg from "@/assets/role-partner-v3.png";
+import internBg from "@/assets/role-intern-v3.png";
+import ambassadorBg from "@/assets/role-ambassador-v3.png";
 
 interface RoleSelectionProps {
   isOpen: boolean;
@@ -17,155 +17,161 @@ interface RoleSelectionProps {
   onSelectOperators: () => void;
   onSelectMembers: () => void;
   onSelectAmbassador: () => void;
-  onSelectCountryUnion: () => void; // kept for back-compat; no longer used
+  onSelectCountryUnion: () => void; // kept for back-compat
   onSelectPartner: () => void;
 }
 
-interface PanelProps {
+interface Role {
+  key: string;
   title: string;
   description: string;
   image: string;
   disabled?: boolean;
-  comingSoon?: boolean;
   onClick?: () => void;
-  onHover?: () => void;
-  delay?: number;
+  hoverSound?: () => void;
 }
 
-const RolePanel = ({
-  title,
-  description,
-  image,
-  disabled = false,
-  comingSoon = false,
-  onClick,
-  onHover,
-  delay = 0,
-}: PanelProps) => {
+interface PanelProps {
+  role: Role;
+  index: number;
+  total: number;
+}
+
+const SKEW_DEG = 8;
+
+const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
+  const { title, description, image, disabled, onClick, hoverSound } = role;
+
+  // Slight z-stack so left panels overlap right ones at the seams
+  const zIndex = total - index;
 
   return (
     <motion.button
       type="button"
       onClick={!disabled ? onClick : undefined}
-      onMouseEnter={!disabled ? onHover : undefined}
+      onMouseEnter={!disabled ? hoverSound : undefined}
       disabled={disabled}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        delay,
-        duration: 0.5,
+        delay: 0.08 + index * 0.06,
+        duration: 0.55,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       }}
-      whileHover={!disabled && !isMobile ? { y: -4 } : undefined}
+      whileHover={!disabled && !isMobile ? { y: -6 } : undefined}
       whileTap={!disabled ? { scale: 0.99 } : undefined}
       className={cn(
-        "group relative flex-1 min-w-0 text-left focus:outline-none h-full overflow-hidden",
+        "group relative h-full text-left focus:outline-none overflow-hidden",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
-      style={{ willChange: "transform" }}
+      style={{
+        zIndex,
+        transform: `skewX(-${SKEW_DEG}deg)`,
+        marginLeft: index === 0 ? `-${SKEW_DEG * 0.6}vw` : "-1px",
+        marginRight: index === total - 1 ? `-${SKEW_DEG * 0.6}vw` : 0,
+        // Metallic edge frame between cards
+        boxShadow:
+          "inset 1px 0 0 hsl(0 0% 100% / 0.18), inset -1px 0 0 hsl(0 0% 100% / 0.18)",
+        willChange: "transform",
+      }}
     >
-      {/* Background image fills entire panel */}
+      {/* Counter-skewed inner so the artwork stays upright */}
       <div
-        className={cn(
-          "absolute inset-0 bg-center bg-cover transition-transform duration-700",
-          !disabled && "group-hover:scale-[1.04]",
-          disabled && "grayscale opacity-50"
-        )}
-        style={{ backgroundImage: `url(${image})` }}
-      />
-
-      {/* Subtle dark gradient for text legibility */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(180deg, hsl(220 60% 4% / 0.55) 0%, hsl(220 60% 4% / 0.15) 35%, hsl(220 60% 4% / 0.25) 60%, hsl(220 60% 4% / 0.92) 100%)",
-        }}
-      />
-
-      {/* Hover sheen */}
-      {!disabled && (
+        className="absolute inset-0 overflow-hidden"
+        style={{ transform: `skewX(${SKEW_DEG}deg) scale(1.18)` }}
+      >
+        {/* Background image */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className={cn(
+            "absolute inset-0 bg-center bg-cover transition-transform duration-700",
+            !disabled && "group-hover:scale-[1.06]",
+            disabled && "grayscale opacity-60"
+          )}
+          style={{ backgroundImage: `url(${image})` }}
+        />
+
+        {/* Gradient for legibility (top + bottom) */}
+        <div
+          className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(180deg, hsl(var(--primary) / 0.18) 0%, transparent 40%, transparent 60%, hsl(var(--primary) / 0.12) 100%)",
+              "linear-gradient(180deg, hsl(220 60% 3% / 0.78) 0%, hsl(220 60% 3% / 0.15) 28%, hsl(220 60% 3% / 0.15) 55%, hsl(220 60% 3% / 0.92) 100%)",
           }}
         />
-      )}
 
-      {/* Coming Soon ribbon */}
-      {comingSoon && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
+        {/* Hover sheen */}
+        {!disabled && (
           <div
-            className="px-3 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm backdrop-blur-md"
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             style={{
-              background: "hsl(220 30% 6% / 0.75)",
-              color: "hsl(var(--foreground) / 0.92)",
-              border: "1px solid hsl(var(--foreground) / 0.3)",
+              background:
+                "linear-gradient(180deg, hsl(var(--primary) / 0.22) 0%, transparent 35%, transparent 65%, hsl(var(--primary) / 0.18) 100%)",
             }}
-          >
-            Locked
-          </div>
-        </div>
-      )}
-
-      {/* Title — upper area */}
-      <div className="absolute inset-x-0 top-[10%] md:top-[12%] z-10 px-3 text-center">
-        <h3
-          className="font-extrabold uppercase tracking-[0.08em] leading-[1.05] text-foreground"
-          style={{
-            fontSize: "clamp(1rem, 1.5vw, 1.65rem)",
-            textShadow:
-              "0 0 14px hsl(var(--primary) / 0.6), 0 2px 8px hsl(220 60% 3% / 0.95)",
-          }}
-        >
-          {title}
-        </h3>
+          />
+        )}
       </div>
 
-      {/* Description — bottom */}
-      <div className="absolute inset-x-0 bottom-6 md:bottom-8 z-10 px-4 md:px-5 text-center">
-        <p
-          className="text-[11px] md:text-[13px] leading-snug font-medium"
-          style={{
-            color: "hsl(0 0% 100% / 0.95)",
-            textShadow: "0 1px 6px hsl(220 60% 3% / 0.98), 0 0 14px hsl(220 60% 3% / 0.9)",
-          }}
-        >
-          {description}
-        </p>
+      {/* Foreground content (also counter-skewed so text is upright) */}
+      <div
+        className="absolute inset-0 flex flex-col justify-between"
+        style={{ transform: `skewX(${SKEW_DEG}deg)` }}
+      >
+        {/* Title — top */}
+        <div className="pt-6 md:pt-10 px-3 text-center">
+          <h3
+            className="font-extrabold uppercase tracking-[0.08em] leading-[1.05] text-foreground"
+            style={{
+              fontSize: "clamp(0.95rem, 1.5vw, 1.7rem)",
+              textShadow:
+                "0 0 14px hsl(var(--primary) / 0.7), 0 2px 10px hsl(220 60% 3% / 0.95)",
+            }}
+          >
+            {title}
+          </h3>
+          <div
+            className="mx-auto mt-2 h-[2px] w-12 md:w-16 rounded-full opacity-80"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)",
+              boxShadow: "0 0 8px hsl(var(--primary) / 0.7)",
+            }}
+          />
+        </div>
+
+        {/* Locked ribbon */}
+        {disabled && (
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30">
+            <div
+              className="px-3 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm backdrop-blur-md"
+              style={{
+                background: "hsl(220 30% 6% / 0.8)",
+                color: "hsl(var(--foreground) / 0.95)",
+                border: "1px solid hsl(var(--foreground) / 0.35)",
+              }}
+            >
+              Locked
+            </div>
+          </div>
+        )}
+
+        {/* Description — bottom */}
+        <div className="pb-6 md:pb-10 px-3 md:px-5 text-center">
+          <p
+            className="text-[11px] md:text-[13px] leading-snug font-medium"
+            style={{
+              color: "hsl(0 0% 100% / 0.96)",
+              textShadow:
+                "0 1px 6px hsl(220 60% 3% / 0.98), 0 0 14px hsl(220 60% 3% / 0.9)",
+            }}
+          >
+            {description}
+          </p>
+        </div>
       </div>
     </motion.button>
   );
 };
-
-// Zigzag vertical divider rendered between panels
-const ZigzagDivider = () => (
-  <div
-    className="hidden lg:block absolute inset-y-0 w-[2px] z-20 pointer-events-none"
-    style={{
-      // converted to inline placement via parent positioning
-    }}
-  >
-    <svg
-      className="h-full w-[14px] -translate-x-1/2"
-      viewBox="0 0 14 100"
-      preserveAspectRatio="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polyline
-        points="7,0 0,5 14,10 0,15 14,20 0,25 14,30 0,35 14,40 0,45 14,50 0,55 14,60 0,65 14,70 0,75 14,80 0,85 14,90 0,95 7,100"
-        fill="none"
-        stroke="hsl(var(--primary) / 0.85)"
-        strokeWidth="0.8"
-        vectorEffect="non-scaling-stroke"
-        style={{ filter: "drop-shadow(0 0 4px hsl(var(--primary) / 0.7))" }}
-      />
-    </svg>
-  </div>
-);
 
 const RoleSelection = ({
   isOpen,
@@ -202,8 +208,60 @@ const RoleSelection = ({
     onClose();
   };
 
-  // Suppress unused (Ambassador is locked now)
+  // Suppress unused
   void onSelectAmbassador;
+
+  const roles: Role[] = [
+    {
+      key: "pathfinder",
+      title: "Pathfinder",
+      description: "Discover opportunities and navigate the TISYA network.",
+      image: pathfinderBg,
+      onClick: () => {
+        playPathfinderSelect();
+        onSelectMembers();
+      },
+      hoverSound: playHover,
+    },
+    {
+      key: "opportunist",
+      title: "Opportunist",
+      description: "Create, manage, and bring ideas to life as an operator.",
+      image: operatorBg,
+      onClick: () => {
+        playOperatorSelect();
+        onSelectOperators();
+      },
+      hoverSound: playHover,
+    },
+    {
+      key: "partner",
+      title: "Partner / Sponsor",
+      description: "Build powerful alliances and provide key support.",
+      image: partnerBg,
+      onClick: () => {
+        playCountryUnionSelect();
+        onSelectPartner();
+      },
+      hoverSound: playHover,
+    },
+    {
+      key: "intern",
+      title: "Intern",
+      description: "Gain valuable experience and assist key projects.",
+      image: internBg,
+      disabled: true,
+      hoverSound: playInternSelect,
+    },
+    {
+      key: "ambassador",
+      title: "Ambassador",
+      description: "Represent TISYA across your campus or country.",
+      image: ambassadorBg,
+      disabled: true,
+      hoverSound: playHover,
+    },
+  ];
 
   return (
     <AnimatePresence>
@@ -234,41 +292,43 @@ const RoleSelection = ({
           {/* Content — fills entire screen */}
           <motion.div
             className="relative z-[102] flex flex-col w-full h-full"
-            initial={{ opacity: 0, scale: 0.98 }}
+            initial={{ opacity: 0, scale: 0.985 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+            exit={{ opacity: 0, scale: 0.985 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           >
-            {/* Header bar */}
-            <div className="flex items-center justify-between px-4 md:px-8 pt-4 md:pt-6 pb-3 md:pb-4 shrink-0">
+            {/* Header bar (overlay style, doesn't steal panel height) */}
+            <div className="absolute top-0 inset-x-0 z-[110] flex items-start justify-between px-4 md:px-8 pt-4 md:pt-6 pointer-events-none">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
+                className="pointer-events-auto"
               >
                 <h2
-                  className="text-xl md:text-3xl font-extrabold uppercase tracking-[0.14em] text-foreground"
+                  className="text-lg md:text-2xl font-extrabold uppercase tracking-[0.18em] text-foreground"
                   style={{
                     textShadow:
-                      "0 0 14px hsl(var(--primary) / 0.55), 0 0 28px hsl(var(--primary) / 0.25)",
+                      "0 0 14px hsl(var(--primary) / 0.55), 0 2px 10px hsl(220 60% 3% / 0.9)",
                   }}
                 >
                   Choose Your Path
                 </h2>
                 <motion.div
-                  className="mt-2 h-[2px] w-full max-w-[220px] md:max-w-[320px] rounded-full"
+                  className="mt-2 h-[2px] w-[160px] md:w-[220px] rounded-full"
                   initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.25, duration: 0.55 }}
                   style={{
-                    background: "linear-gradient(90deg, hsl(var(--primary)), transparent)",
+                    background:
+                      "linear-gradient(90deg, hsl(var(--primary)), transparent)",
                     boxShadow: "0 0 10px hsl(var(--primary) / 0.7)",
                   }}
                 />
               </motion.div>
 
               <motion.button
-                className="p-2.5 rounded-full bg-secondary/60 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/40 transition-colors duration-150"
+                className="pointer-events-auto p-2.5 rounded-full bg-secondary/70 border border-white/10 text-foreground hover:bg-secondary hover:border-primary/40 transition-colors duration-150"
                 onClick={handleClose}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -278,131 +338,18 @@ const RoleSelection = ({
               </motion.button>
             </div>
 
-            {/* Outer container with neon border surrounding the connected cards */}
-            <div className="flex-1 px-3 md:px-6 pb-4 md:pb-6 min-h-0">
-              <div
-                className="relative h-full w-full overflow-hidden"
-                style={{
-                  border: "1.5px solid hsl(var(--primary) / 0.7)",
-                  boxShadow:
-                    "0 0 24px hsl(var(--primary) / 0.35), inset 0 0 30px hsl(var(--primary) / 0.12)",
-                  borderRadius: "4px",
-                }}
-              >
-                {/* Panels grid — connected, no gaps */}
-                <div className="relative h-full w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0">
-                  <div className="relative h-full">
-                    <RolePanel
-                      title="Pathfinder"
-                      description="Discover opportunities and navigate the TISYA network."
-                      image={pathfinderBg}
-                      delay={0.1}
-                      onHover={playHover}
-                      onClick={() => {
-                        playPathfinderSelect();
-                        onSelectMembers();
-                      }}
-                    />
-                  </div>
-
-                  <div className="relative h-full">
-                    {/* Zigzag divider on left edge */}
-                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
-                      <ZigzagDivider />
-                    </div>
-                    <RolePanel
-                      title="Opportunist"
-                      description="Create, manage, and bring ideas to life as an operator."
-                      image={operatorBg}
-                      delay={0.15}
-                      onHover={playHover}
-                      onClick={() => {
-                        playOperatorSelect();
-                        onSelectOperators();
-                      }}
-                    />
-                  </div>
-
-                  <div className="relative h-full">
-                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
-                      <ZigzagDivider />
-                    </div>
-                    <RolePanel
-                      title="Partner / Sponsor"
-                      description="Build powerful alliances and provide key support."
-                      image={partnerBg}
-                      delay={0.2}
-                      onHover={playHover}
-                      onClick={() => {
-                        playCountryUnionSelect();
-                        onSelectPartner();
-                      }}
-                    />
-                  </div>
-
-                  <div className="relative h-full">
-                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
-                      <ZigzagDivider />
-                    </div>
-                    <RolePanel
-                      title="Intern"
-                      description="Gain valuable experience and assist key projects."
-                      image={internBg}
-                      delay={0.25}
-                      disabled
-                      comingSoon
-                      onHover={playInternSelect}
-                    />
-                  </div>
-
-                  <div className="relative h-full">
-                    <div className="absolute inset-y-0 left-0 z-30 pointer-events-none">
-                      <ZigzagDivider />
-                    </div>
-                    <RolePanel
-                      title="Ambassador"
-                      description="Represent TISYA across your campus or country."
-                      image={ambassadorBg}
-                      delay={0.3}
-                      disabled
-                      comingSoon
-                      onHover={playHover}
-                    />
-                  </div>
+            {/* Full-screen tilted slabs row */}
+            <div className="relative flex-1 flex w-full h-full overflow-hidden">
+              {roles.map((role, i) => (
+                <div
+                  key={role.key}
+                  className="relative h-full"
+                  style={{ flex: "1 1 0%", minWidth: 0 }}
+                >
+                  <RolePanel role={role} index={i} total={roles.length} />
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Footer hint */}
-            <motion.div
-              className="flex items-center justify-end gap-4 px-4 md:px-8 pb-3 md:pb-4 text-[10px] md:text-xs font-mono uppercase tracking-[0.2em] shrink-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              style={{ color: "hsl(var(--foreground) / 0.55)" }}
-            >
-              <button
-                onClick={handleClose}
-                className="flex items-center gap-2 hover:text-foreground transition-colors"
-              >
-                <span
-                  className="inline-flex w-4 h-4 items-center justify-center rounded-full border"
-                  style={{ borderColor: "hsl(var(--foreground) / 0.4)" }}
-                >
-                  ×
-                </span>
-                Back
-              </button>
-              <span className="flex items-center gap-2">
-                <span
-                  className="inline-flex w-4 h-4 items-center justify-center rounded-full border"
-                  style={{ borderColor: "hsl(var(--primary) / 0.6)", color: "hsl(var(--primary))" }}
-                >
-                  ◎
-                </span>
-                Select
-              </span>
-            </motion.div>
           </motion.div>
         </motion.div>
       )}
