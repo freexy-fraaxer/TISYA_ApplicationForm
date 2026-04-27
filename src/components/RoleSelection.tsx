@@ -37,6 +37,108 @@ interface PanelProps {
   total: number;
 }
 
+/* ---------- MOBILE CARD (vertical stack) ---------- */
+const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
+  const { title, description, image, disabled, onClick, hoverSound } = role;
+  return (
+    <motion.button
+      type="button"
+      onClick={!disabled ? onClick : undefined}
+      onTouchStart={!disabled ? hoverSound : undefined}
+      disabled={disabled}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: 0.06 + index * 0.05,
+        duration: 0.45,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      }}
+      whileTap={!disabled ? { scale: 0.985 } : undefined}
+      className={cn(
+        "relative block w-full overflow-hidden rounded-xl text-left focus:outline-none",
+        disabled ? "cursor-not-allowed" : "cursor-pointer"
+      )}
+      style={{
+        height: 132,
+        border: "1px solid hsl(var(--foreground) / 0.14)",
+        boxShadow: "0 6px 18px hsl(220 60% 3% / 0.55)",
+      }}
+    >
+      {/* Background image */}
+      <div
+        className={cn(
+          "absolute inset-0 bg-center bg-cover",
+          disabled && "grayscale opacity-60"
+        )}
+        style={{ backgroundImage: `url(${image})` }}
+      />
+      {/* Dark gradient for readability */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, hsl(220 60% 3% / 0.55) 0%, hsl(220 60% 3% / 0.35) 45%, hsl(220 60% 3% / 0.92) 100%)",
+        }}
+      />
+
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col justify-between p-4">
+        <div className="flex items-start justify-between gap-2">
+          <h3
+            className="font-extrabold uppercase tracking-[0.05em] leading-tight text-foreground"
+            style={{
+              fontSize: "18px",
+              textShadow:
+                "0 0 12px hsl(var(--primary) / 0.55), 0 2px 8px hsl(220 60% 3% / 0.95)",
+            }}
+          >
+            {title}
+          </h3>
+          {disabled && (
+            <span
+              className="shrink-0 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded"
+              style={{
+                background: "hsl(220 30% 6% / 0.85)",
+                color: "hsl(var(--foreground) / 0.95)",
+                border: "1px solid hsl(var(--foreground) / 0.35)",
+              }}
+            >
+              Locked
+            </span>
+          )}
+        </div>
+
+        <p
+          className="font-medium leading-snug overflow-hidden"
+          style={{
+            fontSize: "13px",
+            lineHeight: 1.45,
+            color: "hsl(0 0% 100% / 0.94)",
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical" as const,
+            textShadow: "0 1px 6px hsl(220 60% 3% / 0.98)",
+          }}
+        >
+          {description}
+        </p>
+      </div>
+
+      {/* Left accent border */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-[3px]"
+        style={{
+          background:
+            "linear-gradient(180deg, transparent, hsl(var(--primary)), transparent)",
+          boxShadow: "0 0 10px hsl(var(--primary) / 0.7)",
+          opacity: disabled ? 0.35 : 0.9,
+        }}
+      />
+    </motion.button>
+  );
+};
+
+/* ---------- DESKTOP SLANTED PANEL ---------- */
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
   const { title, description, image, disabled, onClick, hoverSound } = role;
@@ -204,6 +306,7 @@ const RoleSelection = ({
   onSelectAmbassador,
   onSelectPartner,
 }: RoleSelectionProps) => {
+  const isMobile = useIsMobile();
   const {
     playAmbientTone,
     playBack,
@@ -320,8 +423,15 @@ const RoleSelection = ({
             exit={{ opacity: 0, scale: 0.985 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           >
-            {/* Header bar (overlay style, doesn't steal panel height) */}
-            <div className="absolute top-0 inset-x-0 z-[110] flex items-start justify-between px-4 md:px-8 pt-4 md:pt-6 pointer-events-none">
+            {/* Header bar */}
+            <div
+              className={cn(
+                "z-[110] flex items-start justify-between px-4 md:px-8 pointer-events-none",
+                isMobile
+                  ? "relative pt-5 pb-5"
+                  : "absolute top-0 inset-x-0 pt-4 md:pt-6"
+              )}
+            >
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -329,7 +439,7 @@ const RoleSelection = ({
                 className="pointer-events-auto"
               >
                 <h2
-                  className="text-lg md:text-2xl font-extrabold uppercase tracking-[0.18em] text-foreground"
+                  className="font-extrabold uppercase tracking-[0.16em] md:tracking-[0.18em] text-foreground text-base md:text-2xl"
                   style={{
                     textShadow:
                       "0 0 14px hsl(var(--primary) / 0.55), 0 2px 10px hsl(220 60% 3% / 0.9)",
@@ -338,7 +448,7 @@ const RoleSelection = ({
                   Choose Your Path
                 </h2>
                 <motion.div
-                  className="mt-2 h-[2px] w-[160px] md:w-[220px] rounded-full"
+                  className="mt-2 h-[2px] w-[120px] md:w-[220px] rounded-full"
                   initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.25, duration: 0.55 }}
@@ -361,18 +471,28 @@ const RoleSelection = ({
               </motion.button>
             </div>
 
-            {/* Full-screen tilted slabs row */}
-            <div className="relative flex-1 flex w-full h-full overflow-hidden">
-              {roles.map((role, i) => (
-                <div
-                  key={role.key}
-                  className="relative h-full"
-                  style={{ flex: "1 1 0%", minWidth: 0 }}
-                >
-                  <RolePanel role={role} index={i} total={roles.length} />
+            {/* Body */}
+            {isMobile ? (
+              <div className="relative flex-1 w-full overflow-y-auto px-4 pb-8 pt-1">
+                <div className="flex flex-col gap-4">
+                  {roles.map((role, i) => (
+                    <MobileRoleCard key={role.key} role={role} index={i} />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="relative flex-1 flex w-full h-full overflow-hidden">
+                {roles.map((role, i) => (
+                  <div
+                    key={role.key}
+                    className="relative h-full"
+                    style={{ flex: "1 1 0%", minWidth: 0 }}
+                  >
+                    <RolePanel role={role} index={i} total={roles.length} />
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
