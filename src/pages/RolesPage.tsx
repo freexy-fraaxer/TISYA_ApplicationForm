@@ -1,0 +1,47 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import RoleSelection from "@/components/RoleSelection";
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
+
+type MissionRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
+
+const RolesPage = () => {
+  const navigate = useNavigate();
+  const { setBackgroundBlurred } = useBackgroundEffects();
+
+  useEffect(() => {
+    setBackgroundBlurred(true);
+    return () => setBackgroundBlurred(false);
+  }, [setBackgroundBlurred]);
+
+  const handleClose = () => {
+    setBackgroundBlurred(false);
+    navigate("/");
+  };
+
+  const handleSelectRole = (role: MissionRole) => {
+    setBackgroundBlurred(false);
+    navigate(`/mission/${role}`);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <RoleSelection
+        isOpen={true}
+        onClose={handleClose}
+        onSelectOperators={() => handleSelectRole("operators")}
+        onSelectMembers={() => handleSelectRole("members")}
+        onSelectAmbassador={() => handleSelectRole("ambassador")}
+        onSelectCountryUnion={() => handleSelectRole("countryunion")}
+        onSelectPartner={() => handleSelectRole("partner")}
+      />
+    </motion.div>
+  );
+};
+
+export default RolesPage;

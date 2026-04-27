@@ -37,11 +37,11 @@ interface PanelProps {
   total: number;
 }
 
-const SLANT = 30;
-
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
   const { title, description, image, disabled, onClick, hoverSound } = role;
+
+  const SLANT = isMobile ? 14 : 30;
 
   const zIndex = total - index;
   const clipPath =
@@ -50,6 +50,10 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
       : index === total - 1
         ? `polygon(0 0, 100% 0, 100% 100%, ${SLANT}px 100%)`
         : `polygon(0 0, calc(100% - ${SLANT}px) 0, 100% 100%, ${SLANT}px 100%)`;
+
+  // Side padding to keep content clear of the slanted edges
+  const padLeft = index === 0 ? (isMobile ? 6 : 14) : SLANT + (isMobile ? 6 : 14);
+  const padRight = index === total - 1 ? (isMobile ? 6 : 14) : SLANT + (isMobile ? 6 : 14);
 
   return (
     <motion.button
@@ -67,14 +71,14 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
       whileHover={!disabled && !isMobile ? { y: -6 } : undefined}
       whileTap={!disabled ? { scale: 0.99 } : undefined}
       className={cn(
-        "group relative block h-full w-[calc(100%+30px)] text-left focus:outline-none overflow-hidden",
-        index !== 0 && "-ml-[30px]",
+        "group relative block h-full text-left focus:outline-none overflow-hidden",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
       style={{
         zIndex,
         clipPath,
-        // Metallic edge frame between cards
+        width: `calc(100% + ${SLANT}px)`,
+        marginLeft: index !== 0 ? `-${SLANT}px` : 0,
         boxShadow:
           "inset 1px 0 0 hsl(0 0% 100% / 0.18), inset -1px 0 0 hsl(0 0% 100% / 0.18)",
         willChange: "transform",
@@ -112,27 +116,34 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
         )}
       </div>
 
-      <div className="absolute inset-0 flex flex-col justify-between">
-        {/* Title — top */}
+      {/* Content layer */}
+      <div className="absolute inset-0 flex flex-col">
+        {/* Title — top, centered horizontally */}
         <div
-          className="pt-20 md:pt-24 text-center"
-          style={{
-            paddingLeft: "14px",
-            paddingRight: index === total - 1 ? "14px" : `${SLANT + 14}px`,
-          }}
+          className="pt-16 md:pt-24 text-center flex justify-center"
+          style={{ paddingLeft: `${padLeft}px`, paddingRight: `${padRight}px` }}
         >
           <h3
-            className="font-extrabold uppercase tracking-[0.08em] leading-[1.05] text-foreground"
+            className="font-extrabold uppercase tracking-[0.06em] leading-[1.05] text-foreground text-center w-full"
             style={{
-              fontSize: "clamp(0.95rem, 1.5vw, 1.7rem)",
+              fontSize: isMobile
+                ? "clamp(0.6rem, 2.4vw, 0.85rem)"
+                : "clamp(0.95rem, 1.5vw, 1.7rem)",
               textShadow:
                 "0 0 14px hsl(var(--primary) / 0.7), 0 2px 10px hsl(220 60% 3% / 0.95)",
             }}
           >
             {title}
           </h3>
+        </div>
+
+        {/* Title underline */}
+        <div
+          className="text-center"
+          style={{ paddingLeft: `${padLeft}px`, paddingRight: `${padRight}px` }}
+        >
           <div
-            className="mx-auto mt-2 h-[2px] w-12 md:w-16 rounded-full opacity-80"
+            className="mx-auto mt-2 h-[2px] w-8 md:w-16 rounded-full opacity-80"
             style={{
               background:
                 "linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)",
@@ -141,13 +152,16 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
           />
         </div>
 
-        {/* Locked ribbon */}
+        {/* Centered Locked badge for disabled roles */}
         {disabled && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30">
+          <div
+            className="flex-1 flex items-center justify-center"
+            style={{ paddingLeft: `${padLeft}px`, paddingRight: `${padRight}px` }}
+          >
             <div
-              className="px-3 py-1 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm backdrop-blur-md"
+              className="px-2.5 py-1 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.25em] rounded-sm backdrop-blur-md"
               style={{
-                background: "hsl(220 30% 6% / 0.8)",
+                background: "hsl(220 30% 6% / 0.82)",
                 color: "hsl(var(--foreground) / 0.95)",
                 border: "1px solid hsl(var(--foreground) / 0.35)",
               }}
@@ -157,17 +171,18 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
           </div>
         )}
 
+        {/* Spacer for non-disabled roles */}
+        {!disabled && <div className="flex-1" />}
+
         {/* Description — bottom */}
         <div
-          className="pb-7 md:pb-10 text-center"
-          style={{
-            paddingLeft: index === 0 ? "16px" : `${SLANT + 16}px`,
-            paddingRight: "16px",
-          }}
+          className="pb-6 md:pb-10 text-center"
+          style={{ paddingLeft: `${padLeft}px`, paddingRight: `${padRight}px` }}
         >
           <p
-            className="text-[11px] md:text-[13px] leading-snug font-medium"
+            className="leading-snug font-medium"
             style={{
+              fontSize: isMobile ? "9px" : "13px",
               color: "hsl(0 0% 100% / 0.96)",
               textShadow:
                 "0 1px 6px hsl(220 60% 3% / 0.98), 0 0 14px hsl(220 60% 3% / 0.9)",

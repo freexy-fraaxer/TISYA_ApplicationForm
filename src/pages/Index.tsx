@@ -2,11 +2,8 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import HomePage from "@/components/HomePage";
-import RoleSelection from "@/components/RoleSelection";
 import SystemTransition from "@/components/SystemTransition";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
-
-type MissionRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
 
 const PageTransition = ({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
   <motion.div
@@ -23,9 +20,8 @@ const PageTransition = ({ children, keyProp }: { children: React.ReactNode; keyP
 
 const Index = () => {
   const navigate = useNavigate();
-  const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [showSystemTransition, setShowSystemTransition] = useState(false);
-  const { setBackgroundBlurred, triggerPulse } = useBackgroundEffects();
+  const { triggerPulse } = useBackgroundEffects();
 
   const handleJoinClick = () => {
     triggerPulse();
@@ -34,21 +30,8 @@ const Index = () => {
 
   const handleSystemTransitionComplete = useCallback(() => {
     setShowSystemTransition(false);
-    setBackgroundBlurred(true);
-    setShowRoleSelection(true);
-  }, [setBackgroundBlurred]);
-
-  const handleCloseRoles = () => {
-    setShowRoleSelection(false);
-    setBackgroundBlurred(false);
-  };
-
-  const handleSelectRole = (role: MissionRole) => {
-    setShowRoleSelection(false);
-    setBackgroundBlurred(false);
-    // Navigate to a dedicated mission briefing page
-    navigate(`/mission/${role}`);
-  };
+    navigate("/roles");
+  }, [navigate]);
 
   return (
     <>
@@ -59,16 +42,6 @@ const Index = () => {
           <HomePage onJoinClick={handleJoinClick} />
         </PageTransition>
       </AnimatePresence>
-
-      <RoleSelection
-        isOpen={showRoleSelection}
-        onClose={handleCloseRoles}
-        onSelectOperators={() => handleSelectRole("operators")}
-        onSelectMembers={() => handleSelectRole("members")}
-        onSelectAmbassador={() => handleSelectRole("ambassador")}
-        onSelectCountryUnion={() => handleSelectRole("countryunion")}
-        onSelectPartner={() => handleSelectRole("partner")}
-      />
     </>
   );
 };
