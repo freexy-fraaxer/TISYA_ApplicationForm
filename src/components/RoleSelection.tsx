@@ -37,14 +37,19 @@ interface PanelProps {
   total: number;
 }
 
-const SKEW_DEG = 8;
+const SLANT = 30;
 
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
   const { title, description, image, disabled, onClick, hoverSound } = role;
 
-  // Slight z-stack so left panels overlap right ones at the seams
   const zIndex = total - index;
+  const clipPath =
+    index === 0
+      ? `polygon(0 0, calc(100% - ${SLANT}px) 0, 100% 100%, 0 100%)`
+      : index === total - 1
+        ? `polygon(0 0, 100% 0, 100% 100%, ${SLANT}px 100%)`
+        : `polygon(0 0, calc(100% - ${SLANT}px) 0, 100% 100%, ${SLANT}px 100%)`;
 
   return (
     <motion.button
@@ -62,25 +67,20 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
       whileHover={!disabled && !isMobile ? { y: -6 } : undefined}
       whileTap={!disabled ? { scale: 0.99 } : undefined}
       className={cn(
-        "group relative block h-full w-full text-left focus:outline-none overflow-hidden",
+        "group relative block h-full w-[calc(100%+30px)] text-left focus:outline-none overflow-hidden",
+        index !== 0 && "-ml-[30px]",
         disabled ? "cursor-not-allowed" : "cursor-pointer"
       )}
       style={{
         zIndex,
-        transform: `skewX(-${SKEW_DEG}deg)`,
-        marginLeft: index === 0 ? `-${SKEW_DEG * 0.6}vw` : "-1px",
-        marginRight: index === total - 1 ? `-${SKEW_DEG * 0.6}vw` : 0,
+        clipPath,
         // Metallic edge frame between cards
         boxShadow:
           "inset 1px 0 0 hsl(0 0% 100% / 0.18), inset -1px 0 0 hsl(0 0% 100% / 0.18)",
         willChange: "transform",
       }}
     >
-      {/* Counter-skewed inner so the artwork stays upright */}
-      <div
-        className="absolute inset-0 overflow-hidden"
-        style={{ transform: `skewX(${SKEW_DEG}deg) scale(1.18)` }}
-      >
+      <div className="absolute inset-0 overflow-hidden">
         {/* Background image */}
         <div
           className={cn(
@@ -112,11 +112,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
         )}
       </div>
 
-      {/* Foreground content (also counter-skewed so text is upright) */}
-      <div
-        className="absolute inset-0 flex flex-col justify-between"
-        style={{ transform: `skewX(${SKEW_DEG}deg)` }}
-      >
+      <div className="absolute inset-0 flex flex-col justify-between">
         {/* Title — top */}
         <div className="pt-6 md:pt-10 px-3 text-center">
           <h3
