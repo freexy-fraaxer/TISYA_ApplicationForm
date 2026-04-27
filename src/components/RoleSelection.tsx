@@ -37,8 +37,6 @@ interface PanelProps {
   total: number;
 }
 
-const SLANT = 30;
-
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
   const { title, description, image, disabled, onClick, hoverSound } = role;
