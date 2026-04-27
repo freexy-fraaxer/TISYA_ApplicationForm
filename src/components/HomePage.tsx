@@ -54,19 +54,19 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
           />
         </motion.div>
 
-        {/* Massive italic neon headline */}
+        {/* Massive italic neon headline — single line */}
         <motion.h1
           variants={itemVariants}
-          className="font-extrabold italic tracking-tight leading-[0.95] select-none"
+          className="font-extrabold italic tracking-tight leading-[0.95] select-none whitespace-nowrap"
           style={{
-            fontSize: "clamp(2.75rem, 10vw, 8rem)",
+            fontSize: "clamp(1.75rem, 8.5vw, 7rem)",
             color: "hsl(190 100% 82%)",
             textShadow:
               "0 0 12px hsl(var(--primary) / 0.95), 0 0 28px hsl(var(--primary) / 0.7), 0 0 60px hsl(var(--primary) / 0.5), 0 0 110px hsl(var(--primary) / 0.35)",
             letterSpacing: "0.005em",
           }}
         >
-          Join The Alliance
+          JOIN THE ALLIANCE
         </motion.h1>
 
         {/* CTA Button — pill */}
