@@ -210,9 +210,17 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Application Received!</h2>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-6">
             Thank you for stepping up as an Ambassador. We'll review your application and get back to you soon.
           </p>
+          {generatedId && (
+            <div className="glass-card p-4 mb-8">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Your Reference ID
+              </span>
+              <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
+            </div>
+          )}
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
       </div>
