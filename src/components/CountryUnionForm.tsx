@@ -18,6 +18,7 @@ import {
 import FormFieldError from "./shared/FormFieldError";
 import CommitmentModal from "./shared/CommitmentModal";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface CountryUnionFormProps {
   onBack: () => void;
@@ -72,6 +73,8 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   const [formData, setFormData] = useState<CountryUnionFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -110,10 +113,34 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+    try {
+      const fields = {
+        "Organization Name": formData.org_name.trim(),
+        Website: formData.website.trim(),
+        "Partnership Type": formData.org_type,
+        Full_Name: formData.contact_name.trim(),
+        Email: formData.contact_email.trim(),
+        Contact_Number: formData.contact_phone.trim(),
+        City: formData.city.trim(),
+        Nationality: formData.country,
+        country: formData.country,
+        scope_of_work: formData.scope_of_work.trim(),
+        why_affiliate: formData.why_affiliate.trim(),
+        student_challenges: formData.student_challenges.trim(),
+        first_steps: formData.first_steps.trim(),
+        consent_commitment: formData.consent_commitment,
+        Data_Consent: formData.consent,
+      };
+      const { generatedId: id } = await submitToAppsScript("CountryUnion", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("CountryUnion submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
@@ -139,9 +166,17 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Registration Received!</h2>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-6">
             Thank you for registering your organization. Our team will review your submission and reach out to discuss next steps.
           </p>
+          {generatedId && (
+            <div className="glass-card p-4 mb-8">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Your Reference ID
+              </span>
+              <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
+            </div>
+          )}
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
       </div>
@@ -422,6 +457,12 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
             </Label>
           </div>
         </div>
+
+        {submitError && (
+          <div className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm">
+            {submitError}
+          </div>
+        )}
 
         {/* Submit */}
         <div className="flex justify-between mt-8">

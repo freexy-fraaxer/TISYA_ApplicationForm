@@ -15,8 +15,7 @@ import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
-
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUrDoWsE2VY6XnbL3uLmb-yXbxPifb8_Ehy7cGWJkTeN7HjFG54jQtEKmj-ivpk7a1/exec";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 const OPERATOR_STEPS = [
   { label: "Basics" },
@@ -238,71 +237,62 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
     const hoursIdx = Math.min(Math.floor((formData.hours_per_week - 1) / 2), hoursLabelMap.length - 1);
     const hoursLabel = hoursLabelMap[Math.max(0, hoursIdx)];
 
-    const payload = {
-      formType: "volunteer",
-      data: {
-        full_name: formData.full_name.trim(),
-        email: formData.email.trim(),
-        contact_number: (formData.contact_number || "").trim(),
-        whatsapp_number: (formData.whatsapp_number || "").trim(),
-        city: (formData.city || "").trim(),
-        nationality: (formData.nationality || "").trim(),
-        university: (formData.university || "").trim(),
-        department_of_study: (formData.department_of_study || "").trim(),
-        education_level: formData.education_level || "",
-        current_status: formData.current_status || "",
-        gender: formData.gender || "",
-        referral_source: formData.referral_source || [],
-        primary_impact_zone: formData.primary_impact_zone || "",
-        impact_zones: formData.impact_zones || [],
-        open_to_other_roles: formData.open_to_other_roles || "",
-        event_roles: formData.event_roles || [],
-        media_design_skills: formData.media_design_skills || [],
-        tech_skills: formData.tech_skills || [],
-        outreach_skills: formData.outreach_skills || [],
-        education_project_skills: formData.education_project_skills || [],
-        research_policy_roles: formData.research_policy_roles || [],
-        operations_roles: formData.operations_roles || [],
-        languages_known: formData.languages_known || [],
-        primary_language: formData.primary_language || "",
-        language_proficiency: formData.language_proficiency || "",
-        skills: formData.skills || [],
-        social_energy: formData.social_energy,
-        planning_style: formData.planning_style || "",
-        visibility_preference: formData.visibility_preference || "",
-        work_preference: formData.work_preference || "",
-        impact_preference: formData.impact_preference || "",
-        commitment_duration: formData.commitment_duration || "",
-        hours_per_week: formData.hours_per_week,
-        hours_per_week_label: hoursLabel,
-        working_style: formData.working_style || [],
-        previous_volunteering: formData.previous_volunteering === true,
-        previous_volunteering_experience: formData.previous_volunteering === true ? (formData.previous_volunteering_experience || "").trim() : "",
-        project_experience: (formData.project_experience || "").trim(),
-        portfolio_links: (formData.portfolio_links || "").trim(),
-        additional_info: (formData.additional_info || "").trim(),
-        fun_tags: formData.fun_tags || [],
-        consent_commitment: formData.consent_commitment === true,
-        consent_data_storage: formData.consent_data_storage === true,
-        consent_updates: formData.consent_updates === true,
-      },
-      details: null,
+    const fields = {
+      // Common PascalCase keys per schema
+      Full_Name: formData.full_name.trim(),
+      Email: formData.email.trim(),
+      Contact_Number: (formData.contact_number || "").trim(),
+      City: (formData.city || "").trim(),
+      Nationality: (formData.nationality || "").trim(),
+      University: (formData.university || "").trim(),
+      Department_of_Study: (formData.department_of_study || "").trim(),
+      // Volunteer-specific
+      whatsapp_number: (formData.whatsapp_number || "").trim(),
+      skills: formData.skills || [],
+      assigned_team: formData.primary_impact_zone || "",
+      // Extended volunteer detail
+      education_level: formData.education_level || "",
+      current_status: formData.current_status || "",
+      gender: formData.gender || "",
+      referral_source: formData.referral_source || [],
+      impact_zones: formData.impact_zones || [],
+      open_to_other_roles: formData.open_to_other_roles || "",
+      event_roles: formData.event_roles || [],
+      media_design_skills: formData.media_design_skills || [],
+      tech_skills: formData.tech_skills || [],
+      outreach_skills: formData.outreach_skills || [],
+      education_project_skills: formData.education_project_skills || [],
+      research_policy_roles: formData.research_policy_roles || [],
+      operations_roles: formData.operations_roles || [],
+      languages_known: formData.languages_known || [],
+      primary_language: formData.primary_language || "",
+      language_proficiency: formData.language_proficiency || "",
+      social_energy: formData.social_energy,
+      planning_style: formData.planning_style,
+      visibility_preference: formData.visibility_preference,
+      work_preference: formData.work_preference || "",
+      impact_preference: formData.impact_preference || "",
+      commitment_duration: formData.commitment_duration || "",
+      hours_per_week: formData.hours_per_week,
+      hours_per_week_label: hoursLabel,
+      working_style: formData.working_style || [],
+      previous_volunteering: formData.previous_volunteering === true,
+      previous_volunteering_experience:
+        formData.previous_volunteering === true
+          ? (formData.previous_volunteering_experience || "").trim()
+          : "",
+      project_experience: (formData.project_experience || "").trim(),
+      portfolio_links: (formData.portfolio_links || "").trim(),
+      additional_info: (formData.additional_info || "").trim(),
+      fun_tags: formData.fun_tags || [],
+      consent_commitment: formData.consent_commitment === true,
+      Data_Consent: formData.consent_data_storage === true,
+      updates_consent: formData.consent_updates === true,
     };
 
     try {
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || result.message || "Submission failed");
-      }
-
-      setApplicationId(result.referenceId || null);
+      const { generatedId } = await submitToAppsScript("Volunteer", fields);
+      setApplicationId(generatedId || "");
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);

@@ -10,9 +10,10 @@ import Confetti from "./Confetti";
 
 interface MemberSuccessScreenProps {
   onBack: () => void;
+  applicationId?: string;
 }
 
-const MemberSuccessScreen = ({ onBack }: MemberSuccessScreenProps) => {
+const MemberSuccessScreen = ({ onBack, applicationId }: MemberSuccessScreenProps) => {
   const { playCelebration, playBack } = useSound();
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -98,6 +99,20 @@ const MemberSuccessScreen = ({ onBack }: MemberSuccessScreenProps) => {
         >
           Connect with fellow Pathfinders and stay updated on everything happening in our community.
         </motion.p>
+
+        {applicationId && (
+          <motion.div
+            className="glass-card p-4 mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.58 }}
+          >
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">
+              Your Reference ID
+            </span>
+            <p className="text-lg font-mono text-primary font-semibold">{applicationId}</p>
+          </motion.div>
+        )}
 
         {/* WhatsApp Community Button */}
         <motion.div

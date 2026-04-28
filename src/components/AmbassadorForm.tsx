@@ -22,6 +22,7 @@ import CommitmentModal from "./shared/CommitmentModal";
 import HelperText from "./shared/HelperText";
 import { cn } from "@/lib/utils";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface AmbassadorFormProps {
   onBack: () => void;
@@ -102,6 +103,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const [formData, setFormData] = useState<AmbassadorFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -150,10 +153,36 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+    try {
+      const fields = {
+        Full_Name: formData.full_name.trim(),
+        Email: formData.email.trim(),
+        Contact_Number: formData.phone.trim(),
+        City: formData.city.trim(),
+        Nationality: formData.country,
+        University: formData.institution.trim(),
+        Department_of_Study: "",
+        ambassador_type: formData.ambassador_type,
+        linkedin: formData.linkedin.trim(),
+        previous_involvement: formData.previous_involvement,
+        involvement_details: formData.involvement_details.trim(),
+        reach_network: formData.reach_network,
+        presence: formData.presence,
+        why_ambassador: formData.why_ambassador.trim(),
+        experience: formData.experience.trim(),
+        consent_commitment: formData.consent_commitment,
+        Data_Consent: formData.consent,
+      };
+      const { generatedId: id } = await submitToAppsScript("Ambassador", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("Ambassador submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
@@ -181,9 +210,17 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-4">Application Received!</h2>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-6">
             Thank you for stepping up as an Ambassador. We'll review your application and get back to you soon.
           </p>
+          {generatedId && (
+            <div className="glass-card p-4 mb-8">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Your Reference ID
+              </span>
+              <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
+            </div>
+          )}
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
       </div>
@@ -531,6 +568,12 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             </Label>
           </div>
         </div>
+
+        {submitError && (
+          <div className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm">
+            {submitError}
+          </div>
+        )}
 
         {/* Submit */}
         <div className="flex justify-between mt-8">

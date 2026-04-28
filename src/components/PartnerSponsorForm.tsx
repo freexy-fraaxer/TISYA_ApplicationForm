@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
 import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
-
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUrDoWsE2VY6XnbL3uLmb-yXbxPifb8_Ehy7cGWJkTeN7HjFG54jQtEKmj-ivpk7a1/exec";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface PartnerSponsorFormProps {
   onBack: () => void;
@@ -186,6 +185,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
   const [formData, setFormData] = useState<PartnerFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState("");
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -256,56 +256,40 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const payload = {
-      formType: "partner",
-      data: {
-        org_name: formData.org_name.trim(),
-        org_type: formData.org_type,
-        contact_name: formData.contact_name.trim(),
-        contact_email: formData.contact_email.trim(),
-        contact_phone: formData.contact_phone.trim(),
-        website: formData.website.trim(),
-        contribution_types: formData.contribution_types,
-        fin_budget: formData.fin_budget,
-        fin_visibility: formData.fin_visibility,
-        fin_visibility_other: formData.fin_visibility_other.trim(),
-        event_types: formData.event_types,
-        event_involvement: formData.event_involvement,
-        mentor_roles: formData.mentor_roles,
-        mentor_topics: formData.mentor_topics.trim(),
-        intern_types: formData.intern_types,
-        intern_fields: formData.intern_fields.trim(),
-        intern_positions: formData.intern_positions.trim(),
-        resource_support: formData.resource_support.trim(),
-        strategic_idea: formData.strategic_idea.trim(),
-        audiences: formData.audiences,
-        audience_fields: formData.audience_fields.trim(),
-        collab_vision: formData.collab_vision.trim(),
-        why_tisya: formData.why_tisya.trim(),
-        prior_partnership: formData.prior_partnership === "Yes",
-        prior_description: formData.prior_description.trim(),
-        additional_details: formData.additional_details.trim(),
-        consent: formData.consent === true,
-      },
-      details: null,
+    const fields = {
+      "Organization Name": formData.org_name.trim(),
+      "Partnership Type": formData.contribution_types.join(", "),
+      Website: formData.website.trim(),
+      Full_Name: formData.contact_name.trim(),
+      Email: formData.contact_email.trim(),
+      Contact_Number: formData.contact_phone.trim(),
+      org_type: formData.org_type,
+      contribution_types: formData.contribution_types,
+      fin_budget: formData.fin_budget,
+      fin_visibility: formData.fin_visibility,
+      fin_visibility_other: formData.fin_visibility_other.trim(),
+      event_types: formData.event_types,
+      event_involvement: formData.event_involvement,
+      mentor_roles: formData.mentor_roles,
+      mentor_topics: formData.mentor_topics.trim(),
+      intern_types: formData.intern_types,
+      intern_fields: formData.intern_fields.trim(),
+      intern_positions: formData.intern_positions.trim(),
+      resource_support: formData.resource_support.trim(),
+      strategic_idea: formData.strategic_idea.trim(),
+      audiences: formData.audiences,
+      audience_fields: formData.audience_fields.trim(),
+      collab_vision: formData.collab_vision.trim(),
+      why_tisya: formData.why_tisya.trim(),
+      prior_partnership: formData.prior_partnership === "Yes",
+      prior_description: formData.prior_description.trim(),
+      additional_details: formData.additional_details.trim(),
+      Data_Consent: formData.consent === true,
     };
 
     try {
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
-      });
-      const text = await response.text();
-      let result: { success?: boolean; error?: string; message?: string };
-      try {
-        result = JSON.parse(text);
-      } catch {
-        throw new Error("Invalid response from server");
-      }
-      if (!result.success) {
-        throw new Error(result.error || result.message || "Submission failed");
-      }
+      const { generatedId: id } = await submitToAppsScript("Collaborator", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
     } catch (error) {
       console.error("Partner submission error:", error);
@@ -340,9 +324,17 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
           <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to TISYA</h2>
           <p className="text-lg text-primary/80 font-medium mb-4">You are now part of The Alliance</p>
           <p className="text-muted-foreground mb-2 text-sm">Path: Partner / Sponsor</p>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-6">
             We'll review your inquiry and reach out to discuss collaboration opportunities.
           </p>
+          {generatedId && (
+            <div className="glass-card p-4 mb-8">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Your Reference ID
+              </span>
+              <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
+            </div>
+          )}
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
       </div>
