@@ -22,6 +22,7 @@ import CommitmentModal from "./shared/CommitmentModal";
 import HelperText from "./shared/HelperText";
 import { cn } from "@/lib/utils";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface AmbassadorFormProps {
   onBack: () => void;
@@ -102,6 +103,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const [formData, setFormData] = useState<AmbassadorFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -150,10 +153,36 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+    try {
+      const fields = {
+        Full_Name: formData.full_name.trim(),
+        Email: formData.email.trim(),
+        Contact_Number: formData.phone.trim(),
+        City: formData.city.trim(),
+        Nationality: formData.country,
+        University: formData.institution.trim(),
+        Department_of_Study: "",
+        ambassador_type: formData.ambassador_type,
+        linkedin: formData.linkedin.trim(),
+        previous_involvement: formData.previous_involvement,
+        involvement_details: formData.involvement_details.trim(),
+        reach_network: formData.reach_network,
+        presence: formData.presence,
+        why_ambassador: formData.why_ambassador.trim(),
+        experience: formData.experience.trim(),
+        consent_commitment: formData.consent_commitment,
+        Data_Consent: formData.consent,
+      };
+      const { generatedId: id } = await submitToAppsScript("Ambassador", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("Ambassador submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
