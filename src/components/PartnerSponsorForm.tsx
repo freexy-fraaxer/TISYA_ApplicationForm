@@ -880,6 +880,16 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
           )}
         </AnimatePresence>
 
+        {submitError && (
+          <motion.div
+            className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {submitError}
+          </motion.div>
+        )}
+
         {/* Navigation */}
         <div className="flex justify-between mt-8">
           <HeroButton variant="ghost" size="md" onClick={handleStepBack}>
