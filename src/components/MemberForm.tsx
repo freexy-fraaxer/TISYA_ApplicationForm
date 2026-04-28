@@ -137,7 +137,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const getAcquisitionChannel = () => {
+    const acquisitionChannel = (() => {
       if (formData.referral_source.includes("Other") && formData.source_other.trim()) {
         return formData.source_other.trim();
       }
@@ -145,62 +145,29 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
         return formData.referral_source[0];
       }
       return "";
-    };
+    })();
 
-    const payload = {
-      formType: "member",
-      data: {
-        source_form_version: "v2_pathfinder",
-        full_name: formData.full_name,
-        email: formData.email,
-        contact_number: formData.contact_number,
-        city: formData.city || "",
-        nationality: formData.nationality,
-        university: formData.university,
-        department_of_study: formData.department_of_study || "",
-        interests: formData.interests,
-        attention_reason: formData.attention_reason,
-        social_level: formData.social_level,
-        acquisition_channel: getAcquisitionChannel(),
-        data_consent: formData.consent_data_storage,
-        updates_consent: formData.consent_updates,
-      },
-      details: null,
+    const fields = {
+      Full_Name: formData.full_name.trim(),
+      Email: formData.email.trim(),
+      Contact_Number: formData.contact_number.trim(),
+      City: formData.city.trim(),
+      Nationality: formData.nationality.trim(),
+      University: formData.university.trim(),
+      Department_of_Study: formData.department_of_study.trim(),
+      Interests: formData.interests,
+      Data_Consent: formData.consent_data_storage,
+      priority: "Pathfinder",
+      attention_reason: formData.attention_reason,
+      social_level: formData.social_level,
+      acquisition_channel: acquisitionChannel,
+      updates_consent: formData.consent_updates,
+      source_form_version: "v2_pathfinder",
     };
-
-    console.log("Member form submitting payload:", JSON.stringify(payload, null, 2));
 
     try {
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
-      });
-
-      const contentType = response.headers.get("content-type");
-      const responseText = await response.text();
-      
-      console.log("Response status:", response.status);
-      console.log("Response content-type:", contentType);
-      console.log("Response body:", responseText.substring(0, 500));
-
-      if (!contentType?.includes("application/json") && responseText.trim().startsWith("<!")) {
-        throw new Error("API returned an error page. Please try again.");
-      }
-
-      let result;
-      try {
-        result = JSON.parse(responseText);
-      } catch {
-        throw new Error("Invalid response from server");
-      }
-
-      console.log("Parsed result:", result);
-
-      if (!result.success) {
-        throw new Error(result.error || result.message || "Submission failed");
-      }
-
+      const { generatedId: id } = await submitToAppsScript("Pathfinder", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission error:", error);
@@ -211,7 +178,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   };
 
   if (isSuccess) {
-    return <MemberSuccessScreen onBack={onBack} />;
+    return <MemberSuccessScreen applicationId={generatedId} onBack={onBack} />;
   }
 
   const stepVariants = {
