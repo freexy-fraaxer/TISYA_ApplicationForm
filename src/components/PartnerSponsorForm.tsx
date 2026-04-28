@@ -324,9 +324,17 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
           <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to TISYA</h2>
           <p className="text-lg text-primary/80 font-medium mb-4">You are now part of The Alliance</p>
           <p className="text-muted-foreground mb-2 text-sm">Path: Partner / Sponsor</p>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-muted-foreground mb-6">
             We'll review your inquiry and reach out to discuss collaboration opportunities.
           </p>
+          {generatedId && (
+            <div className="glass-card p-4 mb-8">
+              <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                Your Reference ID
+              </span>
+              <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
+            </div>
+          )}
           <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
         </GlassCard>
       </div>
