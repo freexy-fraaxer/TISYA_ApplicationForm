@@ -18,6 +18,7 @@ import {
 import FormFieldError from "./shared/FormFieldError";
 import CommitmentModal from "./shared/CommitmentModal";
 import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface CountryUnionFormProps {
   onBack: () => void;
@@ -72,6 +73,8 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   const [formData, setFormData] = useState<CountryUnionFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState("");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -110,10 +113,34 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
   const handleSubmit = async () => {
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+    try {
+      const fields = {
+        "Organization Name": formData.org_name.trim(),
+        Website: formData.website.trim(),
+        "Partnership Type": formData.org_type,
+        Full_Name: formData.contact_name.trim(),
+        Email: formData.contact_email.trim(),
+        Contact_Number: formData.contact_phone.trim(),
+        City: formData.city.trim(),
+        Nationality: formData.country,
+        country: formData.country,
+        scope_of_work: formData.scope_of_work.trim(),
+        why_affiliate: formData.why_affiliate.trim(),
+        student_challenges: formData.student_challenges.trim(),
+        first_steps: formData.first_steps.trim(),
+        consent_commitment: formData.consent_commitment,
+        Data_Consent: formData.consent,
+      };
+      const { generatedId: id } = await submitToAppsScript("CountryUnion", fields);
+      setGeneratedId(id);
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("CountryUnion submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
