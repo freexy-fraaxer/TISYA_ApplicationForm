@@ -10,9 +10,10 @@ import Confetti from "./Confetti";
 
 interface MemberSuccessScreenProps {
   onBack: () => void;
+  applicationId?: string;
 }
 
-const MemberSuccessScreen = ({ onBack }: MemberSuccessScreenProps) => {
+const MemberSuccessScreen = ({ onBack, applicationId }: MemberSuccessScreenProps) => {
   const { playCelebration, playBack } = useSound();
   const [showConfetti, setShowConfetti] = useState(false);
 
