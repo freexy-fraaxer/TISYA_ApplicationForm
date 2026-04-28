@@ -18,6 +18,8 @@ import {
 import FormFieldError from "./shared/FormFieldError";
 import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUrDoWsE2VY6XnbL3uLmb-yXbxPifb8_Ehy7cGWJkTeN7HjFG54jQtEKmj-ivpk7a1/exec";
+
 interface PartnerSponsorFormProps {
   onBack: () => void;
 }
@@ -186,9 +188,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const update = (updates: Partial<PartnerFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    if (submitError) setSubmitError(null);
   };
 
   const handleBlur = (field: string) => {
@@ -250,10 +254,65 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     setTouched((p) => ({ ...p, collab_vision: true, why_tisya: true }));
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+
+    const payload = {
+      formType: "partner",
+      data: {
+        org_name: formData.org_name.trim(),
+        org_type: formData.org_type,
+        contact_name: formData.contact_name.trim(),
+        contact_email: formData.contact_email.trim(),
+        contact_phone: formData.contact_phone.trim(),
+        website: formData.website.trim(),
+        contribution_types: formData.contribution_types,
+        fin_budget: formData.fin_budget,
+        fin_visibility: formData.fin_visibility,
+        fin_visibility_other: formData.fin_visibility_other.trim(),
+        event_types: formData.event_types,
+        event_involvement: formData.event_involvement,
+        mentor_roles: formData.mentor_roles,
+        mentor_topics: formData.mentor_topics.trim(),
+        intern_types: formData.intern_types,
+        intern_fields: formData.intern_fields.trim(),
+        intern_positions: formData.intern_positions.trim(),
+        resource_support: formData.resource_support.trim(),
+        strategic_idea: formData.strategic_idea.trim(),
+        audiences: formData.audiences,
+        audience_fields: formData.audience_fields.trim(),
+        collab_vision: formData.collab_vision.trim(),
+        why_tisya: formData.why_tisya.trim(),
+        prior_partnership: formData.prior_partnership === "Yes",
+        prior_description: formData.prior_description.trim(),
+        additional_details: formData.additional_details.trim(),
+        consent: formData.consent === true,
+      },
+      details: null,
+    };
+
+    try {
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      const text = await response.text();
+      let result: { success?: boolean; error?: string; message?: string };
+      try {
+        result = JSON.parse(text);
+      } catch {
+        throw new Error("Invalid response from server");
+      }
+      if (!result.success) {
+        throw new Error(result.error || result.message || "Submission failed");
+      }
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("Partner submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
