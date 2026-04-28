@@ -458,6 +458,12 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
           </div>
         </div>
 
+        {submitError && (
+          <div className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm">
+            {submitError}
+          </div>
+        )}
+
         {/* Submit */}
         <div className="flex justify-between mt-8">
           <HeroButton variant="ghost" size="md" onClick={handleBack}>
