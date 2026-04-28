@@ -11,8 +11,7 @@ import MemberStep2Interests from "./member-form-steps/MemberStep2Interests";
 import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail } from "@/lib/validation";
-
-const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUrDoWsE2VY6XnbL3uLmb-yXbxPifb8_Ehy7cGWJkTeN7HjFG54jQtEKmj-ivpk7a1/exec";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 const MEMBER_STEPS = [
   { label: "Basics" },
@@ -81,6 +80,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [generatedId, setGeneratedId] = useState<string>("");
 
   const handleBackToRoles = () => {
     playBack();
