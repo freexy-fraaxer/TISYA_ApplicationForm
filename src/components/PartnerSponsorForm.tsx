@@ -40,7 +40,7 @@ interface PartnerFormData {
   website: string;
 
   // Section 2
-  contributions: ContributionType[];
+  contribution_types: ContributionType[];
 
   // Financial
   fin_budget: string;
@@ -52,7 +52,7 @@ interface PartnerFormData {
   event_involvement: string;
 
   // Mentorship
-  mentor_provide: string[];
+  mentor_roles: string[];
   mentor_topics: string;
 
   // Internships
@@ -89,13 +89,13 @@ const initialData: PartnerFormData = {
   contact_email: "",
   contact_phone: "",
   website: "",
-  contributions: [],
+  contribution_types: [],
   fin_budget: "",
   fin_visibility: [],
   fin_visibility_other: "",
   event_types: [],
   event_involvement: "",
-  mentor_provide: [],
+  mentor_roles: [],
   mentor_topics: "",
   intern_types: [],
   intern_fields: "",
