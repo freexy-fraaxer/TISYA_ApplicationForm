@@ -219,7 +219,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     formData.contact_email.trim() &&
     validateEmail(formData.contact_email);
 
-  const step2Valid = formData.contributions.length > 0 && formData.audiences.length > 0;
+  const step2Valid = formData.contribution_types.length > 0 && formData.audiences.length > 0;
 
   const canSubmit =
     step1Valid &&
@@ -478,8 +478,8 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   {CONTRIBUTION_OPTIONS.map((opt) => (
                     <Chip
                       key={opt}
-                      active={formData.contributions.includes(opt)}
-                      onClick={() => toggle("contributions", opt)}
+                      active={formData.contribution_types.includes(opt)}
+                      onClick={() => toggle("contribution_types", opt)}
                     >
                       {opt}
                     </Chip>
@@ -488,7 +488,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
 
                 {/* Conditional micro-cards */}
                 <AnimatePresence>
-                  {formData.contributions.includes("Financial Sponsorship") && (
+                  {formData.contribution_types.includes("Financial Sponsorship") && (
                     <MicroCard key="fin" title="Financial Sponsorship">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Estimated Budget</Label>
@@ -534,7 +534,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Event Sponsorship") && (
+                  {formData.contribution_types.includes("Event Sponsorship") && (
                     <MicroCard key="event" title="Event Sponsorship">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type of Events</Label>
@@ -566,7 +566,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Mentorship / Speakers") && (
+                  {formData.contribution_types.includes("Mentorship / Speakers") && (
                     <MicroCard key="mentor" title="Mentorship / Speakers">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">What can you provide?</Label>
@@ -574,8 +574,8 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                           {MENTOR_PROVIDE.map((v) => (
                             <Chip
                               key={v}
-                              active={formData.mentor_provide.includes(v)}
-                              onClick={() => toggle("mentor_provide", v)}
+                              active={formData.mentor_roles.includes(v)}
+                              onClick={() => toggle("mentor_roles", v)}
                             >
                               {v}
                             </Chip>
@@ -594,7 +594,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Internships / Opportunities") && (
+                  {formData.contribution_types.includes("Internships / Opportunities") && (
                     <MicroCard key="intern" title="Internships / Opportunities">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type</Label>
@@ -635,7 +635,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Resources / Tools") && (
+                  {formData.contribution_types.includes("Resources / Tools") && (
                     <MicroCard key="resources" title="Resources / Tools">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type of support</Label>
@@ -649,7 +649,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Strategic Partnership") && (
+                  {formData.contribution_types.includes("Strategic Partnership") && (
                     <MicroCard key="strategic" title="Strategic Partnership">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Brief description of partnership idea</Label>
