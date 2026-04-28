@@ -18,6 +18,8 @@ import {
 import FormFieldError from "./shared/FormFieldError";
 import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
 
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUrDoWsE2VY6XnbL3uLmb-yXbxPifb8_Ehy7cGWJkTeN7HjFG54jQtEKmj-ivpk7a1/exec";
+
 interface PartnerSponsorFormProps {
   onBack: () => void;
 }
@@ -40,7 +42,7 @@ interface PartnerFormData {
   website: string;
 
   // Section 2
-  contributions: ContributionType[];
+  contribution_types: ContributionType[];
 
   // Financial
   fin_budget: string;
@@ -52,7 +54,7 @@ interface PartnerFormData {
   event_involvement: string;
 
   // Mentorship
-  mentor_provide: string[];
+  mentor_roles: string[];
   mentor_topics: string;
 
   // Internships
@@ -89,13 +91,13 @@ const initialData: PartnerFormData = {
   contact_email: "",
   contact_phone: "",
   website: "",
-  contributions: [],
+  contribution_types: [],
   fin_budget: "",
   fin_visibility: [],
   fin_visibility_other: "",
   event_types: [],
   event_involvement: "",
-  mentor_provide: [],
+  mentor_roles: [],
   mentor_topics: "",
   intern_types: [],
   intern_fields: "",
@@ -186,9 +188,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const update = (updates: Partial<PartnerFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
+    if (submitError) setSubmitError(null);
   };
 
   const handleBlur = (field: string) => {
@@ -219,7 +223,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     formData.contact_email.trim() &&
     validateEmail(formData.contact_email);
 
-  const step2Valid = formData.contributions.length > 0 && formData.audiences.length > 0;
+  const step2Valid = formData.contribution_types.length > 0 && formData.audiences.length > 0;
 
   const canSubmit =
     step1Valid &&
@@ -250,10 +254,65 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     setTouched((p) => ({ ...p, collab_vision: true, why_tisya: true }));
     if (!canSubmit || formData.honeypot || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setSubmitError(null);
+
+    const payload = {
+      formType: "partner",
+      data: {
+        org_name: formData.org_name.trim(),
+        org_type: formData.org_type,
+        contact_name: formData.contact_name.trim(),
+        contact_email: formData.contact_email.trim(),
+        contact_phone: formData.contact_phone.trim(),
+        website: formData.website.trim(),
+        contribution_types: formData.contribution_types,
+        fin_budget: formData.fin_budget,
+        fin_visibility: formData.fin_visibility,
+        fin_visibility_other: formData.fin_visibility_other.trim(),
+        event_types: formData.event_types,
+        event_involvement: formData.event_involvement,
+        mentor_roles: formData.mentor_roles,
+        mentor_topics: formData.mentor_topics.trim(),
+        intern_types: formData.intern_types,
+        intern_fields: formData.intern_fields.trim(),
+        intern_positions: formData.intern_positions.trim(),
+        resource_support: formData.resource_support.trim(),
+        strategic_idea: formData.strategic_idea.trim(),
+        audiences: formData.audiences,
+        audience_fields: formData.audience_fields.trim(),
+        collab_vision: formData.collab_vision.trim(),
+        why_tisya: formData.why_tisya.trim(),
+        prior_partnership: formData.prior_partnership === "Yes",
+        prior_description: formData.prior_description.trim(),
+        additional_details: formData.additional_details.trim(),
+        consent: formData.consent === true,
+      },
+      details: null,
+    };
+
+    try {
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      const text = await response.text();
+      let result: { success?: boolean; error?: string; message?: string };
+      try {
+        result = JSON.parse(text);
+      } catch {
+        throw new Error("Invalid response from server");
+      }
+      if (!result.success) {
+        throw new Error(result.error || result.message || "Submission failed");
+      }
       setIsSuccess(true);
-    }, 1200);
+    } catch (error) {
+      console.error("Partner submission error:", error);
+      setSubmitError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
@@ -478,8 +537,8 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   {CONTRIBUTION_OPTIONS.map((opt) => (
                     <Chip
                       key={opt}
-                      active={formData.contributions.includes(opt)}
-                      onClick={() => toggle("contributions", opt)}
+                      active={formData.contribution_types.includes(opt)}
+                      onClick={() => toggle("contribution_types", opt)}
                     >
                       {opt}
                     </Chip>
@@ -488,7 +547,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
 
                 {/* Conditional micro-cards */}
                 <AnimatePresence>
-                  {formData.contributions.includes("Financial Sponsorship") && (
+                  {formData.contribution_types.includes("Financial Sponsorship") && (
                     <MicroCard key="fin" title="Financial Sponsorship">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Estimated Budget</Label>
@@ -534,7 +593,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Event Sponsorship") && (
+                  {formData.contribution_types.includes("Event Sponsorship") && (
                     <MicroCard key="event" title="Event Sponsorship">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type of Events</Label>
@@ -566,7 +625,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Mentorship / Speakers") && (
+                  {formData.contribution_types.includes("Mentorship / Speakers") && (
                     <MicroCard key="mentor" title="Mentorship / Speakers">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">What can you provide?</Label>
@@ -574,8 +633,8 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                           {MENTOR_PROVIDE.map((v) => (
                             <Chip
                               key={v}
-                              active={formData.mentor_provide.includes(v)}
-                              onClick={() => toggle("mentor_provide", v)}
+                              active={formData.mentor_roles.includes(v)}
+                              onClick={() => toggle("mentor_roles", v)}
                             >
                               {v}
                             </Chip>
@@ -594,7 +653,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Internships / Opportunities") && (
+                  {formData.contribution_types.includes("Internships / Opportunities") && (
                     <MicroCard key="intern" title="Internships / Opportunities">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type</Label>
@@ -635,7 +694,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Resources / Tools") && (
+                  {formData.contribution_types.includes("Resources / Tools") && (
                     <MicroCard key="resources" title="Resources / Tools">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Type of support</Label>
@@ -649,7 +708,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     </MicroCard>
                   )}
 
-                  {formData.contributions.includes("Strategic Partnership") && (
+                  {formData.contribution_types.includes("Strategic Partnership") && (
                     <MicroCard key="strategic" title="Strategic Partnership">
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Brief description of partnership idea</Label>
@@ -820,6 +879,16 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {submitError && (
+          <motion.div
+            className="mt-4 p-4 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {submitError}
+          </motion.div>
+        )}
 
         {/* Navigation */}
         <div className="flex justify-between mt-8">
