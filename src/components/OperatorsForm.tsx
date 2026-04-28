@@ -266,7 +266,7 @@ const OperatorsForm = ({ onBack }: OperatorsFormProps) => {
         languages_known: formData.languages_known || [],
         primary_language: formData.primary_language || "",
         language_proficiency: formData.language_proficiency || "",
-        skills: (formData.skills || "").trim(),
+        skills: formData.skills || [],
         social_energy: formData.social_energy,
         planning_style: formData.planning_style || "",
         visibility_preference: formData.visibility_preference || "",
