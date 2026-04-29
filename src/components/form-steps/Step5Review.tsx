@@ -130,12 +130,6 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
           </Label>
         </div>
       </div>
-
-      {!formData.consent_data_storage && (
-        <p className="text-destructive text-sm">
-          Please accept the data storage consent to submit your application.
-        </p>
-      )}
     </div>
   );
 };
