@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Instagram, MessageCircle, Users, GraduationCap, Calendar, Globe, MoreHorizontal } from "lucide-react";
 import PreSubmitSummary from "../shared/PreSubmitSummary";
+import TermsAgreementCheckbox from "../shared/TermsAgreementCheckbox";
 
 interface Step3Props {
   formData: MemberFormData;
@@ -99,23 +100,11 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
 
       {/* Consent Checkboxes */}
       <div className="space-y-4">
-        <div className="flex items-start space-x-3 p-4 rounded-lg bg-secondary/30 border border-border/50">
-          <Checkbox
-            id="consent_data_storage"
-            checked={formData.consent_data_storage}
-            onCheckedChange={(checked) =>
-              updateFormData({ consent_data_storage: checked === true })
-            }
-            className="mt-0.5"
-          />
-          <label
-            htmlFor="consent_data_storage"
-            className="text-sm text-foreground leading-relaxed cursor-pointer"
-          >
-            I consent to TISYA storing my data for community and communication purposes.{" "}
-            <span className="text-destructive">*</span>
-          </label>
-        </div>
+        <TermsAgreementCheckbox
+          role="pathfinder"
+          checked={formData.consent_data_storage}
+          onCheckedChange={(checked) => updateFormData({ consent_data_storage: checked })}
+        />
 
         <div className="flex items-start space-x-3 p-4 rounded-lg bg-secondary/30 border border-border/50">
           <Checkbox
