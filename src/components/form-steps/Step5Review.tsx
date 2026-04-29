@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import PreSubmitSummary from "../shared/PreSubmitSummary";
 import CommitmentModal from "../shared/CommitmentModal";
+import TermsAgreementCheckbox from "../shared/TermsAgreementCheckbox";
 
 interface Step5Props {
   formData: FormData;
@@ -103,26 +104,14 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
 
       {/* Consent Checkboxes */}
       <div className="space-y-4">
-        <div className="flex items-start gap-3">
-          <Checkbox
-            id="consent_data_storage"
-            checked={formData.consent_data_storage}
-            onCheckedChange={(checked) =>
-              updateFormData({ consent_data_storage: checked as boolean })
-            }
-            className={cn(
-              "mt-0.5 border-border",
-              !formData.consent_data_storage && "border-destructive"
-            )}
-          />
-          <Label
-            htmlFor="consent_data_storage"
-            className="text-sm text-muted-foreground cursor-pointer leading-relaxed"
-          >
-            I consent to TİSYA storing my data for recruitment and communication
-            purposes. <span className="text-destructive">*</span>
-          </Label>
-        </div>
+        <TermsAgreementCheckbox
+          role="opportunist"
+          checked={formData.consent_data_storage}
+          onCheckedChange={(checked) =>
+            updateFormData({ consent_data_storage: checked })
+          }
+          showError={!formData.consent_data_storage}
+        />
 
         <div className="flex items-start gap-3">
           <Checkbox
