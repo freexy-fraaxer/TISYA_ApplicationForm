@@ -266,7 +266,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
 
   try {
     const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbxppX2995CeDLecfDnITDOLscFJ551x36pjYsYDN7c/exec",
+      "https://script.google.com/macros/s/AKfycbykLQS6tcHInh6KvksHmdWOGmenQ0P4ygAp6YOM58uqyyAGepEXDPA3PKaVsOyfQRYv/exec",
       {
         method: "POST",
         headers: {
