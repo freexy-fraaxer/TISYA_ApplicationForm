@@ -496,6 +496,18 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                 />
                 <FormFieldError error={errors.contact_name || null} />
               </div>
+              <div className="space-y-2">
+  <Label className="text-sm font-medium flex items-center gap-2">
+    <User className="w-4 h-4 text-muted-foreground" />
+    Role / Position
+  </Label>
+  <Input
+    placeholder="e.g., Founder, Marketing Lead"
+    value={formData.role_title}
+    onChange={(e) => update({ role_title: e.target.value })}
+    className="bg-secondary/50 border-border focus:border-primary"
+  />
+</div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
