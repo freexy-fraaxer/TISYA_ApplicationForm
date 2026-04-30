@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";

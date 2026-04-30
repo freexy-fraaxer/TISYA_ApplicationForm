@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from "react";
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";

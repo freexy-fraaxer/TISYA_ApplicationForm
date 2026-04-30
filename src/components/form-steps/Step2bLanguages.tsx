@@ -1,4 +1,4 @@
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -12,127 +12,95 @@ import { cn } from "@/lib/utils";
 import { Languages } from "lucide-react";
 import HelperText from "../shared/HelperText";
 
-interface Step2bProps {
-  formData: FormData;
-  updateFormData: (updates: Partial<FormData>) => void;
+import { useState } from "react";
+
+interface Props {
+  formData: any;
+  updateFormData: (data: any) => void;
 }
 
-const languageOptions = [
-  "English",
-  "Turkish",
-  "Arabic",
-  "French",
-  "Spanish",
-  "German",
-  "Russian",
-  "Chinese",
-  "Japanese",
-  "Korean",
-  "Portuguese",
-  "Italian",
-  "Hindi",
-  "Urdu",
-  "Persian",
-  "Indonesian",
-  "Malay",
-  "Vietnamese",
-  "Thai",
-  "Dutch",
-  "Polish",
-  "Ukrainian",
-  "Greek",
-  "Hebrew",
-  "Swedish",
-  "Other",
-];
+const LANGUAGES = ["English", "Turkish", "Bangla", "Arabic","Deutsch","French","Spanish","Urdu","Bahasa","Mandarin","Russian","Hebrew","Japanese","Swahili","Korean","Tamil","Polish","Kazakh"];
 
-const Step2bLanguages = ({ formData, updateFormData }: Step2bProps) => {
-  const toggleLanguage = (language: string) => {
-    const current = formData.languages_known;
-    if (current.includes(language)) {
-      updateFormData({ languages_known: current.filter((l) => l !== language) });
+const Step2bLanguages = ({ formData, updateFormData }: Props) => {
+  const [customLang, setCustomLang] = useState("");
+
+  const toggleLanguage = (lang: string) => {
+    const exists = formData.languages_known.includes(lang);
+
+    if (exists) {
+      updateFormData({
+        languages_known: formData.languages_known.filter((l: string) => l !== lang),
+      });
     } else {
-      updateFormData({ languages_known: [...current, language] });
+      updateFormData({
+        languages_known: [...formData.languages_known, lang],
+      });
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          Languages
-        </h2>
-        <p className="text-muted-foreground">
-          What languages do you speak?
-        </p>
+    <div className="space-y-4">
+
+      <h2 className="text-lg font-semibold">Languages</h2>
+
+      {/* Preset Languages */}
+      <div className="flex flex-wrap gap-2">
+        {LANGUAGES.map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            onClick={() => toggleLanguage(lang)}
+            className={`px-3 py-1 rounded border ${
+              formData.languages_known.includes(lang)
+                ? "bg-primary text-white"
+                : "bg-transparent"
+            }`}
+          >
+            {lang}
+          </button>
+        ))}
       </div>
 
-      {/* Languages Known */}
-      <div className="space-y-3">
-        <Label className="text-sm font-medium flex items-center gap-2">
-          <Languages className="w-4 h-4 text-muted-foreground" />
-          Languages Known
-        </Label>
-        <HelperText>Select all that apply.</HelperText>
-        <div className="flex flex-wrap gap-2">
-          {languageOptions.map((language) => (
-            <button
-              key={language}
-              type="button"
-              onClick={() => toggleLanguage(language)}
-              className={cn(
-                "chip",
-                formData.languages_known.includes(language) && "selected"
-              )}
-            >
-              {language}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Custom Language Input */}
+      <input
+        value={customLang}
+        placeholder="Add other language and press Enter"
+        onChange={(e) => setCustomLang(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && customLang.trim()) {
+            e.preventDefault();
+
+            if (!formData.languages_known.includes(customLang.trim())) {
+              updateFormData({
+                languages_known: [
+                  ...formData.languages_known,
+                  customLang.trim(),
+                ],
+              });
+            }
+
+            setCustomLang("");
+          }
+        }}
+        className="w-full border p-2 rounded"
+      />
 
       {/* Primary Language */}
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">
-          Primary Language <span className="text-destructive">*</span>
-        </Label>
-        <HelperText>Which language are you most comfortable communicating in?</HelperText>
-        <Select
-          value={formData.primary_language}
-          onValueChange={(value) => updateFormData({ primary_language: value })}
-        >
-          <SelectTrigger className="bg-secondary/50 border-border">
-            <SelectValue placeholder="Select primary language" />
-          </SelectTrigger>
-          <SelectContent className="bg-card border-border max-h-60">
-            {languageOptions.map((language) => (
-              <SelectItem key={language} value={language}>
-                {language}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <select
+        value={formData.primary_language}
+        onChange={(e) =>
+          updateFormData({ primary_language: e.target.value })
+        }
+        className="w-full border p-2 rounded"
+      >
+        <option value="">Select Primary Language</option>
+        {formData.languages_known.map((lang: string) => (
+          <option key={lang} value={lang}>
+            {lang}
+          </option>
+        ))}
+      </select>
 
-      {/* Language proficiency */}
-      <div className="space-y-2">
-        <Label className="text-sm font-medium">Language Proficiency</Label>
-        <HelperText>Write like: English (Fluent), Turkish (Intermediate)</HelperText>
-        <Textarea
-          placeholder="English (Fluent), Turkish (Intermediate)"
-          value={formData.language_proficiency}
-          onChange={(e) => {
-            if (e.target.value.length <= 300) {
-              updateFormData({ language_proficiency: e.target.value });
-            }
-          }}
-          className="bg-secondary/50 border-border focus:border-primary min-h-[70px]"
-        />
-        <div className="text-xs text-muted-foreground text-right">
-          {formData.language_proficiency.length}/300
-        </div>
-      </div>
     </div>
   );
 };

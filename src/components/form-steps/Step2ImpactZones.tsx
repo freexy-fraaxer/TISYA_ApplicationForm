@@ -1,4 +1,4 @@
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -51,7 +51,7 @@ const impactZones = [
       "Graphic design",
       "Video editing",
       "Photography",
-      "Copywriting",
+      "Social Media Management",
       "Branding",
     ],
   },

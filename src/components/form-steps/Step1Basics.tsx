@@ -1,4 +1,4 @@
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,9 +24,7 @@ const educationLevels = [
   "High School",
   "Undergraduate",
   "Master's",
-  "PhD",
   "Graduated",
-  "Other",
 ];
 
 const howFoundOptions = [
@@ -63,8 +61,8 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
     if (touched.nationality) {
       newErrors.nationality = formData.nationality ? null : "Nationality is required";
     }
-    if (touched.current_status) {
-      newErrors.current_status = formData.current_status ? null : "Current status is required";
+    if (touched.university) {
+      newErrors.current_status = formData.university ? null : "Uni is required";
     }
     if (touched.education_level) {
       newErrors.education_level = formData.education_level ? null : "Education level is required";
@@ -228,33 +226,6 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           onChange={(e) => updateFormData({ university: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
         />
-      </div>
-
-      {/* Current Status */}
-      <div className="space-y-2">
-        <Label className="text-sm font-medium flex items-center gap-2">
-          <Briefcase className="w-4 h-4 text-muted-foreground" />
-          Current Status <span className="text-destructive">*</span>
-        </Label>
-        <Select
-          value={formData.current_status}
-          onValueChange={(value) => {
-            updateFormData({ current_status: value });
-            handleBlur("current_status");
-          }}
-        >
-          <SelectTrigger className={`bg-secondary/50 border-border ${errors.current_status ? "border-destructive" : ""}`}>
-            <SelectValue placeholder="Select your current status" />
-          </SelectTrigger>
-          <SelectContent className="bg-card border-border">
-            {currentStatusOptions.map((status) => (
-              <SelectItem key={status} value={status}>
-                {status}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <FormFieldError error={errors.current_status || null} />
       </div>
 
       {/* Department */}

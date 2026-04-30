@@ -1,4 +1,4 @@
-import { FormData } from "../OperatorsForm";
+import { FormData } from "../OpportunistForm";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -29,7 +29,6 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
         name={formData.full_name}
         role="Operator"
         interests={formData.impact_zones}
-        preferredImpact={formData.impact_preference}
       />
 
       {/* Summary Card */}
