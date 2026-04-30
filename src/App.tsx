@@ -2,8 +2,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { QueryClient as QueryClientType } from "@tanstack/react-query";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Index from "./pages/Index";
@@ -12,10 +10,11 @@ import MissionPage from "./pages/MissionPage";
 import JoinPage from "./pages/JoinPage";
 import NotFound from "./pages/NotFound";
 import AppShell from "./components/AppShell";
+
 import { SoundProvider } from "@/contexts/SoundContext";
 import { BackgroundEffectsProvider } from "@/contexts/BackgroundEffectsContext";
 
-const queryClient: QueryClientType = new QueryClient();
+const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
