@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import OperatorsForm from "@/components/OperatorsForm";
+import OperatorsForm from "@/components/OpportunistForm";
 import MemberForm from "@/components/MemberForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
 import CountryUnionForm from "@/components/CountryUnionForm";
