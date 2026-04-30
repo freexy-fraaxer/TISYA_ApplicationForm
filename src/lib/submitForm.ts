@@ -3,7 +3,7 @@
 // Expected response shape: { status: "success", data: { generatedId: "..." } }
 
 export const API_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbwsrYDFMxtKX3a2WdPAOHAvS1kC8LHdPDQRc1O7GxVuS7u8pRfDBtnbdk68eGZlVI-U/exec";
+  "https://script.google.com/macros/s/AKfycbykLQS6tcHInh6KvksHmdWOGmenQ0P4ygAp6YOM58uqyyAGepEXDPA3PKaVsOyfQRYv/exec";
 
 export type FormType =
   | "Member"
