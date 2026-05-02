@@ -352,7 +352,7 @@ const RoleSelection = ({
     {
       key: "opportunist",
       title: "Opportunist",
-      description: "Create, manage, and bring ideas to life as an opportunist.",
+      description: "Volunteer, contribute, and turn ideas into real impact.",
       image: opportunistBg,
       onClick: () => {
         playOpportunistSelect();

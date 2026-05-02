@@ -19,7 +19,13 @@ interface Props {
   updateFormData: (data: any) => void;
 }
 
-const LANGUAGES = ["English", "Turkish", "Bangla", "Arabic","Deutsch","French","Spanish","Urdu","Bahasa","Mandarin","Russian","Hebrew","Japanese","Swahili","Korean","Tamil","Polish","Kazakh"];
+const LANGUAGES = [
+  "English", "Turkish", "Arabic", "French", "Spanish", "German",
+  "Russian", "Chinese", "Japanese", "Korean", "Portuguese", "Italian",
+  "Hindi", "Urdu", "Persian", "Indonesian", "Malay", "Vietnamese",
+  "Thai", "Dutch", "Polish", "Ukrainian", "Greek", "Hebrew",
+  "Swedish", "Other",
+];
 
 const Step2bLanguages = ({ formData, updateFormData }: Props) => {
   const [customLang, setCustomLang] = useState("");
@@ -39,67 +45,86 @@ const Step2bLanguages = ({ formData, updateFormData }: Props) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
 
-      <h2 className="text-lg font-semibold">Languages</h2>
-
-      {/* Preset Languages */}
-      <div className="flex flex-wrap gap-2">
-        {LANGUAGES.map((lang) => (
-          <button
-            key={lang}
-            type="button"
-            onClick={() => toggleLanguage(lang)}
-            className={`px-3 py-1 rounded border ${
-              formData.languages_known.includes(lang)
-                ? "bg-primary text-white"
-                : "bg-transparent"
-            }`}
-          >
-            {lang}
-          </button>
-        ))}
+      {/* Section Header */}
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl font-bold text-foreground">Languages</h2>
+        <p className="text-muted-foreground text-sm">What languages do you speak?</p>
       </div>
 
-      {/* Custom Language Input */}
-      <input
-        value={customLang}
-        placeholder="Add other language and press Enter"
-        onChange={(e) => setCustomLang(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && customLang.trim()) {
-            e.preventDefault();
-
-            if (!formData.languages_known.includes(customLang.trim())) {
-              updateFormData({
-                languages_known: [
-                  ...formData.languages_known,
-                  customLang.trim(),
-                ],
-              });
-            }
-
-            setCustomLang("");
-          }
-        }}
-        className="w-full border p-2 rounded"
-      />
+      {/* Languages Known */}
+      <div className="space-y-3">
+        <Label className="text-sm font-semibold flex items-center gap-2">
+          <Languages className="w-4 h-4 text-muted-foreground" />
+          Languages Known
+        </Label>
+        <HelperText>Select all that apply.</HelperText>
+        <div className="flex flex-wrap gap-2">
+          {LANGUAGES.map((lang) => (
+            <button
+              key={lang}
+              type="button"
+              onClick={() => toggleLanguage(lang)}
+              className={cn(
+                "px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-200",
+                formData.languages_known.includes(lang)
+                  ? "bg-primary/20 border-primary text-foreground shadow-[0_0_8px_rgba(56,189,248,0.15)]"
+                  : "bg-secondary/40 border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+              )}
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Primary Language */}
-      <select
-        value={formData.primary_language}
-        onChange={(e) =>
-          updateFormData({ primary_language: e.target.value })
-        }
-        className="w-full border p-2 rounded"
-      >
-        <option value="">Select Primary Language</option>
-        {formData.languages_known.map((lang: string) => (
-          <option key={lang} value={lang}>
-            {lang}
-          </option>
-        ))}
-      </select>
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold">
+          Primary Language <span className="text-destructive">*</span>
+        </Label>
+        <HelperText>Which language are you most comfortable communicating in?</HelperText>
+        <Select
+          value={formData.primary_language}
+          onValueChange={(v) => updateFormData({ primary_language: v })}
+        >
+          <SelectTrigger className="bg-secondary/50 border-border">
+            <SelectValue placeholder="Select primary language" />
+          </SelectTrigger>
+          <SelectContent className="bg-card border-border">
+            {(formData.languages_known.length > 0
+              ? formData.languages_known
+              : LANGUAGES
+            ).map((lang: string) => (
+              <SelectItem key={lang} value={lang}>
+                {lang}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Language Proficiency */}
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold">Language Proficiency</Label>
+        <HelperText>Write like: English (Fluent), Turkish (Intermediate)</HelperText>
+        <Textarea
+          placeholder="English (Fluent), Turkish (Intermediate)"
+          value={formData.language_proficiency}
+          onChange={(e) => {
+            if (e.target.value.length <= 300)
+              updateFormData({ language_proficiency: e.target.value });
+          }}
+          rows={3}
+          className="bg-secondary/50 border-border focus:border-primary resize-none"
+        />
+        <div className="flex justify-end">
+          <span className="text-xs text-muted-foreground">
+            {formData.language_proficiency?.length || 0}/300
+          </span>
+        </div>
+      </div>
 
     </div>
   );
