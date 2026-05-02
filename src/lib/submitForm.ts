@@ -43,6 +43,13 @@ export async function submitToAppsScript(
   let result: {
     success?: boolean;
     error?: string;
+<<<<<<< HEAD
+=======
+    message?: string;
+    data?: { generatedId?: string; app_id?: string };
+    generatedId?: string;
+    referenceId?: string;
+>>>>>>> 67bc2af59a33cc9683fcae74c4c3b07850feb3a1
     app_id?: string;
   };
   try {
@@ -55,5 +62,17 @@ export async function submitToAppsScript(
     throw new Error(result.error || "Submission failed");
   }
 
+<<<<<<< HEAD
   return { generatedId: result.app_id || "", raw: result };
+=======
+  const generatedId =
+    result.data?.generatedId ||
+    result.data?.app_id ||
+    result.generatedId ||
+    result.app_id ||
+    result.referenceId ||
+    "";
+
+  return { generatedId, raw: result };
+>>>>>>> 67bc2af59a33cc9683fcae74c4c3b07850feb3a1
 }
