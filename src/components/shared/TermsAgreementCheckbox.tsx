@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShieldCheck, Check } from "lucide-react";
 import HeroButton from "@/components/HeroButton";
 import { cn } from "@/lib/utils";
@@ -226,7 +225,7 @@ const TermsAgreementCheckbox = ({
             </DialogTitle>
           </DialogHeader>
 
-          <ScrollArea className="flex-1 max-h-[55vh]">
+          <div className="flex-1 overflow-y-auto max-h-[55vh]">
             <div className="p-5 sm:p-6 space-y-5 text-sm leading-relaxed">
               <p className="text-muted-foreground italic">{terms.intro}</p>
               {terms.sections.map((section) => (
@@ -239,7 +238,7 @@ const TermsAgreementCheckbox = ({
                 {terms.closing}
               </p>
             </div>
-          </ScrollArea>
+          </div>
 
           <div className="p-4 sm:p-5 border-t border-border/50 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 bg-secondary/20">
             <button
