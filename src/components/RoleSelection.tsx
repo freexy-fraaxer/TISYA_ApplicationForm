@@ -6,7 +6,7 @@ import { useSound } from "@/contexts/SoundContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import pathfinderBg from "@/assets/role-pathfinder-v3.png";
-import operatorBg from "@/assets/role-operator-v3.png";
+import opportunistBg from "@/assets/role-opportunist-v3.png";
 import partnerBg from "@/assets/role-partner-v3.png";
 import internBg from "@/assets/role-intern-v3.png";
 import ambassadorBg from "@/assets/role-ambassador-v3.png";
@@ -14,7 +14,7 @@ import ambassadorBg from "@/assets/role-ambassador-v3.png";
 interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectOperators: () => void;
+  onSelectOpportunists: () => void;
   onSelectMembers: () => void;
   onSelectAmbassador: () => void;
   onSelectCountryUnion: () => void; // kept for back-compat
@@ -301,7 +301,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
 const RoleSelection = ({
   isOpen,
   onClose,
-  onSelectOperators,
+  onSelectOpportunists,
   onSelectMembers,
   onSelectAmbassador,
   onSelectPartner,
@@ -312,7 +312,7 @@ const RoleSelection = ({
     playBack,
     playHover,
     playPathfinderSelect,
-    playOperatorSelect,
+    playOpportunistSelect,
     playCountryUnionSelect,
     playInternSelect,
   } = useSound();
@@ -352,11 +352,11 @@ const RoleSelection = ({
     {
       key: "opportunist",
       title: "Opportunist",
-      description: "Create, manage, and bring ideas to life as an operator.",
-      image: operatorBg,
+      description: "Create, manage, and bring ideas to life as an opportunist.",
+      image: opportunistBg,
       onClick: () => {
-        playOperatorSelect();
-        onSelectOperators();
+        playOpportunistSelect();
+        onSelectOpportunists();
       },
       hoverSound: playHover,
     },

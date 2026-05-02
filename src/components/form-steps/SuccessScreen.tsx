@@ -56,7 +56,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          Welcome to the Alliance, Operator. We'll be in touch soon.
+          Welcome to the Alliance, Opportunist. We'll be in touch soon.
         </motion.p>
 
         {/* Application ID */}

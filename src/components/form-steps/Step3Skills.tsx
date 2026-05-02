@@ -48,7 +48,7 @@ const getPlanningStyleLabel = (value: number): string => {
 };
 
 const getVisibilityLabel = (value: number): string => {
-  if (value <= 20) return "Silent operator";
+  if (value <= 20) return "Silent opportunist";
   if (value <= 40) return "Support role vibes";
   if (value <= 60) return "Comfortable presenting";
   if (value <= 80) return "Stage-ready";

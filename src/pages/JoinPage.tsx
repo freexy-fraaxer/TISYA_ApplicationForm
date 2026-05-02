@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import OperatorsForm from "@/components/OpportunistForm";
-import MemberForm from "@/components/MemberForm";
+import OpportunistForm from "@/components/OpportunistForm";
+import PathfinderForm from "@/components/PathfinderForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
 import CountryUnionForm from "@/components/CountryUnionForm";
 import PartnerSponsorForm from "@/components/PartnerSponsorForm";
 
-type JoinRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
+type JoinRole = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
 
 const isJoinRole = (v: string | undefined): v is JoinRole =>
-  v === "operators" || v === "members" || v === "ambassador" || v === "countryunion" || v === "partner";
+  v === "opportunists" || v === "members" || v === "ambassador" || v === "countryunion" || v === "partner";
 
 const JoinPage = () => {
   const navigate = useNavigate();
@@ -29,10 +29,10 @@ const JoinPage = () => {
 
   const renderForm = () => {
     switch (role) {
-      case "operators":
-        return <OperatorsForm onBack={handleBack} />;
+      case "opportunists":
+        return <OpportunistForm onBack={handleBack} />;
       case "members":
-        return <MemberForm onBack={handleBack} />;
+        return <PathfinderForm onBack={handleBack} />;
       case "ambassador":
         return <AmbassadorForm onBack={handleBack} />;
       case "countryunion":

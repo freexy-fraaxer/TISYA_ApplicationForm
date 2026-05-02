@@ -146,7 +146,7 @@ const initialFormData: FormData = {
    COMPONENT
 ========================= */
 
-const OperatorsForm = ({ onBack }: { onBack: () => void }) => {
+const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [loading, setLoading] = useState(false);
@@ -313,4 +313,4 @@ const OperatorsForm = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-export default OperatorsForm;
+export default OpportunistForm;

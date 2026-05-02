@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import RoleSelection from "@/components/RoleSelection";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
-type MissionRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
+type MissionRole = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
 
 const RolesPage = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const RolesPage = () => {
       <RoleSelection
         isOpen={true}
         onClose={handleClose}
-        onSelectOperators={() => handleSelectRole("operators")}
+        onSelectOpportunists={() => handleSelectRole("opportunists")}
         onSelectMembers={() => handleSelectRole("members")}
         onSelectAmbassador={() => handleSelectRole("ambassador")}
         onSelectCountryUnion={() => handleSelectRole("countryunion")}

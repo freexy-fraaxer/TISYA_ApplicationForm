@@ -1,4 +1,4 @@
-import { MemberFormData } from "../MemberForm";
+import { PathfinderFormData } from "../PathfinderForm";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,8 @@ import PreSubmitSummary from "../shared/PreSubmitSummary";
 import TermsAgreementCheckbox from "../shared/TermsAgreementCheckbox";
 
 interface Step3Props {
-  formData: MemberFormData;
-  updateFormData: (updates: Partial<MemberFormData>) => void;
+  formData: PathfinderFormData;
+  updateFormData: (updates: Partial<PathfinderFormData>) => void;
 }
 
 const referralOptions = [

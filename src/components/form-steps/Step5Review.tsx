@@ -27,7 +27,7 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
       {/* Pre-submit Summary */}
       <PreSubmitSummary
         name={formData.full_name}
-        role="Operator"
+        role="Opportunist"
         interests={formData.impact_zones}
       />
 
@@ -96,7 +96,7 @@ const Step5Review = ({ formData, updateFormData }: Step5Props) => {
 
       {/* Commitment Checkbox */}
       <CommitmentModal
-        roleName="Operator"
+        roleName="Opportunist"
         checked={formData.consent_commitment}
         onCheckedChange={(checked) => updateFormData({ consent_commitment: checked })}
       />

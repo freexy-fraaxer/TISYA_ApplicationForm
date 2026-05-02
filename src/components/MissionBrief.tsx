@@ -4,7 +4,7 @@ import HeroButton from "./HeroButton";
 import { ArrowLeft, ArrowRight, Shield, Zap, Star } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 
-type RolePath = "operators" | "members" | "ambassador" | "countryunion" | "partner";
+type RolePath = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
 
 interface MissionBriefProps {
   role: RolePath;
@@ -28,15 +28,15 @@ const missionData: Record<RolePath, {
     ],
     impact: "Every Pathfinder strengthens the network — your presence matters.",
   },
-  operators: {
-    title: "Operator",
+  opportunists: {
+    title: "Opportunist",
     mission: "Create, manage, and bring ideas to life. You'll be the engine behind TISYA's programs and initiatives.",
     unlocks: [
       "Work on real projects with a global team",
       "Build your portfolio with impactful work",
       "Access leadership and skill-building tracks",
     ],
-    impact: "Operators turn vision into reality — you're the backbone of The Alliance.",
+    impact: "Opportunists turn vision into reality — you're the backbone of The Alliance.",
   },
   ambassador: {
     title: "Ambassador",

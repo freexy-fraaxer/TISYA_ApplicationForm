@@ -1,4 +1,4 @@
-import { MemberFormData } from "../MemberForm";
+import { PathfinderFormData } from "../PathfinderForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,8 +14,8 @@ import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect, useRef } from "react";
 
 interface Step1Props {
-  formData: MemberFormData;
-  updateFormData: (updates: Partial<MemberFormData>) => void;
+  formData: PathfinderFormData;
+  updateFormData: (updates: Partial<PathfinderFormData>) => void;
 }
 
 const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
@@ -77,7 +77,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
   };
 
   // Handle input with autofill sync
-  const handleInputChange = (field: keyof MemberFormData, value: string) => {
+  const handleInputChange = (field: keyof PathfinderFormData, value: string) => {
     updateFormData({ [field]: value });
   };
 

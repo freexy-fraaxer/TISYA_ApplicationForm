@@ -1,4 +1,4 @@
-import { MemberFormData } from "../MemberForm";
+import { PathfinderFormData } from "../PathfinderForm";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -22,8 +22,8 @@ import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
 
 interface Step2Props {
-  formData: MemberFormData;
-  updateFormData: (updates: Partial<MemberFormData>) => void;
+  formData: PathfinderFormData;
+  updateFormData: (updates: Partial<PathfinderFormData>) => void;
 }
 
 const attentionOptions = [

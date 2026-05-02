@@ -213,7 +213,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     if (touched.contact_name) e.contact_name = getRequiredError(formData.contact_name, "Contact person");
     if (touched.contact_email) e.contact_email = getEmailError(formData.contact_email);
     if (touched.collab_vision) e.collab_vision = getRequiredError(formData.collab_vision, "This field");
-    if (touched.why_tisya) e.why_tisya = getRequiredError(formData.why_tisya, "This field");
+
     setErrors(e);
   }, [formData, touched]);
 
@@ -230,7 +230,6 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     step1Valid &&
     step2Valid &&
     formData.collab_vision.trim() &&
-    formData.why_tisya.trim() &&
     formData.prior_partnership &&
     formData.consent;
 
@@ -257,7 +256,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
 };
 
   const handleSubmit = async () => {
-  setTouched((p) => ({ ...p, collab_vision: true, why_tisya: true }));
+  setTouched((p) => ({ ...p, collab_vision: true }));
 
   if (!canSubmit || formData.honeypot || isSubmitting) return;
 
@@ -836,25 +835,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">
-                  Why TISYA? <span className="text-destructive">*</span>
-                </Label>
-                <Textarea
-                  placeholder="What draws you to TISYA specifically?"
-                  value={formData.why_tisya}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 250) update({ why_tisya: e.target.value });
-                  }}
-                  onBlur={() => handleBlur("why_tisya")}
-                  className={`bg-secondary/50 border-border focus:border-primary ${errors.why_tisya ? "border-destructive" : ""}`}
-                  rows={3}
-                />
-                <div className="flex justify-between">
-                  <FormFieldError error={errors.why_tisya || null} />
-                  <span className="text-xs text-muted-foreground">{formData.why_tisya.length}/250</span>
-                </div>
-              </div>
+
 
               <div className="space-y-2">
                 <Label className="text-sm font-medium">

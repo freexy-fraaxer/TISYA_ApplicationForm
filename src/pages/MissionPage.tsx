@@ -2,10 +2,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import MissionBrief from "@/components/MissionBrief";
 
-type MissionRole = "operators" | "members" | "ambassador" | "countryunion" | "partner";
+type MissionRole = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
 
 const isMissionRole = (v: string | undefined): v is MissionRole =>
-  v === "operators" || v === "members" || v === "ambassador" || v === "countryunion" || v === "partner";
+  v === "opportunists" || v === "members" || v === "ambassador" || v === "countryunion" || v === "partner";
 
 const MissionPage = () => {
   const navigate = useNavigate();

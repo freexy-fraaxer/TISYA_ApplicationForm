@@ -25,7 +25,7 @@ const MEMBER_MICROCOPY = [
   "Almost there",
 ];
 
-export interface MemberFormData {
+export interface PathfinderFormData {
   // Step 1
   full_name: string;
   email: string;
@@ -50,7 +50,7 @@ export interface MemberFormData {
   honeypot: string;
 }
 
-const initialFormData: MemberFormData = {
+const initialFormData: PathfinderFormData = {
   full_name: "",
   email: "",
   contact_number: "",
@@ -68,15 +68,15 @@ const initialFormData: MemberFormData = {
   honeypot: "",
 };
 
-interface MemberFormProps {
+interface PathfinderFormProps {
   onBack: () => void;
 }
 
-const MemberForm = ({ onBack }: MemberFormProps) => {
+const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
   const { playPulse, playBack } = useSound();
   const { triggerPulse } = useBackgroundEffects();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<MemberFormData>(initialFormData);
+  const [formData, setFormData] = useState<PathfinderFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -90,7 +90,7 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   const totalSteps = 3;
   const progress = (currentStep / totalSteps) * 100;
 
-  const updateFormData = (updates: Partial<MemberFormData>) => {
+  const updateFormData = (updates: Partial<PathfinderFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
     if (submitError) setSubmitError(null);
   };
@@ -306,4 +306,4 @@ const MemberForm = ({ onBack }: MemberFormProps) => {
   );
 };
 
-export default MemberForm;
+export default PathfinderForm;

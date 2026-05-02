@@ -15,8 +15,8 @@ interface CommitmentModalProps {
 }
 
 const commitmentContent: Record<string, string> = {
-  Operator:
-    "As a TİSYA Operator, I commit to showing up consistently, communicating proactively with my team, completing assigned tasks on time, and representing TİSYA with integrity in all interactions.",
+  Opportunist:
+    "As a TİSYA Opportunist, I commit to showing up consistently, communicating proactively with my team, completing assigned tasks on time, and representing TİSYA with integrity in all interactions.",
   Ambassador:
     "As a TİSYA Ambassador, I commit to actively representing TİSYA in my designated scope, engaging my network authentically, reporting progress regularly, and upholding the values and mission of TİSYA.",
   "Country Union":
