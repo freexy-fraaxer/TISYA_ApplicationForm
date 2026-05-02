@@ -44,9 +44,10 @@ export async function submitToAppsScript(
     success?: boolean;
     error?: string;
     message?: string;
-    data?: { generatedId?: string };
+    data?: { generatedId?: string; app_id?: string };
     generatedId?: string;
     referenceId?: string;
+    app_id?: string;
   };
   try {
     result = JSON.parse(text);
@@ -61,7 +62,9 @@ export async function submitToAppsScript(
 
   const generatedId =
     result.data?.generatedId ||
+    result.data?.app_id ||
     result.generatedId ||
+    result.app_id ||
     result.referenceId ||
     "";
 
