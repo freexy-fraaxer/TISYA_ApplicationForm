@@ -4,7 +4,7 @@
 // and returns: { success: true, app_id: "..." }
 
 export const API_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbzBBqykKTm_nXlMB8rmay48y1Ab3fGti3XjlmKCa3ASV1KHCwPkLk6Q21JcM0fquF6W/exec";
+  "https://script.google.com/macros/s/AKfycbzGX13Bv3lVhSUyaNx_8mUceckbJp0hbn-WaTakE5boRals8NwDGQa6k2RJ8QQ2yhF1/exec";
 
 export type FormType =
   | "Pathfinder"

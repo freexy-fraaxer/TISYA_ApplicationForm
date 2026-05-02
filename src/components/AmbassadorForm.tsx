@@ -155,15 +155,15 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const fields = {
-        Full_Name: formData.full_name.trim(),
-        Email: formData.email.trim(),
-        Contact_Number: formData.phone.trim(),
-        City: formData.city.trim(),
-        Nationality: formData.country,
-        University: formData.institution.trim(),
-        Department_of_Study: "",
+      // Keys MUST exactly match AMBASSADOR_FIELDS in the Apps Script
+      const fields: Record<string, unknown> = {
         ambassador_type: formData.ambassador_type,
+        full_name: formData.full_name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        country: formData.country,
+        city: formData.city.trim(),
+        institution: formData.institution.trim(),
         linkedin: formData.linkedin.trim(),
         previous_involvement: formData.previous_involvement,
         involvement_details: formData.involvement_details.trim(),
@@ -172,7 +172,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
         why_ambassador: formData.why_ambassador.trim(),
         experience: formData.experience.trim(),
         consent_commitment: formData.consent_commitment,
-        Data_Consent: formData.consent,
+        consent: formData.consent,
       };
       const { generatedId: id } = await submitToAppsScript("Ambassador", fields);
       setGeneratedId(id);

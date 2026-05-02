@@ -115,22 +115,22 @@ const CountryUnionForm = ({ onBack }: CountryUnionFormProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
     try {
-      const fields = {
-        "Organization Name": formData.org_name.trim(),
-        Website: formData.website.trim(),
-        "Partnership Type": formData.org_type,
-        Full_Name: formData.contact_name.trim(),
-        Email: formData.contact_email.trim(),
-        Contact_Number: formData.contact_phone.trim(),
-        City: formData.city.trim(),
-        Nationality: formData.country,
+      // Keys MUST exactly match COUNTRY_UNION_FIELDS in the Apps Script
+      const fields: Record<string, unknown> = {
+        org_name: formData.org_name.trim(),
         country: formData.country,
+        city: formData.city.trim(),
+        org_type: formData.org_type,
+        contact_name: formData.contact_name.trim(),
+        contact_email: formData.contact_email.trim(),
+        contact_phone: formData.contact_phone.trim(),
+        website: formData.website.trim(),
         scope_of_work: formData.scope_of_work.trim(),
         why_affiliate: formData.why_affiliate.trim(),
         student_challenges: formData.student_challenges.trim(),
         first_steps: formData.first_steps.trim(),
         consent_commitment: formData.consent_commitment,
-        Data_Consent: formData.consent,
+        consent: formData.consent,
       };
       const { generatedId: id } = await submitToAppsScript("CountryUnion", fields);
       setGeneratedId(id);
