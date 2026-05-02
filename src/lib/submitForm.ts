@@ -1,16 +1,16 @@
 // Unified form submitter for Google Apps Script Web App.
 // Sends POST with Content-Type: text/plain;charset=utf-8 (required to bypass CORS).
-// Expected response shape: { status: "success", data: { generatedId: "..." } }
+// The Apps Script expects: { formType: "...", data: { field1: "...", ... } }
+// and returns: { success: true, app_id: "..." }
 
 export const API_ENDPOINT =
   "https://script.google.com/macros/s/AKfycbzBBqykKTm_nXlMB8rmay48y1Ab3fGti3XjlmKCa3ASV1KHCwPkLk6Q21JcM0fquF6W/exec";
 
 export type FormType =
-  | "Member"
-  | "Volunteer"
   | "Pathfinder"
+  | "Volunteer"
+  | "partner"
   | "Ambassador"
-  | "Collaborator"
   | "CountryUnion";
 
 export interface SubmitResult {
@@ -22,7 +22,8 @@ export async function submitToAppsScript(
   formType: FormType,
   fields: Record<string, unknown>
 ): Promise<SubmitResult> {
-  const body = { formType, ...fields };
+  // Nest fields under `data` so Apps Script can do: const data = body.data
+  const body = { formType, data: fields };
 
   console.log(`[submitForm] Submitting ${formType}:`, body);
 
@@ -40,13 +41,9 @@ export async function submitToAppsScript(
   }
 
   let result: {
-    status?: string;
     success?: boolean;
     error?: string;
-    message?: string;
-    data?: { generatedId?: string };
-    generatedId?: string;
-    referenceId?: string;
+    app_id?: string;
   };
   try {
     result = JSON.parse(text);
@@ -54,16 +51,9 @@ export async function submitToAppsScript(
     throw new Error("Invalid response from server");
   }
 
-  const ok = result.status === "success" || result.success === true;
-  if (!ok) {
-    throw new Error(result.error || result.message || "Submission failed");
+  if (!result.success) {
+    throw new Error(result.error || "Submission failed");
   }
 
-  const generatedId =
-    result.data?.generatedId ||
-    result.generatedId ||
-    result.referenceId ||
-    "";
-
-  return { generatedId, raw: result };
+  return { generatedId: result.app_id || "", raw: result };
 }

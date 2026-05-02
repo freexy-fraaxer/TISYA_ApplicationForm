@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
 import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { submitToAppsScript } from "@/lib/submitForm";
 
 interface PartnerSponsorFormProps {
   onBack: () => void;
@@ -264,67 +265,41 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
   setSubmitError(null);
 
   try {
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbzBBqykKTm_nXlMB8rmay48y1Ab3fGti3XjlmKCa3ASV1KHCwPkLk6Q21JcM0fquF6W/exec",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain",
-        },
-        body: JSON.stringify({
-          formType: "partner",
-          data: {
-            org_name: formData.org_name.trim(),
-            org_type: formData.org_type,
-            contact_name: formData.contact_name.trim(),
-            role_title: formData.role_title.trim(),
-            contact_email: formData.contact_email.trim(),
-            contact_phone: formData.contact_phone.trim(),
-            website: formData.website.trim(),
+    // Keys MUST exactly match PARTNER_FIELDS in the Apps Script
+    const fields: Record<string, unknown> = {
+      org_name: formData.org_name.trim(),
+      org_type: formData.org_type,
+      contact_name: formData.contact_name.trim(),
+      role_title: formData.role_title.trim(),
+      contact_email: formData.contact_email.trim(),
+      contact_phone: formData.contact_phone.trim(),
+      website: formData.website.trim(),
+      contribution_types: formData.contribution_types,
+      fin_budget: formData.fin_budget,
+      fin_visibility: formData.fin_visibility,
+      fin_visibility_other: formData.fin_visibility_other.trim(),
+      event_types: formData.event_types,
+      event_involvement: formData.event_involvement,
+      mentor_roles: formData.mentor_roles,
+      mentor_topics: formData.mentor_topics.trim(),
+      intern_types: formData.intern_types,
+      intern_fields: formData.intern_fields.trim(),
+      intern_positions: formData.intern_positions,
+      resource_support: formData.resource_support.trim(),
+      strategic_idea: formData.strategic_idea.trim(),
+      audiences: formData.audiences,
+      audience_fields: formData.audience_fields.trim(),
+      collab_vision: formData.collab_vision.trim(),
+      why_tisya: formData.why_tisya.trim(),
+      prior_partnership: formData.prior_partnership,
+      prior_description: formData.prior_description.trim(),
+      additional_details: formData.additional_details.trim(),
+      consent: formData.consent,
+    };
 
-            contribution_types: formData.contribution_types,
+    const res = await submitToAppsScript("partner", fields);
 
-            fin_budget: formData.fin_budget,
-            fin_visibility: formData.fin_visibility,
-            fin_visibility_other: formData.fin_visibility_other.trim(),
-
-            event_types: formData.event_types,
-            event_involvement: formData.event_involvement,
-
-            mentor_roles: formData.mentor_roles,
-            mentor_topics: formData.mentor_topics.trim(),
-
-            intern_types: formData.intern_types,
-            intern_fields: formData.intern_fields.trim(),
-            intern_positions: formData.intern_positions,
-
-            resource_support: formData.resource_support.trim(),
-            strategic_idea: formData.strategic_idea.trim(),
-
-            audiences: formData.audiences,
-            audience_fields: formData.audience_fields.trim(),
-
-            collab_vision: formData.collab_vision.trim(),
-            why_tisya: formData.why_tisya.trim(),
-
-            prior_partnership: formData.prior_partnership === "Yes",
-            prior_description: formData.prior_description.trim(),
-
-            additional_details: formData.additional_details.trim(),
-
-            consent: formData.consent === true,
-          },
-        }),
-      }
-    );
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.error || "Submission failed");
-    }
-
-    setGeneratedId(result.app_id);
+    setGeneratedId(res.generatedId);
     setIsSuccess(true);
   } catch (error) {
     console.error("Submission error:", error);

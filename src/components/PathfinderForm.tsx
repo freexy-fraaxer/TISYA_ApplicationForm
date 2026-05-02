@@ -147,22 +147,22 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
       return "";
     })();
 
-    const fields = {
-      Full_Name: formData.full_name.trim(),
-      Email: formData.email.trim(),
-      Contact_Number: formData.contact_number.trim(),
-      City: formData.city.trim(),
-      Nationality: formData.nationality.trim(),
-      University: formData.university.trim(),
-      Department_of_Study: formData.department_of_study.trim(),
-      Interests: formData.interests,
-      Data_Consent: formData.consent_data_storage,
-      priority: "Pathfinder",
+    // Keys MUST exactly match MEMBER_FIELDS in the Apps Script
+    const fields: Record<string, unknown> = {
+      source_form_version: "v2_pathfinder",
+      full_name: formData.full_name.trim(),
+      email: formData.email.trim(),
+      contact_number: formData.contact_number.trim(),
+      city: formData.city.trim(),
+      nationality: formData.nationality.trim(),
+      university: formData.university.trim(),
+      department_of_study: formData.department_of_study.trim(),
+      interests: formData.interests,
       attention_reason: formData.attention_reason,
       social_level: formData.social_level,
       acquisition_channel: acquisitionChannel,
-      updates_consent: formData.consent_updates,
-      source_form_version: "v2_pathfinder",
+      consent_data_storage: formData.consent_data_storage,
+      consent_updates: formData.consent_updates,
     };
 
     try {

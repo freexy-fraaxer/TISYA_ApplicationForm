@@ -204,7 +204,47 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
     setError(null);
 
     try {
-      const payload: Record<string, unknown> = { ...formData };
+      // Keys MUST exactly match VOLUNTEER_FIELDS in the Apps Script
+      const payload: Record<string, unknown> = {
+        full_name: formData.full_name.trim(),
+        email: formData.email.trim(),
+        contact_number: formData.contact_number.trim(),
+        whatsapp_number: formData.whatsapp_number.trim(),
+        city: formData.city.trim(),
+        nationality: formData.nationality.trim(),
+        university: formData.university.trim(),
+        department_of_study: formData.department_of_study.trim(),
+        education_level: formData.education_level,
+        gender: formData.gender,
+        referral_source: formData.referral_source,
+        primary_impact_zone: formData.primary_impact_zone,
+        impact_zones: formData.impact_zones,
+        open_to_other_roles: formData.open_to_other_roles,
+        event_roles: formData.event_roles,
+        media_design_skills: formData.media_design_skills,
+        tech_skills: formData.tech_skills,
+        outreach_skills: formData.outreach_skills,
+        education_project_skills: formData.education_project_skills,
+        research_policy_roles: formData.research_policy_roles,
+        operations_roles: formData.operations_roles,
+        languages_known: formData.languages_known,
+        primary_language: formData.primary_language,
+        language_proficiency: formData.language_proficiency,
+        skills: formData.skills,
+        social_energy: formData.social_energy,
+        planning_style: formData.planning_style,
+        visibility_preference: formData.visibility_preference,
+        work_preference: formData.work_preference,
+        commitment_duration: formData.commitment_duration,
+        hours_per_week: formData.hours_per_week,
+        previous_volunteering: formData.previous_volunteering,
+        previous_volunteering_experience: formData.previous_volunteering_experience.trim(),
+        portfolio_links: formData.portfolio_links.trim(),
+        fun_tags: formData.fun_tags,
+        consent_commitment: formData.consent_commitment,
+        consent_data_storage: formData.consent_data_storage,
+        consent_updates: formData.consent_updates,
+      };
 
       const res = await submitToAppsScript("Volunteer", payload);
 
