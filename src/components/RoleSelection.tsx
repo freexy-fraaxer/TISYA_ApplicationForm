@@ -6,7 +6,7 @@ import { useSound } from "@/contexts/SoundContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import pathfinderBg from "@/assets/role-pathfinder-v3.png";
-import opportunistBg from "@/assets/role-opportunist-v3.png";
+import opportunistBg from "@/assets/role-operator-v3.png";
 import partnerBg from "@/assets/role-partner-v3.png";
 import internBg from "@/assets/role-intern-v3.png";
 import ambassadorBg from "@/assets/role-ambassador-v3.png";
