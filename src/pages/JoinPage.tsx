@@ -4,13 +4,12 @@ import { motion } from "framer-motion";
 import OpportunistForm from "@/components/OpportunistForm";
 import PathfinderForm from "@/components/PathfinderForm";
 import AmbassadorForm from "@/components/AmbassadorForm";
-import CountryUnionForm from "@/components/CountryUnionForm";
 import PartnerSponsorForm from "@/components/PartnerSponsorForm";
 
-type JoinRole = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
+type JoinRole = "opportunists" | "members" | "ambassador" | "partner";
 
 const isJoinRole = (v: string | undefined): v is JoinRole =>
-  v === "opportunists" || v === "members" || v === "ambassador" || v === "countryunion" || v === "partner";
+  v === "opportunists" || v === "members" || v === "ambassador" || v === "partner";
 
 const JoinPage = () => {
   const navigate = useNavigate();
@@ -35,8 +34,6 @@ const JoinPage = () => {
         return <PathfinderForm onBack={handleBack} />;
       case "ambassador":
         return <AmbassadorForm onBack={handleBack} />;
-      case "countryunion":
-        return <CountryUnionForm onBack={handleBack} />;
       case "partner":
         return <PartnerSponsorForm onBack={handleBack} />;
     }

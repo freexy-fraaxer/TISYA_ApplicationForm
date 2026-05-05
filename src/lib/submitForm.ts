@@ -4,14 +4,13 @@
 // and returns: { success: true, app_id: "..." }
 
 export const API_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbzGX13Bv3lVhSUyaNx_8mUceckbJp0hbn-WaTakE5boRals8NwDGQa6k2RJ8QQ2yhF1/exec";
+  "https://script.google.com/macros/s/AKfycbykH-Z1GhZswkXt4Q_1fkMEmVDUhSrt2q42rWBvwWcoUgAPoDKK9bCU_bxY_SAbFyYq/exec";
 
 export type FormType =
   | "Pathfinder"
   | "Volunteer"
   | "partner"
-  | "Ambassador"
-  | "CountryUnion";
+  | "Ambassador";
 
 export interface SubmitResult {
   generatedId: string;

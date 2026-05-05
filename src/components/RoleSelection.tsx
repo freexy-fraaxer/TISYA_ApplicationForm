@@ -17,7 +17,6 @@ interface RoleSelectionProps {
   onSelectOpportunists: () => void;
   onSelectMembers: () => void;
   onSelectAmbassador: () => void;
-  onSelectCountryUnion: () => void; // kept for back-compat
   onSelectPartner: () => void;
 }
 
@@ -334,9 +333,6 @@ const RoleSelection = ({
     onClose();
   };
 
-  // Suppress unused
-  void onSelectAmbassador;
-
   const roles: Role[] = [
     {
       key: "pathfinder",
@@ -384,7 +380,10 @@ const RoleSelection = ({
       title: "Ambassador",
       description: "Represent TISYA across your campus or country.",
       image: ambassadorBg,
-      disabled: true,
+      onClick: () => {
+        playHover();
+        onSelectAmbassador();
+      },
       hoverSound: playHover,
     },
   ];
