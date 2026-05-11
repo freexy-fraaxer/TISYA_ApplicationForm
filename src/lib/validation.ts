@@ -26,6 +26,7 @@ export const getEmailError = (email: string): string | null => {
 
 export const getPhoneError = (phone: string): string | null => {
   if (!phone.trim()) return null; // Optional
+  if (/[a-zA-Z]/.test(phone)) return "Only numbers and valid symbols (+, -, space) are allowed";
   if (!validatePhone(phone)) return "Please enter a valid phone number with country code";
   return null;
 };

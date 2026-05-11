@@ -15,7 +15,7 @@ import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
 import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 
-import { validateEmail } from "@/lib/validation";
+import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
 
 /* =========================
@@ -161,9 +161,11 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   const validateStep = () => {
     switch (step) {
       case 1:
-        return (
+        return !!(
           formData.full_name &&
           validateEmail(formData.email) &&
+          validatePhone(formData.contact_number) &&
+          validatePhone(formData.whatsapp_number) &&
           formData.city &&
           formData.nationality &&
           formData.university &&

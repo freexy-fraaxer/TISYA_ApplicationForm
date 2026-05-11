@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { User, Mail, MapPin, Globe, GraduationCap, BookOpen, Phone } from "lucide-react";
-import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { countries, validateEmail, getEmailError, getRequiredError, getPhoneError } from "@/lib/validation";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect, useRef } from "react";
 
@@ -36,7 +36,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       newErrors.email = getEmailError(formData.email);
     }
     if (touched.contact_number) {
-      newErrors.contact_number = getRequiredError(formData.contact_number, "Contact number");
+      newErrors.contact_number = getRequiredError(formData.contact_number, "Contact number") || getPhoneError(formData.contact_number);
     }
     if (touched.nationality) {
       newErrors.nationality = getRequiredError(formData.nationality, "Nationality");

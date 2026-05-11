@@ -10,7 +10,7 @@ import MemberStep1Basics from "./member-form-steps/MemberStep1Basics";
 import MemberStep2Interests from "./member-form-steps/MemberStep2Interests";
 import MemberStep3Finish from "./member-form-steps/MemberStep3Finish";
 import MemberSuccessScreen from "./shared/MemberSuccessScreen";
-import { validateEmail } from "@/lib/validation";
+import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
 
 const MEMBER_STEPS = [
@@ -103,6 +103,7 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
           formData.email.trim() &&
           validateEmail(formData.email) &&
           formData.contact_number.trim() &&
+          validatePhone(formData.contact_number) &&
           formData.nationality.trim() &&
           formData.university.trim()
         );

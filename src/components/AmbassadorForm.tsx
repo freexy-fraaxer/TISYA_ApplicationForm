@@ -21,7 +21,7 @@ import FormFieldError from "./shared/FormFieldError";
 import CommitmentModal from "./shared/CommitmentModal";
 import HelperText from "./shared/HelperText";
 import { cn } from "@/lib/utils";
-import { countries, validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { countries, validateEmail, getEmailError, getRequiredError, validatePhone, getPhoneError } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
 
 interface AmbassadorFormProps {
@@ -131,7 +131,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     if (touched.ambassador_type) e.ambassador_type = formData.ambassador_type ? null : "Ambassador type is required";
     if (touched.full_name) e.full_name = getRequiredError(formData.full_name, "Full name");
     if (touched.email) e.email = getEmailError(formData.email);
-    if (touched.phone) e.phone = getRequiredError(formData.phone, "Phone number");
+    if (touched.phone) e.phone = getRequiredError(formData.phone, "Phone number") || getPhoneError(formData.phone);
     if (touched.country) e.country = formData.country ? null : "Country is required";
     if (touched.why_ambassador) e.why_ambassador = getRequiredError(formData.why_ambassador, "This field");
     if (touched.experience) e.experience = getRequiredError(formData.experience, "This field");
@@ -144,6 +144,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     formData.email.trim() &&
     validateEmail(formData.email) &&
     formData.phone.trim() &&
+    validatePhone(formData.phone) &&
     formData.country &&
     formData.why_ambassador.trim() &&
     formData.experience.trim() &&

@@ -274,7 +274,7 @@ function generateAppId(formType, data) {
   switch (formType) {
     case 'Pathfinder':
       var initials = getInitials(data.full_name);
-      return 'PF-' + initials + '-' + rand;
+      return 'PF' + initials + '-' + rand;
       
     case 'Volunteer':
       return 'TIS-OPX-' + rand;

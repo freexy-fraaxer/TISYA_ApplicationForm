@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FormFieldError from "./shared/FormFieldError";
-import { validateEmail, getEmailError, getRequiredError } from "@/lib/validation";
+import { validateEmail, getEmailError, getRequiredError, validatePhone, getPhoneError } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
 
 interface PartnerSponsorFormProps {
@@ -213,17 +213,20 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
     if (touched.org_type) e.org_type = getRequiredError(formData.org_type, "Organization type");
     if (touched.contact_name) e.contact_name = getRequiredError(formData.contact_name, "Contact person");
     if (touched.contact_email) e.contact_email = getEmailError(formData.contact_email);
+    if (touched.contact_phone) e.contact_phone = getPhoneError(formData.contact_phone);
     if (touched.collab_vision) e.collab_vision = getRequiredError(formData.collab_vision, "This field");
 
     setErrors(e);
   }, [formData, touched]);
 
-  const step1Valid =
+  const step1Valid = !!(
     formData.org_name.trim() &&
     formData.org_type.trim() &&
     formData.contact_name.trim() &&
     formData.contact_email.trim() &&
-    validateEmail(formData.contact_email);
+    validateEmail(formData.contact_email) &&
+    validatePhone(formData.contact_phone)
+  );
 
   const step2Valid = formData.contribution_types.length > 0 && formData.audiences.length > 0;
 
@@ -509,8 +512,10 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     placeholder="+1 234 567 8900"
                     value={formData.contact_phone}
                     onChange={(e) => update({ contact_phone: e.target.value })}
-                    className="bg-secondary/50 border-border focus:border-primary"
+                    onBlur={() => handleBlur("contact_phone")}
+                    className={`bg-secondary/50 border-border focus:border-primary ${errors.contact_phone ? "border-destructive" : ""}`}
                   />
+                  <FormFieldError error={errors.contact_phone || null} />
                 </div>
               </div>
 
