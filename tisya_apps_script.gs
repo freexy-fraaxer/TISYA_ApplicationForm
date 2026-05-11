@@ -187,7 +187,7 @@ function doPost(e) {
     var sheet = getOrCreateSheet(cfg.tab, cfg.fields);
 
     // ── 4. Build the row ─────────────────────────────────────────
-    var app_id       = generateAppId(cfg.prefix);
+    var app_id       = generateAppId(formType, data);
     var submitted_at = Utilities.formatDate(new Date(), 'GMT+3', 'yyyy-MM-dd HH:mm:ss');
 
     var row = [submitted_at, app_id];
@@ -245,13 +245,43 @@ function getOrCreateSheet(tab_name, fields) {
 }
 
 /**
- * Generates a unique application ID.
- * Format: PREFIX-YYMMDD-XXXX  (e.g., PF-260506-4821)
+ * Extracts initials from a full name.
  */
-function generateAppId(prefix) {
-  var date = Utilities.formatDate(new Date(), 'GMT+3', 'yyMMdd');
+function getInitials(fullName) {
+  if (!fullName || typeof fullName !== 'string') return 'XX';
+  var names = fullName.trim().split(/\s+/);
+  if (names.length === 1) {
+    var name = names[0];
+    return name.length >= 2 ? name.substring(0, 2).toUpperCase() : (name + 'X').toUpperCase();
+  }
+  var first = names[0];
+  var last = names[names.length - 1];
+  return (first.charAt(0) + last.charAt(0)).toUpperCase();
+}
+
+/**
+ * Generates a unique application ID based on form type.
+ */
+function generateAppId(formType, data) {
   var rand = Math.floor(Math.random() * 9000 + 1000); // 4-digit number
-  return prefix + '-' + date + '-' + rand;
+  
+  switch (formType) {
+    case 'Pathfinder':
+      var initials = getInitials(data.full_name);
+      return 'PF-' + initials + '-' + rand;
+      
+    case 'Volunteer':
+      return 'TIS-OPX-' + rand;
+      
+    case 'partner':
+      return 'TIS-PT-' + rand;
+      
+    case 'Ambassador':
+      return 'AMB-X' + rand;
+      
+    default:
+      return 'ID-' + rand;
+  }
 }
 
 /**
