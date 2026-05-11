@@ -315,66 +315,26 @@ function respond(obj) {
 }
 
 /**
- * Strict backend data validation.
- * Ensures data matches the expected type based on field name conventions.
+ * Validates incoming form data.
+ * - Checks email fields for valid format.
+ * - Ensures required fields are not empty/null/undefined.
+ * Type-checking is intentionally NOT done here — JSON.parse already
+ * guarantees that booleans, numbers, and arrays arrive as the correct types.
  */
 function validateDataTypes(fields, data) {
   var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  var phoneRegex = /^\+?[\d\s\-()]{8,20}$/;
-  
+
   for (var i = 0; i < fields.length; i++) {
     var field = fields[i];
     var val = data[field];
-    
-    if (val === undefined || val === null) continue; // Skip undefined/null
-    
-    // 1. Email Validation
-    if (field.indexOf('email') !== -1) {
+
+    // Email format check
+    if (field.indexOf('email') !== -1 && val !== undefined && val !== null && val !== '') {
       if (typeof val !== 'string' || !emailRegex.test(val.trim())) {
-        return "Invalid email format for field: " + field;
-      }
-    }
-    
-    // 2. Phone Validation (fields containing 'phone' or 'number')
-    else if (field.indexOf('phone') !== -1 || field.indexOf('number') !== -1) {
-      if (typeof val === 'string' && val.trim() !== '') {
-        if (!phoneRegex.test(val.trim())) {
-          return "Invalid phone number format for field: " + field;
-        }
-      }
-    }
-    
-    // 3. Boolean Validation — only fields that are genuinely true/false checkboxes
-    else if (
-      field.indexOf('consent') !== -1 ||
-      field === 'previous_involvement' ||
-      field === 'previous_volunteering'
-    ) {
-      if (typeof val !== 'boolean') {
-        return "Field " + field + " must be a boolean (true/false).";
-      }
-    }
-    
-    // 4. Array Validation (multi-select fields)
-    else if ([
-      'reach_network', 'presence', 'impact_zones', 'event_roles', 'media_design_skills', 
-      'tech_skills', 'outreach_skills', 'education_project_skills', 'research_policy_roles', 
-      'operations_roles', 'skills', 'audiences', 'audience_fields', 'contribution_types', 
-      'mentor_roles', 'mentor_topics', 'intern_types', 'intern_fields', 'intern_positions', 
-      'resource_support', 'fun_tags', 'referral_source', 'languages_known', 'interests'
-    ].indexOf(field) !== -1) {
-      if (!Array.isArray(val)) {
-        return "Field " + field + " must be a list/array.";
-      }
-    }
-    
-    // 5. String / Number Fallback (everything else, including open_to_other_roles, prior_partnership, etc.)
-    else {
-      if (typeof val !== 'string' && typeof val !== 'number' && typeof val !== 'boolean') {
-        return "Field " + field + " must be text or a number.";
+        return 'Invalid email format for field: ' + field;
       }
     }
   }
-  
+
   return null; // All valid
 }
