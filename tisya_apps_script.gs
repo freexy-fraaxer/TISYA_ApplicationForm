@@ -326,7 +326,7 @@ function validateDataTypes(fields, data) {
     var field = fields[i];
     var val = data[field];
     
-    if (val === undefined || val === null) continue; // Skip undefined
+    if (val === undefined || val === null) continue; // Skip undefined/null
     
     // 1. Email Validation
     if (field.indexOf('email') !== -1) {
@@ -344,8 +344,12 @@ function validateDataTypes(fields, data) {
       }
     }
     
-    // 3. Boolean Validation
-    else if (field.indexOf('consent') !== -1 || field === 'previous_involvement' || field === 'open_to_other_roles' || field === 'prior_partnership') {
+    // 3. Boolean Validation — only fields that are genuinely true/false checkboxes
+    else if (
+      field.indexOf('consent') !== -1 ||
+      field === 'previous_involvement' ||
+      field === 'previous_volunteering'
+    ) {
       if (typeof val !== 'boolean') {
         return "Field " + field + " must be a boolean (true/false).";
       }
@@ -357,16 +361,16 @@ function validateDataTypes(fields, data) {
       'tech_skills', 'outreach_skills', 'education_project_skills', 'research_policy_roles', 
       'operations_roles', 'skills', 'audiences', 'audience_fields', 'contribution_types', 
       'mentor_roles', 'mentor_topics', 'intern_types', 'intern_fields', 'intern_positions', 
-      'resource_support', 'fun_tags', 'referral_source', 'languages_known'
+      'resource_support', 'fun_tags', 'referral_source', 'languages_known', 'interests'
     ].indexOf(field) !== -1) {
       if (!Array.isArray(val)) {
         return "Field " + field + " must be a list/array.";
       }
     }
     
-    // 5. String Fallback (everything else)
+    // 5. String / Number Fallback (everything else, including open_to_other_roles, prior_partnership, etc.)
     else {
-      if (typeof val !== 'string' && typeof val !== 'number') {
+      if (typeof val !== 'string' && typeof val !== 'number' && typeof val !== 'boolean') {
         return "Field " + field + " must be text or a number.";
       }
     }
