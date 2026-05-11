@@ -153,8 +153,8 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
         : `polygon(0 0, calc(100% - ${SLANT}px) 0, 100% 100%, ${SLANT}px 100%)`;
 
   // Side padding to keep content clear of the slanted edges
-  const padLeft = index === 0 ? (isMobile ? 6 : 14) : SLANT + (isMobile ? 6 : 14);
-  const padRight = index === total - 1 ? (isMobile ? 6 : 14) : SLANT + (isMobile ? 6 : 14);
+  const padLeft = index === 0 ? (isMobile ? 12 : 24) : SLANT + (isMobile ? 12 : 24);
+  const padRight = index === total - 1 ? (isMobile ? 12 : 24) : SLANT + (isMobile ? 12 : 24);
 
   return (
     <motion.button
@@ -178,7 +178,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
       style={{
         zIndex,
         clipPath,
-        width: `calc(100% + ${SLANT}px)`,
+        width: index === 0 ? "100%" : `calc(100% + ${SLANT}px)`,
         marginLeft: index !== 0 ? `-${SLANT}px` : 0,
         boxShadow:
           "inset 1px 0 0 hsl(0 0% 100% / 0.18), inset -1px 0 0 hsl(0 0% 100% / 0.18)",
