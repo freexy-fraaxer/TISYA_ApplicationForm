@@ -183,6 +183,12 @@ function doPost(e) {
 
     var cfg = FORM_CONFIG[formType];
 
+    // ── 2.5 Strict Data Validation ───────────────────────────────
+    var validationError = validateDataTypes(cfg.fields, data);
+    if (validationError) {
+      return respond({ success: false, error: validationError });
+    }
+
     // ── 3. Get or create the destination sheet ───────────────────
     var sheet = getOrCreateSheet(cfg.tab, cfg.fields);
 
@@ -306,4 +312,65 @@ function respond(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Strict backend data validation.
+ * Ensures data matches the expected type based on field name conventions.
+ */
+function validateDataTypes(fields, data) {
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var phoneRegex = /^\+?[\d\s\-()]{8,20}$/;
+  
+  for (var i = 0; i < fields.length; i++) {
+    var field = fields[i];
+    var val = data[field];
+    
+    if (val === undefined || val === null) continue; // Skip undefined
+    
+    // 1. Email Validation
+    if (field.indexOf('email') !== -1) {
+      if (typeof val !== 'string' || !emailRegex.test(val.trim())) {
+        return "Invalid email format for field: " + field;
+      }
+    }
+    
+    // 2. Phone Validation (fields containing 'phone' or 'number')
+    else if (field.indexOf('phone') !== -1 || field.indexOf('number') !== -1) {
+      if (typeof val === 'string' && val.trim() !== '') {
+        if (!phoneRegex.test(val.trim())) {
+          return "Invalid phone number format for field: " + field;
+        }
+      }
+    }
+    
+    // 3. Boolean Validation
+    else if (field.indexOf('consent') !== -1 || field === 'previous_involvement' || field === 'open_to_other_roles' || field === 'prior_partnership') {
+      if (typeof val !== 'boolean') {
+        return "Field " + field + " must be a boolean (true/false).";
+      }
+    }
+    
+    // 4. Array Validation (multi-select fields)
+    else if ([
+      'reach_network', 'presence', 'impact_zones', 'event_roles', 'media_design_skills', 
+      'tech_skills', 'outreach_skills', 'education_project_skills', 'research_policy_roles', 
+      'operations_roles', 'skills', 'audiences', 'audience_fields', 'contribution_types', 
+      'mentor_roles', 'mentor_topics', 'intern_types', 'intern_fields', 'intern_positions', 
+      'resource_support', 'fun_tags', 'referral_source', 'languages_known'
+    ].indexOf(field) !== -1) {
+      if (!Array.isArray(val)) {
+        return "Field " + field + " must be a list/array.";
+      }
+    }
+    
+    // 5. String Fallback (everything else)
+    else {
+      if (typeof val !== 'string' && typeof val !== 'number') {
+        return "Field " + field + " must be text or a number.";
+      }
+    }
+  }
+  
+  return null; // All valid
 }
