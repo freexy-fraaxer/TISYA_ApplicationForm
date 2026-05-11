@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2, X } from "lucide-react";
+import { useSound } from "@/contexts/SoundContext";
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
@@ -147,12 +149,19 @@ const initialFormData: FormData = {
 ========================= */
 
 const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
+  const { playPulse, playBack } = useSound();
+  const { triggerPulse } = useBackgroundEffects();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [appId, setAppId] = useState("");
+
+  const handleBackToRoles = () => {
+    playBack();
+    onBack();
+  };
 
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
@@ -194,7 +203,11 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   };
 
   const next = () => {
-    if (validateStep()) setStep(prev => prev + 1);
+    if (validateStep()) {
+      playPulse();
+      triggerPulse();
+      setStep(prev => prev + 1);
+    }
   };
 
   const prev = () => setStep(prev => prev - 1);

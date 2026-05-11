@@ -99,7 +99,8 @@ const initialData: AmbassadorFormData = {
 };
 
 const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
-  const { playBack, playTick } = useSound();
+  const { playBack, playTick, playPulse } = useSound();
+  const { triggerPulse } = useBackgroundEffects();
   const [formData, setFormData] = useState<AmbassadorFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -177,6 +178,8 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
       };
       const { generatedId: id } = await submitToAppsScript("Ambassador", fields);
       setGeneratedId(id);
+      playPulse();
+      triggerPulse();
       setIsSuccess(true);
     } catch (error) {
       console.error("Ambassador submission error:", error);

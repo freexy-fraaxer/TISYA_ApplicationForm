@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
+import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 import { ArrowLeft, ArrowRight, Check, Loader2, Building2, Mail, Phone, Globe, User, X, Sparkles, Target } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
@@ -182,7 +183,8 @@ const MicroCard = ({ title, children }: { title: string; children: React.ReactNo
 );
 
 const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
-  const { playBack } = useSound();
+  const { playBack, playPulse } = useSound();
+  const { triggerPulse } = useBackgroundEffects();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<PartnerFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -243,6 +245,8 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
       if (!step1Valid) return;
     }
     if (step === 2 && !step2Valid) return;
+    playPulse();
+    triggerPulse();
     setStep((s) => Math.min(3, s + 1));
   };
 
