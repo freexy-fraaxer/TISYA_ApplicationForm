@@ -171,11 +171,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const ambassadorTypes = Object.values(t.ambassadorForm.ambassadorTypes);
   
   const getWhyQuestion = () => {
-    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.country) return t.ambassadorForm.dynamicWhyQuestions.country;
-    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus) return t.ambassadorForm.dynamicWhyQuestions.campus;
-    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.region) return t.ambassadorForm.dynamicWhyQuestions.region;
-    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.community) return t.ambassadorForm.dynamicWhyQuestions.community;
-    return t.ambassadorForm.dynamicWhyQuestions.default;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.country) return t.ambassadorForm.whyQuestions.country;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus) return t.ambassadorForm.whyQuestions.campus;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.regional) return t.ambassadorForm.whyQuestions.regional;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.community) return t.ambassadorForm.whyQuestions.community;
+    return t.ambassadorForm.whyQuestions.default;
   };
 
   const whyQuestion = getWhyQuestion();
@@ -262,7 +262,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Globe className="w-4 h-4 text-muted-foreground" />
-              {t.ambassadorForm.ambassadorTypeLabel} <span className="text-destructive">*</span>
+              {t.ambassadorForm.ambassadorType} <span className="text-destructive">*</span>
             </Label>
             <Select
               value={formData.ambassador_type}
@@ -272,7 +272,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               }}
             >
               <SelectTrigger className={`bg-secondary/50 border-border ${errors.ambassador_type ? "border-destructive" : ""}`}>
-                <SelectValue placeholder={t.ambassadorForm.ambassadorTypePlaceholder} />
+                <SelectValue placeholder={t.ambassadorForm.selectAmbassadorType} />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
                 {ambassadorTypes.map((t) => (
@@ -383,7 +383,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               >
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
-                  {formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus ? t.ambassadorForm.universityLabel : t.ambassadorForm.organizationLabel}
+                  {formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus ? t.ambassadorForm.universityInstitution : t.ambassadorForm.organizationCommunity}
                 </Label>
                 <Input
                   placeholder={formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus ? t.ambassadorForm.universityPlaceholder : t.ambassadorForm.organizationPlaceholder}
@@ -413,7 +413,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">
-                {t.ambassadorForm.previousInvolvementLabel}
+                {t.ambassadorForm.previousInvolvement}
               </Label>
               <Switch
                 checked={formData.previous_involvement}
@@ -443,11 +443,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Your Reach & Network */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">
-              {t.ambassadorForm.reachNetworkLabel}
+              {t.ambassadorForm.whoAccess}
             </Label>
-            <HelperText>{t.ambassadorForm.reachNetworkHelper}</HelperText>
+            <HelperText>{t.ambassadorForm.whoAccessHint}</HelperText>
             <div className="flex flex-wrap gap-2">
-              {t.ambassadorForm.reachOptions.map((option) => (
+              {Object.values(t.ambassadorForm.reachOptions).map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -468,11 +468,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Your Presence */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">
-              {t.ambassadorForm.presenceLabel}
+              {t.ambassadorForm.howEngage}
             </Label>
-            <HelperText>{t.ambassadorForm.presenceHelper}</HelperText>
+            <HelperText>{t.ambassadorForm.howEngageHint}</HelperText>
             <div className="flex flex-wrap gap-2">
-              {t.ambassadorForm.presenceOptions.map((option) => (
+              {Object.values(t.ambassadorForm.presenceOptions).map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -496,7 +496,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               {whyQuestion} <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder={t.ambassadorForm.whyAmbassadorPlaceholder}
+              placeholder={t.ambassadorForm.whyPlaceholder}
               value={formData.why_ambassador}
               onChange={(e) => {
                 if (e.target.value.length <= 500) {
@@ -516,7 +516,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Experience */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              {t.ambassadorForm.experienceLabel} <span className="text-destructive">*</span>
+              {t.ambassadorForm.experience} <span className="text-destructive">*</span>
             </Label>
             <Textarea
               placeholder={t.ambassadorForm.experiencePlaceholder}
@@ -552,7 +552,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               className="mt-1"
             />
             <Label htmlFor="ambassador-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              {t.ambassadorForm.dataConsent} <span className="text-destructive">*</span>
+              {t.ambassadorForm.consentData} <span className="text-destructive">*</span>
             </Label>
           </div>
         </div>
