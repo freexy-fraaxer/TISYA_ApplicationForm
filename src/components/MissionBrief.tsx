@@ -3,6 +3,7 @@ import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { ArrowLeft, ArrowRight, Shield, Zap, Star } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
+import { useT } from "@/contexts/LanguageContext";
 
 type RolePath = "opportunists" | "members" | "ambassador" | "countryunion" | "partner";
 
@@ -12,63 +13,7 @@ interface MissionBriefProps {
   onBack: () => void;
 }
 
-const missionData: Record<RolePath, {
-  title: string;
-  mission: string;
-  unlocks: string[];
-  impact: string;
-}> = {
-  members: {
-    title: "Pathfinder",
-    mission: "Explore opportunities, connect with peers, and navigate the TISYA network at your own pace.",
-    unlocks: [
-      "Access to community events and meetups",
-      "Connect with students across Türkiye",
-      "Stay updated on opportunities and resources",
-    ],
-    impact: "Every Pathfinder strengthens the network — your presence matters.",
-  },
-  opportunists: {
-    title: "Opportunist",
-    mission: "Create, manage, and bring ideas to life. You'll be the engine behind TISYA's programs and initiatives.",
-    unlocks: [
-      "Work on real projects with a global team",
-      "Build your portfolio with impactful work",
-      "Access leadership and skill-building tracks",
-    ],
-    impact: "Opportunists turn vision into reality — you're the backbone of The Alliance.",
-  },
-  ambassador: {
-    title: "Ambassador",
-    mission: "Represent TISYA across your campus, city, or country. Be the voice and bridge for your community.",
-    unlocks: [
-      "Official TISYA Ambassador title and resources",
-      "Lead local initiatives and events",
-      "Direct channel to TISYA leadership",
-    ],
-    impact: "Ambassadors are the face of TISYA — you set the tone for your community.",
-  },
-  countryunion: {
-    title: "Country Union",
-    mission: "Lead partnerships and represent your organization's affiliation with TISYA for long-term collaboration.",
-    unlocks: [
-      "Structural partnership with TISYA",
-      "Joint programming and resource sharing",
-      "Representation in TISYA's governance structure",
-    ],
-    impact: "Country Unions create lasting institutional bridges across borders.",
-  },
-  partner: {
-    title: "Partner / Sponsor",
-    mission: "Collaborate with TISYA as an organization or sponsor. Support impactful student initiatives across Türkiye.",
-    unlocks: [
-      "Visibility across TISYA's network and events",
-      "Co-branded programs and campaigns",
-      "Access to a diverse international student community",
-    ],
-    impact: "Partners fuel the mission — together we create opportunities that last.",
-  },
-};
+
 
 const itemVariants = {
   hidden: { opacity: 0, y: 12 },
@@ -81,7 +26,8 @@ const itemVariants = {
 
 const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
   const { playPulse, playBack } = useSound();
-  const data = missionData[role];
+  const t = useT();
+  const data = t.mission[role];
 
   const handleAccept = () => {
     playPulse();
@@ -108,7 +54,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           whileHover={{ x: -5 }}
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to paths</span>
+          <span>{t.common.backToPaths}</span>
         </motion.button>
 
         {/* Header */}
@@ -120,7 +66,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           animate="visible"
         >
           <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/70 mb-2">
-            Path Selected
+            {t.mission.pathSelected}
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground glow-text">
             {data.title}
@@ -138,7 +84,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           <div className="flex items-center gap-2 mb-2">
             <Shield className="w-4 h-4 text-primary" />
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              Your Mission
+              {t.mission.yourMission}
             </span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
@@ -157,7 +103,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           <div className="flex items-center gap-2 mb-3">
             <Zap className="w-4 h-4 text-primary" />
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              What You Unlock
+              {t.mission.whatYouUnlock}
             </span>
           </div>
           <ul className="space-y-2">
@@ -187,7 +133,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-4 h-4 text-primary" />
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              Your Impact
+              {t.mission.yourImpact}
             </span>
           </div>
           <p className="text-sm text-foreground/80 italic leading-relaxed">
@@ -204,7 +150,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
           className="flex justify-center"
         >
           <HeroButton onClick={handleAccept} size="lg">
-            Accept Mission
+            {t.common.acceptMission}
             <ArrowRight className="w-5 h-5" />
           </HeroButton>
         </motion.div>

@@ -20,31 +20,33 @@ import {
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
 import { useSound } from "@/contexts/SoundContext";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Step2Props {
   formData: PathfinderFormData;
   updateFormData: (updates: Partial<PathfinderFormData>) => void;
 }
 
-const attentionOptions = [
-  { id: "I want to explore opportunities", label: "I want to explore opportunities", icon: Search },
-  { id: "I want to meet people", label: "I want to meet people", icon: Heart },
-  { id: "I want to build something", label: "I want to build something", icon: Hammer },
-  { id: "I'm just curious", label: "I'm just curious", icon: HelpCircle },
-];
-
-const interestOptions = [
-  { id: "Community", label: "Community", icon: Users },
-  { id: "Events", label: "Events", icon: Calendar },
-  { id: "Skills", label: "Skills", icon: Wrench },
-  { id: "Opportunities", label: "Opportunities", icon: Compass },
-  { id: "Diplomacy", label: "Diplomacy", icon: Handshake },
-  { id: "Media", label: "Media", icon: Camera },
-  { id: "Projects", label: "Projects", icon: Rocket },
-];
-
 const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
   const { playTick } = useSound();
+  const t = useT();
+
+  const attentionOptions = [
+    { id: "I want to explore opportunities", label: t.pathfinderForm.step2.attentionOptions.explore, icon: Search },
+    { id: "I want to meet people", label: t.pathfinderForm.step2.attentionOptions.meetPeople, icon: Heart },
+    { id: "I want to build something", label: t.pathfinderForm.step2.attentionOptions.buildSomething, icon: Hammer },
+    { id: "I'm just curious", label: t.pathfinderForm.step2.attentionOptions.justCurious, icon: HelpCircle },
+  ];
+
+  const interestOptions = [
+    { id: "Community", label: t.pathfinderForm.step2.interests.community, icon: Users },
+    { id: "Events", label: t.pathfinderForm.step2.interests.events, icon: Calendar },
+    { id: "Skills", label: t.pathfinderForm.step2.interests.skills, icon: Wrench },
+    { id: "Opportunities", label: t.pathfinderForm.step2.interests.opportunities, icon: Compass },
+    { id: "Diplomacy", label: t.pathfinderForm.step2.interests.diplomacy, icon: Handshake },
+    { id: "Media", label: t.pathfinderForm.step2.interests.media, icon: Camera },
+    { id: "Projects", label: t.pathfinderForm.step2.interests.projects, icon: Rocket },
+  ];
 
   const selectAttention = (id: string) => {
     playTick();
@@ -66,10 +68,10 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Your Vibe
+          {t.pathfinderForm.step2.title}
         </h2>
         <p className="text-muted-foreground">
-          No wrong answers — just be honest
+          {t.pathfinderForm.step2.subtitle}
         </p>
       </div>
 
@@ -77,9 +79,9 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
       <div className="space-y-3">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-muted-foreground" />
-          What made you feel like TİSYA is for you? <span className="text-destructive">*</span>
+          {t.pathfinderForm.step2.whatMadeYouFeel} <span className="text-destructive">*</span>
         </Label>
-        <HelperText>Pick the one that fits best.</HelperText>
+        <HelperText>{t.pathfinderForm.step2.pickOneFits}</HelperText>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {attentionOptions.map((option, index) => {
             const Icon = option.icon;
@@ -131,9 +133,9 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
       {/* What are you interested in - Multi Select */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          What are you interested in? <span className="text-destructive">*</span>
+          {t.pathfinderForm.step2.whatInterested} <span className="text-destructive">*</span>
         </Label>
-        <HelperText>Pick what you enjoy or want to grow into.</HelperText>
+        <HelperText>{t.pathfinderForm.step2.pickEnjoy}</HelperText>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {interestOptions.map((option, index) => {
             const Icon = option.icon;
@@ -186,9 +188,9 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
       <div className="space-y-4">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Eye className="w-4 h-4 text-muted-foreground" />
-          How do you usually show up in communities?
+          {t.pathfinderForm.step2.socialLevel}
         </Label>
-        <HelperText>Be honest — there's no right answer.</HelperText>
+        <HelperText>{t.pathfinderForm.step2.socialLevelHint}</HelperText>
 
         <div className="p-5 rounded-xl border-2 border-border/50 bg-secondary/30 space-y-4">
           <Slider
@@ -199,11 +201,11 @@ const MemberStep2Interests = ({ formData, updateFormData }: Step2Props) => {
             onValueChange={(value) => updateFormData({ social_level: value[0] })}
           />
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>I observe more</span>
+            <span>{t.pathfinderForm.step2.observeMore}</span>
             <span className="text-primary font-mono font-semibold text-sm">
               {formData.social_level}
             </span>
-            <span>I lead and engage</span>
+            <span>{t.pathfinderForm.step2.leadAndEngage}</span>
           </div>
         </div>
       </div>

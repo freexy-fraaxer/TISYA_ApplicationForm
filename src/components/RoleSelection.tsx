@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSound } from "@/contexts/SoundContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useT } from "@/contexts/LanguageContext";
 
 import pathfinderBg from "@/assets/role-pathfinder-v3.png";
 import opportunistBg from "@/assets/role-operator-v3.png";
@@ -39,6 +40,7 @@ interface PanelProps {
 /* ---------- MOBILE CARD (vertical stack) ---------- */
 const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
   const { title, description, image, disabled, onClick, hoverSound } = role;
+  const t = useT();
   return (
     <motion.button
       type="button"
@@ -102,7 +104,7 @@ const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
                 border: "1px solid hsl(var(--foreground) / 0.35)",
               }}
             >
-              Locked
+              {t.common.locked}
             </span>
           )}
         </div>
@@ -140,6 +142,7 @@ const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
 /* ---------- DESKTOP SLANTED PANEL ---------- */
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
+  const t = useT();
   const { title, description, image, disabled, onClick, hoverSound } = role;
 
   const SLANT = isMobile ? 14 : 30;
@@ -267,7 +270,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
                 border: "1px solid hsl(var(--foreground) / 0.35)",
               }}
             >
-              Locked
+              {t.common.locked}
             </div>
           </div>
         )}
@@ -306,6 +309,7 @@ const RoleSelection = ({
   onSelectPartner,
 }: RoleSelectionProps) => {
   const isMobile = useIsMobile();
+  const t = useT();
   const {
     playAmbientTone,
     playBack,
@@ -336,8 +340,8 @@ const RoleSelection = ({
   const roles: Role[] = [
     {
       key: "pathfinder",
-      title: "Pathfinder",
-      description: "Discover opportunities and navigate the TISYA network.",
+      title: t.roles.pathfinder.title,
+      description: t.roles.pathfinder.description,
       image: pathfinderBg,
       onClick: () => {
         playPathfinderSelect();
@@ -347,8 +351,8 @@ const RoleSelection = ({
     },
     {
       key: "opportunist",
-      title: "Opportunist",
-      description: "Volunteer, contribute, and turn ideas into real impact.",
+      title: t.roles.opportunist.title,
+      description: t.roles.opportunist.description,
       image: opportunistBg,
       onClick: () => {
         playOpportunistSelect();
@@ -358,8 +362,8 @@ const RoleSelection = ({
     },
     {
       key: "partner",
-      title: "Partner / Sponsor",
-      description: "Build powerful alliances and provide key support.",
+      title: t.roles.partner.title,
+      description: t.roles.partner.description,
       image: partnerBg,
       onClick: () => {
         playCountryUnionSelect();
@@ -369,16 +373,16 @@ const RoleSelection = ({
     },
     {
       key: "intern",
-      title: "Intern",
-      description: "Gain valuable experience and assist key projects.",
+      title: t.roles.intern.title,
+      description: t.roles.intern.description,
       image: internBg,
       disabled: true,
       hoverSound: playInternSelect,
     },
     {
       key: "ambassador",
-      title: "Ambassador",
-      description: "Represent TISYA across your campus or country.",
+      title: t.roles.ambassador.title,
+      description: t.roles.ambassador.description,
       image: ambassadorBg,
       onClick: () => {
         playHover();
@@ -444,7 +448,7 @@ const RoleSelection = ({
                       "0 0 14px hsl(var(--primary) / 0.55), 0 2px 10px hsl(220 60% 3% / 0.9)",
                   }}
                 >
-                  Choose Your Path
+                  {t.roles.chooseYourPath}
                 </h2>
                 <motion.div
                   className="mt-2 h-[2px] w-[120px] md:w-[220px] rounded-full"

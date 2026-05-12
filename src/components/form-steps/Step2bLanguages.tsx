@@ -14,6 +14,7 @@ import { Languages } from "lucide-react";
 import HelperText from "../shared/HelperText";
 
 import { useState } from "react";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Props {
   formData: any;
@@ -29,6 +30,7 @@ const LANGUAGES = [
 ];
 
 const Step2bLanguages = ({ formData, updateFormData }: Props) => {
+  const t = useT();
   const isCustomLang = formData.primary_language !== "" && !LANGUAGES.includes(formData.primary_language);
   const [isOtherPrimary, setIsOtherPrimary] = useState(isCustomLang || formData.primary_language === "Other");
 
@@ -84,8 +86,7 @@ const Step2bLanguages = ({ formData, updateFormData }: Props) => {
 
       {/* Section Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">Languages</h2>
-        <p className="text-muted-foreground text-sm">What languages do you speak?</p>
+        <h2 className="text-2xl font-bold text-foreground">{t.opportunistForm.steps.languages}</h2>
       </div>
 
       {/* Primary Language */}

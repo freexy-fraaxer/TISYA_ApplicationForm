@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Loader2, X } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
+import { useT } from "@/contexts/LanguageContext";
 
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
@@ -19,21 +20,6 @@ import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
 
 import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
-
-/* =========================
-   STEPS
-========================= */
-
-const STEPS = [
-  { label: "Basics" },
-  { label: "Impact" },
-  { label: "Languages" },
-  { label: "Skills" },
-  { label: "Schedule" },
-  { label: "Fun" },
-  { label: "Review" },
-];
-
 /* =========================
    FORM DATA
 ========================= */
@@ -157,6 +143,7 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [appId, setAppId] = useState("");
+  const t = useT();
 
   const handleBackToRoles = () => {
     playBack();
@@ -302,7 +289,7 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
               whileHover={{ x: -3 }}
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Previous</span>
+              <span>{t.common.previous}</span>
             </motion.button>
           ) : <span />}
           <motion.button
@@ -317,10 +304,18 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
         </div>
 
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
-          Mission Progress
+          {t.common.missionProgress}
         </p>
 
-        <FormProgressBar currentStep={step} totalSteps={7} steps={STEPS} />
+        <FormProgressBar currentStep={step} totalSteps={7} steps={[
+          { label: t.opportunistForm.steps.basics },
+          { label: t.opportunistForm.steps.impact },
+          { label: t.opportunistForm.steps.languages },
+          { label: t.opportunistForm.steps.skills },
+          { label: t.opportunistForm.steps.schedule },
+          { label: t.opportunistForm.steps.fun },
+          { label: t.opportunistForm.steps.review },
+        ]} />
 
         <AnimatePresence mode="wait">
           <motion.div key={step}>
@@ -338,7 +333,7 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
               disabled={!validateStep()}
               className={!validateStep() ? "opacity-50 cursor-not-allowed" : ""}
             >
-              Next
+              {t.common.next}
               <ArrowRight className="w-4 h-4" />
             </HeroButton>
           ) : (
@@ -351,11 +346,11 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Submitting...
+                  {t.common.submitting}
                 </>
               ) : (
                 <>
-                  Submit
+                  {t.common.submit}
                   <Check className="w-4 h-4" />
                 </>
               )}

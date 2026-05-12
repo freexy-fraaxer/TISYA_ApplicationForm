@@ -12,6 +12,7 @@ import { User, Mail, MapPin, Globe, GraduationCap, BookOpen, Phone } from "lucid
 import { countries, validateEmail, getEmailError, getRequiredError, getPhoneError } from "@/lib/validation";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect, useRef } from "react";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Step1Props {
   formData: PathfinderFormData;
@@ -21,6 +22,7 @@ interface Step1Props {
 const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const t = useT();
   
   // Refs for autofill detection
   const fullNameRef = useRef<HTMLInputElement>(null);
@@ -86,16 +88,16 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Welcome, Pathfinder
+          {t.pathfinderForm.step1.title}
         </h2>
-        <p className="text-muted-foreground">Let's get you started</p>
+        <p className="text-muted-foreground">{t.pathfinderForm.step1.subtitle}</p>
       </div>
 
       {/* Full Name */}
       <div className="space-y-2">
         <Label htmlFor="full_name" className="text-sm font-medium flex items-center gap-2">
           <User className="w-4 h-4 text-muted-foreground" />
-          Full Name <span className="text-destructive">*</span>
+          {t.pathfinderForm.step1.fullName} <span className="text-destructive">*</span>
         </Label>
         <Input
           ref={fullNameRef}
@@ -103,7 +105,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           name="name"
           type="text"
           autoComplete="name"
-          placeholder="Your full name"
+          placeholder={t.pathfinderForm.step1.fullNamePlaceholder}
           value={formData.full_name}
           onChange={(e) => handleInputChange("full_name", e.target.value)}
           onBlur={() => handleBlur("full_name")}
@@ -116,7 +118,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
           <Mail className="w-4 h-4 text-muted-foreground" />
-          Email <span className="text-destructive">*</span>
+          {t.pathfinderForm.step1.email} <span className="text-destructive">*</span>
         </Label>
         <Input
           ref={emailRef}
@@ -124,7 +126,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="you@email.com"
+          placeholder={t.pathfinderForm.step1.emailPlaceholder}
           value={formData.email}
           onChange={(e) => handleInputChange("email", e.target.value)}
           onBlur={() => handleBlur("email")}
@@ -137,7 +139,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="contact_number" className="text-sm font-medium flex items-center gap-2">
           <Phone className="w-4 h-4 text-muted-foreground" />
-          Contact Number <span className="text-destructive">*</span>
+          {t.pathfinderForm.step1.contactNumber} <span className="text-destructive">*</span>
         </Label>
         <Input
           ref={contactRef}
@@ -145,7 +147,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
           name="tel"
           type="tel"
           autoComplete="tel"
-          placeholder="+1 234 567 8900"
+          placeholder={t.pathfinderForm.step1.contactNumberPlaceholder}
           value={formData.contact_number}
           onChange={(e) => handleInputChange("contact_number", e.target.value)}
           onBlur={() => handleBlur("contact_number")}
@@ -159,14 +161,14 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
         <div className="space-y-2">
           <Label htmlFor="city" className="text-sm font-medium flex items-center gap-2">
             <MapPin className="w-4 h-4 text-muted-foreground" />
-            City
+            {t.pathfinderForm.step1.city}
           </Label>
           <Input
             id="city"
             name="city"
             type="text"
             autoComplete="address-level2"
-            placeholder="Your city"
+            placeholder={t.pathfinderForm.step1.cityPlaceholder}
             value={formData.city}
             onChange={(e) => handleInputChange("city", e.target.value)}
             className="bg-secondary/50 border-border focus:border-primary"
@@ -175,7 +177,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
         <div className="space-y-2">
           <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
             <Globe className="w-4 h-4 text-muted-foreground" />
-            Nationality <span className="text-destructive">*</span>
+            {t.pathfinderForm.step1.nationality} <span className="text-destructive">*</span>
           </Label>
           <Select
             value={formData.nationality}
@@ -185,7 +187,7 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
             }}
           >
             <SelectTrigger className={`bg-secondary/50 border-border ${errors.nationality ? "border-destructive" : ""}`}>
-              <SelectValue placeholder="Select country" />
+              <SelectValue placeholder={t.common.selectCountry} />
             </SelectTrigger>
             <SelectContent className="bg-card border-border max-h-60">
               {countries.map((country) => (
@@ -203,14 +205,14 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="university" className="text-sm font-medium flex items-center gap-2">
           <GraduationCap className="w-4 h-4 text-muted-foreground" />
-          University <span className="text-destructive">*</span>
+          {t.pathfinderForm.step1.university} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="university"
           name="organization"
           type="text"
           autoComplete="organization"
-          placeholder="Your university name"
+          placeholder={t.pathfinderForm.step1.universityPlaceholder}
           value={formData.university}
           onChange={(e) => handleInputChange("university", e.target.value)}
           onBlur={() => handleBlur("university")}
@@ -223,12 +225,12 @@ const MemberStep1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="department_of_study" className="text-sm font-medium flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-muted-foreground" />
-          Department of Study
+          {t.pathfinderForm.step1.departmentOfStudy}
         </Label>
         <Input
           id="department_of_study"
           type="text"
-          placeholder="e.g., Computer Science, Business Administration"
+          placeholder={t.pathfinderForm.step1.departmentPlaceholder}
           value={formData.department_of_study}
           onChange={(e) => handleInputChange("department_of_study", e.target.value)}
           className="bg-secondary/50 border-border focus:border-primary"

@@ -13,6 +13,7 @@ import AppShell from "./components/AppShell";
 
 import { SoundProvider } from "@/contexts/SoundContext";
 import { BackgroundEffectsProvider } from "@/contexts/BackgroundEffectsContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
 
@@ -22,19 +23,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <BackgroundEffectsProvider>
-          <SoundProvider>
-            <AppShell>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/roles" element={<RolesPage />} />
-                <Route path="/mission/:role" element={<MissionPage />} />
-                <Route path="/join/:role" element={<JoinPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AppShell>
-          </SoundProvider>
-        </BackgroundEffectsProvider>
+        <LanguageProvider>
+          <BackgroundEffectsProvider>
+            <SoundProvider>
+              <AppShell>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/roles" element={<RolesPage />} />
+                  <Route path="/mission/:role" element={<MissionPage />} />
+                  <Route path="/join/:role" element={<JoinPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AppShell>
+            </SoundProvider>
+          </BackgroundEffectsProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

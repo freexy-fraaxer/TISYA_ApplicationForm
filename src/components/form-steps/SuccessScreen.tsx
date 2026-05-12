@@ -3,6 +3,7 @@ import GlassCard from "../GlassCard";
 import HeroButton from "../HeroButton";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import tisyaLogo from "@/assets/tisya-logo.png";
+import { useT } from "@/contexts/LanguageContext";
 
 interface SuccessScreenProps {
   applicationId: string;
@@ -10,6 +11,7 @@ interface SuccessScreenProps {
 }
 
 const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
+  const t = useT();
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
       <GlassCard
@@ -41,14 +43,11 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
         />
 
         {/* Success Message */}
-        <motion.h2
-          className="text-2xl md:text-3xl font-bold text-foreground mb-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          Application Submitted
-        </motion.h2>
+          <h2
+            className="text-2xl md:text-3xl font-bold text-foreground mb-4"
+          >
+            {t.opportunistForm.successTitle}
+          </h2>
 
         <motion.p
           className="text-muted-foreground mb-6"
@@ -56,7 +55,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          Welcome to the Alliance, Opportunist. We'll be in touch soon.
+          {t.opportunistForm.successSubtitle}
         </motion.p>
 
         {/* Application ID */}
@@ -67,7 +66,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           transition={{ delay: 0.6 }}
         >
           <span className="text-xs text-muted-foreground uppercase tracking-wider">
-            Application ID
+            {t.common.applicationId}
           </span>
           <p className="text-lg font-mono text-primary font-semibold">
             {applicationId}
@@ -81,7 +80,7 @@ const SuccessScreen = ({ applicationId, onBack }: SuccessScreenProps) => {
           transition={{ delay: 0.7 }}
         >
           <HeroButton onClick={onBack} variant="secondary">
-            Back to Home
+            {t.common.backToHome}
             <ArrowRight className="w-4 h-4" />
           </HeroButton>
         </motion.div>

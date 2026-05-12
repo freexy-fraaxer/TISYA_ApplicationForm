@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useT } from "@/contexts/LanguageContext";
 
 interface RoleCardProps {
   title: string;
@@ -25,6 +26,7 @@ const RoleCard = ({
   onClick,
 }: RoleCardProps) => {
   const isMobile = useIsMobile();
+  const t = useT();
 
   return (
     <motion.div
@@ -70,7 +72,7 @@ const RoleCard = ({
             // Desktop only: shadow
             !isMobile && "shadow-lg"
           )}>
-            Coming Soon
+            {t.common.comingSoon}
           </div>
         </div>
       )}
@@ -167,7 +169,7 @@ const RoleCard = ({
                 isMobile ? "opacity-70" : "opacity-60 group-hover:opacity-100 transition-opacity duration-300"
               )}
             >
-              <span>Start</span>
+              <span>{t.common.start}</span>
               <ArrowRight className={cn(
                 "w-3 h-3 md:w-4 md:h-4",
                 !isMobile && "group-hover:translate-x-1 transition-transform duration-200"

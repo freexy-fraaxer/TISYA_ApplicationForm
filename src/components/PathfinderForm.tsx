@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 import { ArrowLeft, ArrowRight, Check, Loader2, X } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import FormProgressBar from "./shared/FormProgressBar";
@@ -13,17 +14,7 @@ import MemberSuccessScreen from "./shared/MemberSuccessScreen";
 import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
 
-const MEMBER_STEPS = [
-  { label: "Basics" },
-  { label: "Your Vibe" },
-  { label: "Final Touch" },
-];
 
-const MEMBER_MICROCOPY = [
-  "Nice to meet you",
-  "Great picks",
-  "Almost there",
-];
 
 export interface PathfinderFormData {
   // Step 1
@@ -81,6 +72,7 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [generatedId, setGeneratedId] = useState<string>("");
+  const t = useT();
 
   const handleBackToRoles = () => {
     playBack();
@@ -204,7 +196,7 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
               whileHover={{ x: -3 }}
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Previous</span>
+              <span>{t.common.previous}</span>
             </motion.button>
           ) : <span />}
           <motion.button
@@ -219,14 +211,18 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
         </div>
 
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
-          Mission Progress
+          {t.common.missionProgress}
         </p>
 
         <FormProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
-          steps={MEMBER_STEPS}
-          completedMicrocopy={MEMBER_MICROCOPY}
+          steps={[
+            { label: t.pathfinderForm.steps.basics },
+            { label: t.pathfinderForm.steps.yourVibe },
+            { label: t.pathfinderForm.steps.finalTouch },
+          ]}
+          completedMicrocopy={[...t.pathfinderForm.microcopy]}
         />
 
         <input
@@ -278,7 +274,7 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
               disabled={!canProceed}
               className={!canProceed ? "opacity-50 cursor-not-allowed" : ""}
             >
-              Next
+              {t.common.next}
               <ArrowRight className="w-4 h-4" />
             </HeroButton>
           ) : (
@@ -291,11 +287,11 @@ const PathfinderForm = ({ onBack }: PathfinderFormProps) => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Submitting...
+                  {t.common.submitting}
                 </>
               ) : (
                 <>
-                  Complete Registration
+                  {t.common.completeRegistration}
                   <Check className="w-4 h-4" />
                 </>
               )}

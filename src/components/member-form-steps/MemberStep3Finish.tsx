@@ -6,23 +6,25 @@ import { cn } from "@/lib/utils";
 import { Instagram, MessageCircle, Users, GraduationCap, Calendar, Globe, MoreHorizontal } from "lucide-react";
 import PreSubmitSummary from "../shared/PreSubmitSummary";
 import TermsAgreementCheckbox from "../shared/TermsAgreementCheckbox";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Step3Props {
   formData: PathfinderFormData;
   updateFormData: (updates: Partial<PathfinderFormData>) => void;
 }
 
-const referralOptions = [
-  { id: "Instagram", label: "Instagram", icon: Instagram },
-  { id: "WhatsApp", label: "WhatsApp", icon: MessageCircle },
-  { id: "Friend / Referral", label: "Friend / Referral", icon: Users },
-  { id: "University / Campus", label: "University / Campus", icon: GraduationCap },
-  { id: "Event / Workshop", label: "Event / Workshop", icon: Calendar },
-  { id: "Website", label: "Website", icon: Globe },
-  { id: "Other", label: "Other", icon: MoreHorizontal },
-];
-
 const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
+  const t = useT();
+
+  const referralOptions = [
+    { id: "Instagram", label: t.pathfinderForm.step3.referralOptions.instagram, icon: Instagram },
+    { id: "WhatsApp", label: t.pathfinderForm.step3.referralOptions.whatsapp, icon: MessageCircle },
+    { id: "Friend / Referral", label: t.pathfinderForm.step3.referralOptions.friendReferral, icon: Users },
+    { id: "University / Campus", label: t.pathfinderForm.step3.referralOptions.universityCampus, icon: GraduationCap },
+    { id: "Event / Workshop", label: t.pathfinderForm.step3.referralOptions.eventWorkshop, icon: Calendar },
+    { id: "Website", label: t.pathfinderForm.step3.referralOptions.website, icon: Globe },
+    { id: "Other", label: t.pathfinderForm.step3.referralOptions.other, icon: MoreHorizontal },
+  ];
   const handleSourceSelect = (source: string) => {
     // Single selection, clear source_other if not selecting Other
     if (source !== "Other") {
@@ -42,10 +44,10 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Almost there
+          {t.pathfinderForm.step3.title}
         </h2>
         <p className="text-muted-foreground">
-          Just a few more things before you join
+          {t.pathfinderForm.step3.subtitle}
         </p>
       </div>
 
@@ -59,7 +61,7 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
       {/* How did you hear about us */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          How did you hear about us?
+          {t.pathfinderForm.step3.howDidYouHear}
         </Label>
         <div className="flex flex-wrap gap-3">
           {referralOptions.map((option) => {
@@ -88,7 +90,7 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
         {isOtherSelected && (
           <div className="mt-3">
             <Input
-              placeholder="Please specify..."
+              placeholder={t.common.pleaseSpecify}
               value={formData.source_other || ""}
               onChange={(e) => updateFormData({ source_other: e.target.value })}
               className="bg-secondary/50 border-border focus:border-primary"
@@ -119,7 +121,7 @@ const MemberStep3Finish = ({ formData, updateFormData }: Step3Props) => {
             htmlFor="consent_updates"
             className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
           >
-            I'd like to receive updates about events and opportunities.
+            {t.pathfinderForm.step3.consentUpdates}
           </label>
         </div>
       </div>

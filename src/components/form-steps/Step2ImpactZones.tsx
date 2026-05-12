@@ -20,6 +20,7 @@ import {
   Star,
 } from "lucide-react";
 import HelperText from "../shared/HelperText";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Step2Props {
   formData: FormData;
@@ -128,6 +129,33 @@ const impactZones = [
 ];
 
 const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
+  const t = useT();
+
+  const getImpactZoneLabel = (id: string) => {
+    switch (id) {
+      case "Events": return t.opportunistForm.step2.impactZones.events.label;
+      case "Media & Design": return t.opportunistForm.step2.impactZones.mediaDesign.label;
+      case "Tech & Digital": return t.opportunistForm.step2.impactZones.techDigital.label;
+      case "Community & Outreach": return t.opportunistForm.step2.impactZones.communityOutreach.label;
+      case "Education & Projects": return t.opportunistForm.step2.impactZones.educationProjects.label;
+      case "Research & Policy": return t.opportunistForm.step2.impactZones.researchPolicy.label;
+      case "Operations & Support": return t.opportunistForm.step2.impactZones.operationsSupport.label;
+      default: return id;
+    }
+  };
+
+  const getImpactZoneDescription = (id: string) => {
+    switch (id) {
+      case "Events": return t.opportunistForm.step2.impactZones.events.description;
+      case "Media & Design": return t.opportunistForm.step2.impactZones.mediaDesign.description;
+      case "Tech & Digital": return t.opportunistForm.step2.impactZones.techDigital.description;
+      case "Community & Outreach": return t.opportunistForm.step2.impactZones.communityOutreach.description;
+      case "Education & Projects": return t.opportunistForm.step2.impactZones.educationProjects.description;
+      case "Research & Policy": return t.opportunistForm.step2.impactZones.researchPolicy.description;
+      case "Operations & Support": return t.opportunistForm.step2.impactZones.operationsSupport.description;
+      default: return "";
+    }
+  };
   const setPrimaryZone = (zoneId: string) => {
     // Remove from "other" interests if present
     const updatedOthers = formData.impact_zones.filter((z) => z !== zoneId);
@@ -173,10 +201,10 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Choose your Impact Zone
+          {t.opportunistForm.step2.title}
         </h2>
         <p className="text-muted-foreground">
-          Pick where you'd like to focus first — and what else interests you
+          {t.opportunistForm.step2.subtitle}
         </p>
       </div>
 
@@ -184,20 +212,20 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Star className="w-4 h-4 text-primary" />
-          Select your PRIMARY area <span className="text-destructive">*</span>
+          {t.opportunistForm.step2.selectPrimary} <span className="text-destructive">*</span>
         </Label>
-        <HelperText>This is where you want to focus most of your time.</HelperText>
+        <HelperText>{t.opportunistForm.step2.primaryHint}</HelperText>
         <Select
           value={formData.primary_impact_zone}
           onValueChange={setPrimaryZone}
         >
           <SelectTrigger className="bg-secondary/50 border-border">
-            <SelectValue placeholder="Select your primary impact zone" />
+            <SelectValue placeholder={t.opportunistForm.step2.selectPrimaryPlaceholder} />
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
             {impactZones.map((zone) => (
               <SelectItem key={zone.id} value={zone.id}>
-                {zone.label}
+                {getImpactZoneLabel(zone.id)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -205,15 +233,15 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       </div>
 
       <p className="text-xs text-center text-primary/60 italic">
-        This helps us match you to the right team
+        {t.opportunistForm.step2.matchHelp}
       </p>
 
       {/* Other Impact Zones */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          Other areas you're interested in
+          {t.opportunistForm.step2.otherAreas}
         </Label>
-        <HelperText>Optional — pick any extras you'd like to support.</HelperText>
+        <HelperText>{t.opportunistForm.step2.otherAreasHint}</HelperText>
         <div className="space-y-3">
           {impactZones.map((zone, index) => {
             const isPrimary = formData.primary_impact_zone === zone.id;
@@ -254,10 +282,10 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
                           isSelected ? "text-primary" : "text-foreground"
                         )}
                       >
-                        {zone.label}
+                        {getImpactZoneLabel(zone.id)}
                       </h3>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {zone.description}
+                        {getImpactZoneDescription(zone.id)}
                       </p>
                     </div>
                   </div>
@@ -274,7 +302,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
                       transition={{ duration: 0.2 }}
                     >
                       <Label className="text-xs font-medium text-muted-foreground">
-                        What specifically interests you?
+                        {t.opportunistForm.step2.whatSpecifically}
                       </Label>
                       <div className="flex flex-wrap gap-2">
                         {zone.subOptions.map((option) => (
@@ -303,21 +331,21 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       {/* Open to other roles */}
       <div className="space-y-3 pt-2">
         <Label className="text-sm font-medium">
-          Open to other roles if needed?
+          {t.opportunistForm.step2.openToOtherRoles}
         </Label>
-        <HelperText>Helps us shuffle you in if a team needs extra hands.</HelperText>
+        <HelperText>{t.opportunistForm.step2.openToRolesHint}</HelperText>
         <div className="flex gap-2">
-          {["Yes", "Maybe", "No"].map((opt) => (
+          {[{ value: "Yes", label: t.common.yes }, { value: "Maybe", label: t.common.maybe }, { value: "No", label: t.common.no }].map((opt) => (
             <button
-              key={opt}
+              key={opt.value}
               type="button"
-              onClick={() => updateFormData({ open_to_other_roles: opt })}
+              onClick={() => updateFormData({ open_to_other_roles: opt.value })}
               className={cn(
                 "chip px-6",
-                formData.open_to_other_roles === opt && "selected"
+                formData.open_to_other_roles === opt.value && "selected"
               )}
             >
-              {opt}
+              {opt.label}
             </button>
           ))}
         </div>

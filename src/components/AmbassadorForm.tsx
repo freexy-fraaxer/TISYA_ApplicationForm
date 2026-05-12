@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 import { ArrowLeft, Check, Loader2, User, Mail, Phone, MapPin, Globe, Linkedin, X } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
 import { Input } from "@/components/ui/input";
@@ -28,35 +29,7 @@ interface AmbassadorFormProps {
   onBack: () => void;
 }
 
-const ambassadorTypes = [
-  "Country Ambassador",
-  "Campus Ambassador",
-  "Regional Ambassador",
-  "Community Ambassador",
-];
 
-const reachOptions = [
-  "University students",
-  "International students",
-  "Student communities",
-  "NGOs / organizations",
-  "Event organizers / spaces",
-];
-
-const presenceOptions = [
-  "I create content",
-  "I speak / present",
-  "I organize people",
-  "I connect people",
-  "I don't yet, but want to",
-];
-
-const dynamicWhyQuestions: Record<string, string> = {
-  "Country Ambassador": "How would you bring together students from your country in Türkiye under TİSYA?",
-  "Campus Ambassador": "How would you introduce TİSYA in your university?",
-  "Regional Ambassador": "How would you build a TİSYA presence in your city?",
-  "Community Ambassador": "How would you connect your existing community with TİSYA?",
-};
 
 interface AmbassadorFormData {
   ambassador_type: string;
@@ -101,6 +74,7 @@ const initialData: AmbassadorFormData = {
 const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
   const { playBack, playTick, playPulse } = useSound();
   const { triggerPulse } = useBackgroundEffects();
+  const t = useT();
   const [formData, setFormData] = useState<AmbassadorFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -194,7 +168,17 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
     onBack();
   };
 
-  const whyQuestion = dynamicWhyQuestions[formData.ambassador_type] || "Why do you want to become an Ambassador?";
+  const ambassadorTypes = Object.values(t.ambassadorForm.ambassadorTypes);
+  
+  const getWhyQuestion = () => {
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.country) return t.ambassadorForm.dynamicWhyQuestions.country;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus) return t.ambassadorForm.dynamicWhyQuestions.campus;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.region) return t.ambassadorForm.dynamicWhyQuestions.region;
+    if (formData.ambassador_type === t.ambassadorForm.ambassadorTypes.community) return t.ambassadorForm.dynamicWhyQuestions.community;
+    return t.ambassadorForm.dynamicWhyQuestions.default;
+  };
+
+  const whyQuestion = getWhyQuestion();
 
   if (isSuccess) {
     return (
@@ -213,19 +197,19 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           >
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-foreground mb-4">Application Received!</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-4">{t.common.applicationReceived}</h2>
           <p className="text-muted-foreground mb-6">
-            Thank you for stepping up as an Ambassador. We'll review your application and get back to you soon.
+            {t.ambassadorForm.successMessage}
           </p>
           {generatedId && (
             <div className="glass-card p-4 mb-8">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Your Reference ID
+                {t.common.yourReferenceId}
               </span>
               <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
             </div>
           )}
-          <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
+          <HeroButton onClick={handleBack} variant="secondary">{t.common.backToHome}</HeroButton>
         </GlassCard>
       </div>
     );
@@ -252,7 +236,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
         </div>
 
         <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/60 mb-4 text-center">
-          Mission Progress
+          {t.common.missionProgress}
         </p>
 
         <input
@@ -267,9 +251,9 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Become an Ambassador</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t.ambassadorForm.title}</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Ambassadors represent TİSYA within a defined scope — a country, campus, region, or community. Pick your lane and show us what you've got.
+            {t.ambassadorForm.subtitle}
           </p>
         </div>
 
@@ -278,7 +262,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Globe className="w-4 h-4 text-muted-foreground" />
-              Ambassador Type <span className="text-destructive">*</span>
+              {t.ambassadorForm.ambassadorTypeLabel} <span className="text-destructive">*</span>
             </Label>
             <Select
               value={formData.ambassador_type}
@@ -288,7 +272,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               }}
             >
               <SelectTrigger className={`bg-secondary/50 border-border ${errors.ambassador_type ? "border-destructive" : ""}`}>
-                <SelectValue placeholder="Select ambassador type" />
+                <SelectValue placeholder={t.ambassadorForm.ambassadorTypePlaceholder} />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
                 {ambassadorTypes.map((t) => (
@@ -303,10 +287,10 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <User className="w-4 h-4 text-muted-foreground" />
-              Full Name <span className="text-destructive">*</span>
+              {t.common.fullName} <span className="text-destructive">*</span>
             </Label>
             <Input
-              placeholder="Your full name"
+              placeholder={t.common.fullNamePlaceholder}
               value={formData.full_name}
               onChange={(e) => update({ full_name: e.target.value })}
               onBlur={() => handleBlur("full_name")}
@@ -319,11 +303,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Mail className="w-4 h-4 text-muted-foreground" />
-              Email <span className="text-destructive">*</span>
+              {t.common.email} <span className="text-destructive">*</span>
             </Label>
             <Input
               type="email"
-              placeholder="you@email.com"
+              placeholder={t.common.emailPlaceholder}
               value={formData.email}
               onChange={(e) => update({ email: e.target.value })}
               onBlur={() => handleBlur("email")}
@@ -336,11 +320,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Phone className="w-4 h-4 text-muted-foreground" />
-              Phone Number <span className="text-destructive">*</span>
+              {t.common.phone} <span className="text-destructive">*</span>
             </Label>
             <Input
               type="tel"
-              placeholder="+1 234 567 8900"
+              placeholder={t.common.phonePlaceholder}
               value={formData.phone}
               onChange={(e) => update({ phone: e.target.value })}
               onBlur={() => handleBlur("phone")}
@@ -354,7 +338,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             <div className="space-y-2">
               <Label className="text-sm font-medium flex items-center gap-2">
                 <Globe className="w-4 h-4 text-muted-foreground" />
-                Country <span className="text-destructive">*</span>
+                {t.common.country} <span className="text-destructive">*</span>
               </Label>
               <Select
                 value={formData.country}
@@ -364,7 +348,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
                 }}
               >
                 <SelectTrigger className={`bg-secondary/50 border-border ${errors.country ? "border-destructive" : ""}`}>
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder={t.common.countryPlaceholder} />
                 </SelectTrigger>
                 <SelectContent className="bg-card border-border max-h-60">
                   {countries.map((c) => (
@@ -377,10 +361,10 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             <div className="space-y-2">
               <Label className="text-sm font-medium flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                City
+                {t.common.city}
               </Label>
               <Input
-                placeholder="Your city"
+                placeholder={t.common.cityPlaceholder}
                 value={formData.city}
                 onChange={(e) => update({ city: e.target.value })}
                 className="bg-secondary/50 border-border focus:border-primary"
@@ -399,10 +383,10 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               >
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
-                  {formData.ambassador_type === "Campus Ambassador" ? "University / Institution" : "Organization / Community"}
+                  {formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus ? t.ambassadorForm.universityLabel : t.ambassadorForm.organizationLabel}
                 </Label>
                 <Input
-                  placeholder={formData.ambassador_type === "Campus Ambassador" ? "e.g. Istanbul University" : "e.g. Local Youth Council"}
+                  placeholder={formData.ambassador_type === t.ambassadorForm.ambassadorTypes.campus ? t.ambassadorForm.universityPlaceholder : t.ambassadorForm.organizationPlaceholder}
                   value={formData.institution}
                   onChange={(e) => update({ institution: e.target.value })}
                   className="bg-secondary/50 border-border focus:border-primary"
@@ -415,10 +399,10 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-2">
             <Label className="text-sm font-medium flex items-center gap-2">
               <Linkedin className="w-4 h-4 text-muted-foreground" />
-              LinkedIn Profile
+              {t.common.linkedin}
             </Label>
             <Input
-              placeholder="https://linkedin.com/in/yourprofile"
+              placeholder={t.common.linkedinPlaceholder}
               value={formData.linkedin}
               onChange={(e) => update({ linkedin: e.target.value })}
               className="bg-secondary/50 border-border focus:border-primary"
@@ -429,7 +413,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">
-                Have you been involved with TİSYA before?
+                {t.ambassadorForm.previousInvolvementLabel}
               </Label>
               <Switch
                 checked={formData.previous_involvement}
@@ -445,7 +429,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
                   className="overflow-hidden"
                 >
                   <Textarea
-                    placeholder="Tell us what you did..."
+                    placeholder={t.ambassadorForm.involvementPlaceholder}
                     value={formData.involvement_details}
                     onChange={(e) => update({ involvement_details: e.target.value })}
                     className="bg-secondary/50 border-border focus:border-primary"
@@ -459,11 +443,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Your Reach & Network */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">
-              Who do you have access to?
+              {t.ambassadorForm.reachNetworkLabel}
             </Label>
-            <HelperText>Pick all that apply — this helps us understand your reach.</HelperText>
+            <HelperText>{t.ambassadorForm.reachNetworkHelper}</HelperText>
             <div className="flex flex-wrap gap-2">
-              {reachOptions.map((option) => (
+              {t.ambassadorForm.reachOptions.map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -484,11 +468,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Your Presence */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">
-              How do you usually engage with people?
+              {t.ambassadorForm.presenceLabel}
             </Label>
-            <HelperText>No wrong answer — we want to know your style.</HelperText>
+            <HelperText>{t.ambassadorForm.presenceHelper}</HelperText>
             <div className="flex flex-wrap gap-2">
-              {presenceOptions.map((option) => (
+              {t.ambassadorForm.presenceOptions.map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -512,7 +496,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               {whyQuestion} <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder="Be specific — we love real answers over polished ones."
+              placeholder={t.ambassadorForm.whyAmbassadorPlaceholder}
               value={formData.why_ambassador}
               onChange={(e) => {
                 if (e.target.value.length <= 500) {
@@ -532,10 +516,10 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
           {/* Experience */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              What experience makes you right for this? <span className="text-destructive">*</span>
+              {t.ambassadorForm.experienceLabel} <span className="text-destructive">*</span>
             </Label>
             <Textarea
-              placeholder="Leadership, community work, events you've run — anything relevant."
+              placeholder={t.ambassadorForm.experiencePlaceholder}
               value={formData.experience}
               onChange={(e) => {
                 if (e.target.value.length <= 500) {
@@ -568,7 +552,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
               className="mt-1"
             />
             <Label htmlFor="ambassador-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              I consent to TİSYA storing my data for this application. <span className="text-destructive">*</span>
+              {t.ambassadorForm.dataConsent} <span className="text-destructive">*</span>
             </Label>
           </div>
         </div>
@@ -583,7 +567,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
         <div className="flex justify-between mt-8">
           <HeroButton variant="ghost" size="md" onClick={handleBack}>
             <ArrowLeft className="w-4 h-4" />
-            Back
+            {t.common.back}
           </HeroButton>
           <HeroButton
             size="md"
@@ -594,11 +578,11 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Submitting...
+                {t.common.submitting}
               </>
             ) : (
               <>
-                Complete Registration
+                {t.common.completeRegistration}
                 <Check className="w-4 h-4" />
               </>
             )}

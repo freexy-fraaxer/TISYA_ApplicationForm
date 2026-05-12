@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSound } from "@/contexts/SoundContext";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
+import { useT } from "@/contexts/LanguageContext";
 import { ArrowLeft, ArrowRight, Check, Loader2, Building2, Mail, Phone, Globe, User, X, Sparkles, Target } from "lucide-react";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
@@ -143,6 +144,96 @@ const MENTOR_PROVIDE = ["Speakers", "Mentors", "Workshop leaders"];
 const INTERN_TYPES = ["Internships", "Part-time roles", "Full-time roles"];
 const AUDIENCES = ["Students", "Early Professionals", "Entrepreneurs", "Specific Fields"];
 
+const getOrgTypeLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Startup": return t.partnerSponsorForm.orgTypes.startup;
+    case "Corporate": return t.partnerSponsorForm.orgTypes.corporate;
+    case "NGO / Non-profit": return t.partnerSponsorForm.orgTypes.ngo;
+    case "Educational Institution": return t.partnerSponsorForm.orgTypes.edu;
+    case "Government / Public Sector": return t.partnerSponsorForm.orgTypes.gov;
+    case "Individual Sponsor": return t.partnerSponsorForm.orgTypes.individual;
+    default: return val;
+  }
+};
+
+const getContributionLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Financial Sponsorship": return t.partnerSponsorForm.contributions.financial;
+    case "Event Sponsorship": return t.partnerSponsorForm.contributions.event;
+    case "Mentorship / Speakers": return t.partnerSponsorForm.contributions.mentorship;
+    case "Internships / Opportunities": return t.partnerSponsorForm.contributions.internships;
+    case "Resources / Tools": return t.partnerSponsorForm.contributions.resources;
+    case "Strategic Partnership": return t.partnerSponsorForm.contributions.strategic;
+    default: return val;
+  }
+};
+
+const getFinBudgetLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Less than $500": return t.partnerSponsorForm.finBudgets.lessThan500;
+    case "$500 – $2,000": return t.partnerSponsorForm.finBudgets.between500And2k;
+    case "$2,000 – $5,000": return t.partnerSponsorForm.finBudgets.between2kAnd5k;
+    case "$5,000+": return t.partnerSponsorForm.finBudgets.moreThan5k;
+    default: return val;
+  }
+};
+
+const getFinVisibilityLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Event branding": return t.partnerSponsorForm.finVisibilityOptions.eventBranding;
+    case "Social media": return t.partnerSponsorForm.finVisibilityOptions.socialMedia;
+    case "Website presence": return t.partnerSponsorForm.finVisibilityOptions.websitePresence;
+    default: return val;
+  }
+};
+
+const getEventTypeLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Workshops": return t.partnerSponsorForm.eventTypes.workshops;
+    case "Networking events": return t.partnerSponsorForm.eventTypes.networking;
+    case "Panels / Talks": return t.partnerSponsorForm.eventTypes.panels;
+    case "Competitions": return t.partnerSponsorForm.eventTypes.competitions;
+    default: return val;
+  }
+};
+
+const getEventInvolvementLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Sponsor only": return t.partnerSponsorForm.eventInvolvements.sponsor;
+    case "Co-host": return t.partnerSponsorForm.eventInvolvements.coHost;
+    case "Lead organizer": return t.partnerSponsorForm.eventInvolvements.lead;
+    default: return val;
+  }
+};
+
+const getMentorRoleLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Speakers": return t.partnerSponsorForm.mentorRoles.speakers;
+    case "Mentors": return t.partnerSponsorForm.mentorRoles.mentors;
+    case "Workshop leaders": return t.partnerSponsorForm.mentorRoles.workshopLeaders;
+    default: return val;
+  }
+};
+
+const getInternTypeLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Internships": return t.partnerSponsorForm.internTypes.internships;
+    case "Part-time roles": return t.partnerSponsorForm.internTypes.partTime;
+    case "Full-time roles": return t.partnerSponsorForm.internTypes.fullTime;
+    default: return val;
+  }
+};
+
+const getAudienceLabel = (val: string, t: any) => {
+  switch (val) {
+    case "Students": return t.partnerSponsorForm.audiences.students;
+    case "Early Professionals": return t.partnerSponsorForm.audiences.earlyProfessionals;
+    case "Entrepreneurs": return t.partnerSponsorForm.audiences.entrepreneurs;
+    case "Specific Fields": return t.partnerSponsorForm.audiences.specificFields;
+    default: return val;
+  }
+};
+
 // Reusable chip-style multi-select toggle
 const Chip = ({
   active,
@@ -183,6 +274,7 @@ const MicroCard = ({ title, children }: { title: string; children: React.ReactNo
 );
 
 const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
+  const t = useT();
   const { playBack, playPulse } = useSound();
   const { triggerPulse } = useBackgroundEffects();
   const [step, setStep] = useState(1);
@@ -337,28 +429,28 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
           >
             <Check className="w-10 h-10 text-primary" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to TISYA</h2>
-          <p className="text-lg text-primary/80 font-medium mb-4">You are now part of The Alliance</p>
-          <p className="text-muted-foreground mb-2 text-sm">Path: Partner / Sponsor</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t.partnerSponsorForm.successTitle}</h2>
+          <p className="text-lg text-primary/80 font-medium mb-4">{t.partnerSponsorForm.successSubtitle}</p>
+          <p className="text-muted-foreground mb-2 text-sm">{t.partnerSponsorForm.successPath}</p>
           <p className="text-muted-foreground mb-6">
-            We'll review your inquiry and reach out to discuss collaboration opportunities.
+            {t.partnerSponsorForm.successDesc}
           </p>
           {generatedId && (
             <div className="glass-card p-4 mb-8">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Your Reference ID
+                {t.common.applicationId}
               </span>
               <p className="text-lg font-mono text-primary font-semibold">{generatedId}</p>
             </div>
           )}
-          <HeroButton onClick={handleBack} variant="secondary">Back to Home</HeroButton>
+          <HeroButton onClick={handleBack} variant="secondary">{t.common.backToHome}</HeroButton>
         </GlassCard>
       </div>
     );
   }
 
   const sectionTitle =
-    step === 1 ? "Organization Info" : step === 2 ? "Partnership Details" : "Strategic Fit";
+    step === 1 ? t.partnerSponsorForm.step1Title : step === 2 ? t.partnerSponsorForm.step2Title : t.partnerSponsorForm.step3Title;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
@@ -393,11 +485,14 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
         {/* Header */}
         <div className="text-center mb-8">
           <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/70 mb-2">
-            Mission Progress: Step {step} of 3 — {sectionTitle}
+            {t.partnerSponsorForm.progressStep
+              .replace("{{current}}", step.toString())
+              .replace("{{total}}", "3")
+              .replace("{{title}}", sectionTitle)}
           </p>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Partner / Sponsor</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{t.partnerSponsorForm.title}</h2>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Collaborate with TISYA as an organization or sponsor. Tell us about your vision.
+            {t.partnerSponsorForm.subtitle}
           </p>
         </div>
 
@@ -427,10 +522,10 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-muted-foreground" />
-                  Organization Name <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.orgName} <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  placeholder="Your organization"
+                  placeholder={t.partnerSponsorForm.orgNamePlaceholder}
                   value={formData.org_name}
                   onChange={(e) => update({ org_name: e.target.value })}
                   onBlur={() => handleBlur("org_name")}
@@ -442,7 +537,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-muted-foreground" />
-                  Organization Type <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.orgType} <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={formData.org_type}
@@ -452,11 +547,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   }}
                 >
                   <SelectTrigger className={`bg-secondary/50 border-border ${errors.org_type ? "border-destructive" : ""}`}>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={t.partnerSponsorForm.orgTypePlaceholder} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border">
-                    {ORG_TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    {ORG_TYPES.map((typeVal) => (
+                      <SelectItem key={typeVal} value={typeVal}>{getOrgTypeLabel(typeVal, t)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -466,10 +561,10 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <User className="w-4 h-4 text-muted-foreground" />
-                  Contact Person <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.contactPerson} <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  placeholder="Primary contact name"
+                  placeholder={t.partnerSponsorForm.contactPersonPlaceholder}
                   value={formData.contact_name}
                   onChange={(e) => update({ contact_name: e.target.value })}
                   onBlur={() => handleBlur("contact_name")}
@@ -480,10 +575,10 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
   <Label className="text-sm font-medium flex items-center gap-2">
     <User className="w-4 h-4 text-muted-foreground" />
-    Role / Position
+    {t.partnerSponsorForm.rolePosition}
   </Label>
   <Input
-    placeholder="e.g., Founder, Marketing Lead"
+    placeholder={t.partnerSponsorForm.rolePlaceholder}
     value={formData.role_title}
     onChange={(e) => update({ role_title: e.target.value })}
     className="bg-secondary/50 border-border focus:border-primary"
@@ -494,11 +589,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    Email <span className="text-destructive">*</span>
+                    {t.partnerSponsorForm.email} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     type="email"
-                    placeholder="contact@org.com"
+                    placeholder={t.partnerSponsorForm.emailPlaceholder}
                     value={formData.contact_email}
                     onChange={(e) => update({ contact_email: e.target.value })}
                     onBlur={() => handleBlur("contact_email")}
@@ -509,11 +604,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium flex items-center gap-2">
                     <Phone className="w-4 h-4 text-muted-foreground" />
-                    Phone
+                    {t.partnerSponsorForm.phone}
                   </Label>
                   <Input
                     type="tel"
-                    placeholder="+1 234 567 8900"
+                    placeholder={t.partnerSponsorForm.phonePlaceholder}
                     value={formData.contact_phone}
                     onChange={(e) => update({ contact_phone: e.target.value })}
                     onBlur={() => handleBlur("contact_phone")}
@@ -526,10 +621,10 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Globe className="w-4 h-4 text-muted-foreground" />
-                  Website
+                  {t.partnerSponsorForm.website}
                 </Label>
                 <Input
-                  placeholder="https://yourorg.com"
+                  placeholder={t.partnerSponsorForm.websitePlaceholder}
                   value={formData.website}
                   onChange={(e) => update({ website: e.target.value })}
                   className="bg-secondary/50 border-border focus:border-primary"
@@ -552,9 +647,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-muted-foreground" />
-                  Type of Contribution <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.typeOfContribution} <span className="text-destructive">*</span>
                 </Label>
-                <p className="text-xs text-muted-foreground">Select all that apply</p>
+                <p className="text-xs text-muted-foreground">{t.partnerSponsorForm.contributionHint}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   {CONTRIBUTION_OPTIONS.map((opt) => (
                     <Chip
@@ -562,7 +657,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                       active={formData.contribution_types.includes(opt)}
                       onClick={() => toggle("contribution_types", opt)}
                     >
-                      {opt}
+                      {getContributionLabel(opt, t)}
                     </Chip>
                   ))}
                 </div>
@@ -570,22 +665,22 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                 {/* Conditional micro-cards */}
                 <AnimatePresence>
                   {formData.contribution_types.includes("Financial Sponsorship") && (
-                    <MicroCard key="fin" title="Financial Sponsorship">
+                    <MicroCard key="fin" title={t.partnerSponsorForm.contributions.financial}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Estimated Budget</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.finBudgets.label}</Label>
                         <Select value={formData.fin_budget} onValueChange={(v) => update({ fin_budget: v })}>
                           <SelectTrigger className="bg-secondary/50 border-border">
-                            <SelectValue placeholder="Select budget range" />
+                            <SelectValue placeholder={t.partnerSponsorForm.finBudgets.placeholder} />
                           </SelectTrigger>
                           <SelectContent className="bg-card border-border">
                             {FIN_BUDGETS.map((b) => (
-                              <SelectItem key={b} value={b}>{b}</SelectItem>
+                              <SelectItem key={b} value={b}>{getFinBudgetLabel(b, t)}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Preferred Visibility</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.finVisibilityOptions.label}</Label>
                         <div className="flex flex-wrap gap-2">
                           {FIN_VISIBILITY.map((v) => (
                             <Chip
@@ -593,19 +688,19 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                               active={formData.fin_visibility.includes(v)}
                               onClick={() => toggle("fin_visibility", v)}
                             >
-                              {v}
+                              {getFinVisibilityLabel(v, t)}
                             </Chip>
                           ))}
                           <Chip
                             active={formData.fin_visibility.includes("Other")}
                             onClick={() => toggle("fin_visibility", "Other")}
                           >
-                            Other
+                            {t.common.other}
                           </Chip>
                         </div>
                         {formData.fin_visibility.includes("Other") && (
                           <Input
-                            placeholder="Specify other visibility..."
+                            placeholder={t.partnerSponsorForm.finVisibilityOptions.otherPlaceholder}
                             value={formData.fin_visibility_other}
                             onChange={(e) => update({ fin_visibility_other: e.target.value })}
                             className="bg-secondary/50 border-border focus:border-primary mt-2"
@@ -616,9 +711,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   )}
 
                   {formData.contribution_types.includes("Event Sponsorship") && (
-                    <MicroCard key="event" title="Event Sponsorship">
+                    <MicroCard key="event" title={t.partnerSponsorForm.contributions.event}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Type of Events</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.eventTypes.label}</Label>
                         <div className="flex flex-wrap gap-2">
                           {EVENT_TYPES.map((v) => (
                             <Chip
@@ -626,20 +721,20 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                               active={formData.event_types.includes(v)}
                               onClick={() => toggle("event_types", v)}
                             >
-                              {v}
+                              {getEventTypeLabel(v, t)}
                             </Chip>
                           ))}
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Level of Involvement</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.eventInvolvements.label}</Label>
                         <Select value={formData.event_involvement} onValueChange={(v) => update({ event_involvement: v })}>
                           <SelectTrigger className="bg-secondary/50 border-border">
-                            <SelectValue placeholder="Select involvement" />
+                            <SelectValue placeholder={t.partnerSponsorForm.eventInvolvements.placeholder} />
                           </SelectTrigger>
                           <SelectContent className="bg-card border-border">
                             {EVENT_INVOLVEMENT.map((b) => (
-                              <SelectItem key={b} value={b}>{b}</SelectItem>
+                              <SelectItem key={b} value={b}>{getEventInvolvementLabel(b, t)}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -648,9 +743,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   )}
 
                   {formData.contribution_types.includes("Mentorship / Speakers") && (
-                    <MicroCard key="mentor" title="Mentorship / Speakers">
+                    <MicroCard key="mentor" title={t.partnerSponsorForm.contributions.mentorship}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">What can you provide?</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.mentorRoles.label}</Label>
                         <div className="flex flex-wrap gap-2">
                           {MENTOR_PROVIDE.map((v) => (
                             <Chip
@@ -658,15 +753,15 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                               active={formData.mentor_roles.includes(v)}
                               onClick={() => toggle("mentor_roles", v)}
                             >
-                              {v}
+                              {getMentorRoleLabel(v, t)}
                             </Chip>
                           ))}
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Fields / Topics</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.mentorRoles.fieldsTopics}</Label>
                         <Input
-                          placeholder="e.g., AI, design, entrepreneurship"
+                          placeholder={t.partnerSponsorForm.mentorRoles.fieldsPlaceholder}
                           value={formData.mentor_topics}
                           onChange={(e) => update({ mentor_topics: e.target.value })}
                           className="bg-secondary/50 border-border focus:border-primary"
@@ -676,9 +771,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   )}
 
                   {formData.contribution_types.includes("Internships / Opportunities") && (
-                    <MicroCard key="intern" title="Internships / Opportunities">
+                    <MicroCard key="intern" title={t.partnerSponsorForm.contributions.internships}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Type</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.internTypes.label}</Label>
                         <div className="flex flex-wrap gap-2">
                           {INTERN_TYPES.map((v) => (
                             <Chip
@@ -686,27 +781,27 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                               active={formData.intern_types.includes(v)}
                               onClick={() => toggle("intern_types", v)}
                             >
-                              {v}
+                              {getInternTypeLabel(v, t)}
                             </Chip>
                           ))}
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="space-y-2">
-                          <Label className="text-xs text-muted-foreground">Fields / Roles</Label>
+                          <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.internFields}</Label>
                           <Input
-                            placeholder="e.g., engineering, marketing"
+                            placeholder={t.partnerSponsorForm.internFieldsPlaceholder}
                             value={formData.intern_fields}
                             onChange={(e) => update({ intern_fields: e.target.value })}
                             className="bg-secondary/50 border-border focus:border-primary"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-xs text-muted-foreground">Approx. positions</Label>
+                          <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.internPositions}</Label>
                           <Input
                             type="number"
                             min={1}
-                            placeholder="e.g., 5"
+                            placeholder={t.partnerSponsorForm.internPositionsPlaceholder}
                             value={formData.intern_positions}
                             onChange={(e) => update({ intern_positions: e.target.value })}
                             className="bg-secondary/50 border-border focus:border-primary"
@@ -717,11 +812,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   )}
 
                   {formData.contribution_types.includes("Resources / Tools") && (
-                    <MicroCard key="resources" title="Resources / Tools">
+                    <MicroCard key="resources" title={t.partnerSponsorForm.contributions.resources}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Type of support</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.resourceSupport}</Label>
                         <Input
-                          placeholder="e.g., software, platforms, access, credits"
+                          placeholder={t.partnerSponsorForm.resourcePlaceholder}
                           value={formData.resource_support}
                           onChange={(e) => update({ resource_support: e.target.value })}
                           className="bg-secondary/50 border-border focus:border-primary"
@@ -731,11 +826,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   )}
 
                   {formData.contribution_types.includes("Strategic Partnership") && (
-                    <MicroCard key="strategic" title="Strategic Partnership">
+                    <MicroCard key="strategic" title={t.partnerSponsorForm.contributions.strategic}>
                       <div className="space-y-2">
-                        <Label className="text-xs text-muted-foreground">Brief description of partnership idea</Label>
+                        <Label className="text-xs text-muted-foreground">{t.partnerSponsorForm.strategicIdea}</Label>
                         <Textarea
-                          placeholder="Share your partnership idea..."
+                          placeholder={t.partnerSponsorForm.strategicPlaceholder}
                           value={formData.strategic_idea}
                           onChange={(e) => {
                             if (e.target.value.length <= 400) update({ strategic_idea: e.target.value });
@@ -753,9 +848,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               <div className="space-y-2">
                 <Label className="text-sm font-medium flex items-center gap-2">
                   <Target className="w-4 h-4 text-muted-foreground" />
-                  Target Audience Alignment <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.targetAudience} <span className="text-destructive">*</span>
                 </Label>
-                <p className="text-xs text-muted-foreground">Who are you looking to reach?</p>
+                <p className="text-xs text-muted-foreground">{t.partnerSponsorForm.audienceHint}</p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   {AUDIENCES.map((a) => (
                     <Chip
@@ -763,7 +858,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                       active={formData.audiences.includes(a)}
                       onClick={() => toggle("audiences", a)}
                     >
-                      {a}
+                      {getAudienceLabel(a, t)}
                     </Chip>
                   ))}
                 </div>
@@ -775,7 +870,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                     className="overflow-hidden"
                   >
                     <Input
-                      placeholder="Which specific fields?"
+                      placeholder={t.partnerSponsorForm.specificFieldsPlaceholder}
                       value={formData.audience_fields}
                       onChange={(e) => update({ audience_fields: e.target.value })}
                       className="bg-secondary/50 border-border focus:border-primary mt-2"
@@ -798,13 +893,13 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
             >
               <div className="space-y-2">
                 <Label className="text-sm font-medium">
-                  How do you envision collaborating with TISYA? <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.collabVision} <span className="text-destructive">*</span>
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Describe the value you aim to bring and what outcomes you're looking to achieve.
+                  {t.partnerSponsorForm.collabHint}
                 </p>
                 <Textarea
-                  placeholder="Your vision for this collaboration..."
+                  placeholder={t.partnerSponsorForm.collabPlaceholder}
                   value={formData.collab_vision}
                   onChange={(e) => {
                     if (e.target.value.length <= 500) update({ collab_vision: e.target.value });
@@ -823,16 +918,16 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
 
               <div className="space-y-2">
                 <Label className="text-sm font-medium">
-                  Have you partnered with student organizations before? <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.pastPartnerships} <span className="text-destructive">*</span>
                 </Label>
                 <div className="flex gap-2 pt-1">
-                  {["Yes", "No"].map((v) => (
+                  {[{ value: "Yes", label: t.common.yes }, { value: "No", label: t.common.no }].map((v) => (
                     <Chip
-                      key={v}
-                      active={formData.prior_partnership === v}
-                      onClick={() => update({ prior_partnership: v, prior_description: v === "No" ? "" : formData.prior_description })}
+                      key={v.value}
+                      active={formData.prior_partnership === v.value}
+                      onClick={() => update({ prior_partnership: v.value, prior_description: v.value === "No" ? "" : formData.prior_description })}
                     >
-                      {v}
+                      {v.label}
                     </Chip>
                   ))}
                 </div>
@@ -845,7 +940,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                       className="overflow-hidden"
                     >
                       <Textarea
-                        placeholder="Briefly describe your past partnerships"
+                        placeholder={t.partnerSponsorForm.pastPartnershipsPlaceholder}
                         value={formData.prior_description}
                         onChange={(e) => {
                           if (e.target.value.length <= 400) update({ prior_description: e.target.value });
@@ -859,9 +954,9 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Additional details or specific ideas (optional)</Label>
+                <Label className="text-sm font-medium">{t.partnerSponsorForm.additionalDetails}</Label>
                 <Textarea
-                  placeholder="Anything else you'd like to share..."
+                  placeholder={t.partnerSponsorForm.additionalPlaceholder}
                   value={formData.additional_details}
                   onChange={(e) => update({ additional_details: e.target.value })}
                   className="bg-secondary/50 border-border focus:border-primary"
@@ -877,7 +972,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
                   className="mt-1"
                 />
                 <Label htmlFor="partner-consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                  I consent to TISYA storing this data for partnership purposes. <span className="text-destructive">*</span>
+                  {t.partnerSponsorForm.consentLabel} <span className="text-destructive">*</span>
                 </Label>
               </div>
             </motion.div>
@@ -898,7 +993,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
         <div className="flex justify-between mt-8">
           <HeroButton variant="ghost" size="md" onClick={handleStepBack}>
             <ArrowLeft className="w-4 h-4" />
-            Back
+            {t.common.back}
           </HeroButton>
           {step < 3 ? (
             <HeroButton
@@ -907,7 +1002,7 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               disabled={(step === 1 && !step1Valid) || (step === 2 && !step2Valid)}
               className={(step === 1 && !step1Valid) || (step === 2 && !step2Valid) ? "opacity-50 cursor-not-allowed" : ""}
             >
-              Next
+              {t.common.next}
               <ArrowRight className="w-4 h-4" />
             </HeroButton>
           ) : (
@@ -920,11 +1015,11 @@ const PartnerSponsorForm = ({ onBack }: PartnerSponsorFormProps) => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Submitting...
+                  {t.common.submitting}
                 </>
               ) : (
                 <>
-                  Complete Registration
+                  {t.common.completeRegistration}
                   <Check className="w-4 h-4" />
                 </>
               )}

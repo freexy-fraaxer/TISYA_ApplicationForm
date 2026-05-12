@@ -14,32 +14,34 @@ import { countries, genderOptions, validateEmail, validatePhone, getEmailError, 
 import HelperText from "../shared/HelperText";
 import FormFieldError from "../shared/FormFieldError";
 import { useState, useEffect } from "react";
+import { useT } from "@/contexts/LanguageContext";
 
 interface Step1Props {
   formData: FormData;
   updateFormData: (updates: Partial<FormData>) => void;
 }
 
-const educationLevels = [
-  "High School",
-  "Undergraduate",
-  "Master's",
-  "Graduated",
-];
-
-const howFoundOptions = [
-  "Instagram",
-  "Friend",
-  "Event",
-  "Website",
-  "WhatsApp",
-  "Other",
-];
-
 const currentStatusOptions = ["Student", "Graduate", "Working", "Other"];
 const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const t = useT();
+
+  const educationLevels = [
+    { value: "High School", label: t.opportunistForm.step1.educationLevels.highSchool },
+    { value: "Undergraduate", label: t.opportunistForm.step1.educationLevels.undergraduate },
+    { value: "Master's", label: t.opportunistForm.step1.educationLevels.masters },
+    { value: "Graduated", label: t.opportunistForm.step1.educationLevels.graduated },
+  ];
+
+  const howFoundOptions = [
+    { value: "Instagram", label: t.opportunistForm.step1.howFoundOptions.instagram },
+    { value: "Friend", label: t.opportunistForm.step1.howFoundOptions.friend },
+    { value: "Event", label: t.opportunistForm.step1.howFoundOptions.event },
+    { value: "Website", label: t.opportunistForm.step1.howFoundOptions.website },
+    { value: "WhatsApp", label: t.opportunistForm.step1.howFoundOptions.whatsapp },
+    { value: "Other", label: t.opportunistForm.step1.howFoundOptions.other },
+  ];
 
   useEffect(() => {
     const newErrors: Record<string, string | null> = {};
@@ -88,21 +90,21 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Let's start with the basics
+          {t.opportunistForm.step1.title}
         </h2>
-        <p className="text-muted-foreground">Tell us a bit about yourself</p>
+        <p className="text-muted-foreground">{t.opportunistForm.step1.subtitle}</p>
       </div>
 
       {/* Full Name */}
       <div className="space-y-2">
         <Label htmlFor="full_name" className="text-sm font-medium flex items-center gap-2">
           <User className="w-4 h-4 text-muted-foreground" />
-          Full Name <span className="text-destructive">*</span>
+          {t.opportunistForm.step1.fullName} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="full_name"
           type="text"
-          placeholder="Your full name"
+          placeholder={t.opportunistForm.step1.fullNamePlaceholder}
           value={formData.full_name}
           onChange={(e) => updateFormData({ full_name: e.target.value })}
           onBlur={() => handleBlur("full_name")}
@@ -115,12 +117,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
           <Mail className="w-4 h-4 text-muted-foreground" />
-          Email <span className="text-destructive">*</span>
+          {t.opportunistForm.step1.email} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="email"
           type="email"
-          placeholder="you@email.com"
+          placeholder={t.opportunistForm.step1.emailPlaceholder}
           value={formData.email}
           onChange={(e) => updateFormData({ email: e.target.value })}
           onBlur={() => handleBlur("email")}
@@ -133,12 +135,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="contact_number" className="text-sm font-medium flex items-center gap-2">
           <Phone className="w-4 h-4 text-muted-foreground" />
-          Contact Number
+          {t.opportunistForm.step1.contactNumber}
         </Label>
         <Input
           id="contact_number"
           type="tel"
-          placeholder="+90 5XX XXX XXXX"
+          placeholder={t.opportunistForm.step1.contactNumberPlaceholder}
           value={formData.contact_number}
           onChange={(e) => updateFormData({ contact_number: e.target.value })}
           onBlur={() => handleBlur("contact_number")}
@@ -151,13 +153,13 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="whatsapp_number" className="text-sm font-medium flex items-center gap-2">
           <MessageCircle className="w-4 h-4 text-muted-foreground" />
-          WhatsApp Number
+          {t.opportunistForm.step1.whatsappNumber}
         </Label>
-        <HelperText>Optional — only if different from contact number.</HelperText>
+        <HelperText>{t.opportunistForm.step1.whatsappHint}</HelperText>
         <Input
           id="whatsapp_number"
           type="tel"
-          placeholder="+90 5XX XXX XXXX"
+          placeholder={t.opportunistForm.step1.whatsappPlaceholder}
           value={formData.whatsapp_number}
           onChange={(e) => updateFormData({ whatsapp_number: e.target.value })}
           onBlur={() => handleBlur("whatsapp_number")}
@@ -171,13 +173,13 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         <div className="space-y-2">
           <Label htmlFor="city" className="text-sm font-medium flex items-center gap-2">
             <MapPin className="w-4 h-4 text-muted-foreground" />
-            City <span className="text-destructive">*</span>
+            {t.opportunistForm.step1.city} <span className="text-destructive">*</span>
           </Label>
-          <HelperText>Used for event opportunities and local coordination.</HelperText>
+          <HelperText>{t.opportunistForm.step1.cityHint}</HelperText>
           <Input
             id="city"
             type="text"
-            placeholder="City (Türkiye)"
+            placeholder={t.opportunistForm.step1.cityPlaceholder}
             value={formData.city}
             onChange={(e) => updateFormData({ city: e.target.value })}
             onBlur={() => handleBlur("city")}
@@ -188,7 +190,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
         <div className="space-y-2">
           <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
             <Globe className="w-4 h-4 text-muted-foreground" />
-            Nationality <span className="text-destructive">*</span>
+            {t.opportunistForm.step1.nationality} <span className="text-destructive">*</span>
           </Label>
           <Select
             value={formData.nationality}
@@ -198,7 +200,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
             }}
           >
             <SelectTrigger className={`bg-secondary/50 border-border ${errors.nationality ? "border-destructive" : ""}`}>
-              <SelectValue placeholder="Select country" />
+              <SelectValue placeholder={t.common.selectCountry} />
             </SelectTrigger>
             <SelectContent className="bg-card border-border max-h-60">
               {countries.map((country) => (
@@ -216,12 +218,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="university" className="text-sm font-medium flex items-center gap-2">
           <GraduationCap className="w-4 h-4 text-muted-foreground" />
-          University
+          {t.opportunistForm.step1.university}
         </Label>
         <Input
           id="university"
           type="text"
-          placeholder="Your university name (optional)"
+          placeholder={t.opportunistForm.step1.universityPlaceholder}
           value={formData.university}
           onChange={(e) => updateFormData({ university: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
@@ -232,12 +234,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       <div className="space-y-2">
         <Label htmlFor="department_of_study" className="text-sm font-medium flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-muted-foreground" />
-          Department of Study
+          {t.opportunistForm.step1.departmentOfStudy}
         </Label>
         <Input
           id="department_of_study"
           type="text"
-          placeholder="e.g., Computer Science, Business Administration"
+          placeholder={t.opportunistForm.step1.departmentPlaceholder}
           value={formData.department_of_study}
           onChange={(e) => updateFormData({ department_of_study: e.target.value })}
           className="bg-secondary/50 border-border focus:border-primary"
@@ -247,7 +249,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
       {/* Education Level */}
       <div className="space-y-2">
         <Label className="text-sm font-medium">
-          Education Level <span className="text-destructive">*</span>
+          {t.opportunistForm.step1.educationLevel} <span className="text-destructive">*</span>
         </Label>
         <Select
           value={formData.education_level}
@@ -257,12 +259,12 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
           }}
         >
           <SelectTrigger className={`bg-secondary/50 border-border ${errors.education_level ? "border-destructive" : ""}`}>
-            <SelectValue placeholder="Select education level" />
+            <SelectValue placeholder={t.opportunistForm.step1.selectEducationLevel} />
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
             {educationLevels.map((level) => (
-              <SelectItem key={level} value={level}>
-                {level}
+              <SelectItem key={level.value} value={level.value}>
+                {level.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -272,7 +274,7 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* Gender */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">Gender</Label>
+        <Label className="text-sm font-medium">{t.opportunistForm.step1.gender}</Label>
         <div className="flex flex-wrap gap-2">
           {genderOptions.map((option) => (
             <button
@@ -294,19 +296,19 @@ const Step1Basics = ({ formData, updateFormData }: Step1Props) => {
 
       {/* How Found Us */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">How did you find us?</Label>
+        <Label className="text-sm font-medium">{t.opportunistForm.step1.howFoundUs}</Label>
         <div className="flex flex-wrap gap-2">
           {howFoundOptions.map((option) => (
             <button
-              key={option}
+              key={option.value}
               type="button"
-              onClick={() => toggleReferral(option)}
+              onClick={() => toggleReferral(option.value)}
               className={cn(
                 "chip",
-                formData.referral_source.includes(option) && "selected"
+                formData.referral_source.includes(option.value) && "selected"
               )}
             >
-              {option}
+              {option.label}
             </button>
           ))}
         </div>

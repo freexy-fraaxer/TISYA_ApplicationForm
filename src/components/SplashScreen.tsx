@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
 import tisyaLogo from "@/assets/tisya-logo.svg";
+import { useT } from "@/contexts/LanguageContext";
 
 interface SplashScreenProps {
   isVisible: boolean;
 }
 
 const SplashScreen = ({ isVisible }: SplashScreenProps) => {
+  const t = useT();
   return (
     <AnimatePresence>
       {isVisible && (
@@ -42,7 +44,7 @@ const SplashScreen = ({ isVisible }: SplashScreenProps) => {
 
             {/* Tagline with letter stagger */}
             <motion.div className="flex gap-[2px] overflow-hidden">
-              {"THE ALLIANCE".split("").map((char, i) => (
+              {t.splash.tagline.split("").map((char, i) => (
                 <motion.span
                   key={i}
                   className="text-xs md:text-sm font-semibold tracking-[0.3em] text-primary/70"

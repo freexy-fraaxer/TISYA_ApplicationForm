@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import tisyaLogo from "@/assets/tisya-logo.svg";
 import SocialLinks from "./shared/SocialLinks";
 import { useSound } from "@/contexts/SoundContext";
+import { useT } from "@/contexts/LanguageContext";
 
 interface HomePageProps {
   onJoinClick: () => void;
@@ -30,6 +31,7 @@ const itemVariants = {
 
 const HomePage = ({ onJoinClick }: HomePageProps) => {
   const { enableSound, playClickJingle } = useSound();
+  const t = useT();
 
   const handleJoinClick = () => {
     enableSound();
@@ -66,7 +68,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
             letterSpacing: "0.005em",
           }}
         >
-          JOIN THE ALLIANCE
+          {t.home.headline}
         </motion.h1>
 
         {/* CTA Button — pill */}
@@ -102,7 +104,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
                 ease: "easeInOut",
               }}
             />
-            <span className="relative z-10">Choose Your Path</span>
+            <span className="relative z-10">{t.home.cta}</span>
           </motion.button>
         </motion.div>
 
@@ -112,7 +114,7 @@ const HomePage = ({ onJoinClick }: HomePageProps) => {
             className="text-[10px] md:text-xs font-semibold tracking-[0.4em] uppercase mb-3"
             style={{ color: "hsl(var(--primary) / 0.85)" }}
           >
-            Follow Us
+            {t.home.followUs}
           </p>
           <SocialLinks />
         </motion.div>
