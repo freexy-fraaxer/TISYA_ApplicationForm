@@ -10,7 +10,8 @@ export type FormType =
   | "Pathfinder"
   | "Volunteer"
   | "partner"
-  | "Ambassador";
+  | "Ambassador"
+  | "CountryUnion";
 
 export interface SubmitResult {
   generatedId: string;

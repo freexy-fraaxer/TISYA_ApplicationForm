@@ -374,7 +374,7 @@ const AmbassadorForm = ({ onBack }: AmbassadorFormProps) => {
 
           {/* Institution - conditional */}
           <AnimatePresence>
-            {["Campus Ambassador", "Community Ambassador"].includes(formData.ambassador_type) && (
+            {[t.ambassadorForm.ambassadorTypes.campus, t.ambassadorForm.ambassadorTypes.community].includes(formData.ambassador_type as any) && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}

@@ -14,6 +14,14 @@ interface Props {
   updateFormData: (data: any) => void;
 }
 
+const hoursLabel = (val: number): string => {
+  if (val <= 2) return "1–2";
+  if (val <= 4) return "3–4";
+  if (val <= 7) return "5–7";
+  if (val <= 10) return "8–10";
+  return "10+";
+};
+
 const Step4Schedule = ({ formData, updateFormData }: Props) => {
   const t = useT();
 
