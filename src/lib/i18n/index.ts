@@ -21,13 +21,13 @@ export const LANGUAGES: LangOption[] = [
 ];
 
 const translationLoaders: Record<Language, () => Promise<{ default: Translations }>> = {
-  en: () => import('./translations/en'),
-  tr: () => import('./translations/tr'),
-  ar: () => import('./translations/ar'),
-  de: () => import('./translations/de'),
-  ru: () => import('./translations/ru'),
-  ur: () => import('./translations/ur'),
-  bn: () => import('./translations/bn'),
+  en: () => import('./translations/en') as Promise<{ default: Translations }>,
+  tr: () => import('./translations/tr') as Promise<{ default: Translations }>,
+  ar: () => import('./translations/ar') as Promise<{ default: Translations }>,
+  de: () => import('./translations/de') as Promise<{ default: Translations }>,
+  ru: () => import('./translations/ru') as Promise<{ default: Translations }>,
+  ur: () => import('./translations/ur') as Promise<{ default: Translations }>,
+  bn: () => import('./translations/bn') as Promise<{ default: Translations }>,
 };
 
 const cache: Partial<Record<Language, Translations>> = { en };
