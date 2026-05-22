@@ -1,0 +1,19 @@
+# TİSYA
+
+> TİSYA is a global student-led alliance. Pick a path — Pathfinder, Opportunist, Ambassador, or Partner — and join the movement.
+
+## Pages
+
+- [Home](/): Overview of TİSYA and entry point to join.
+- [Roles](/roles): Choose your path within the Alliance.
+- [Pathfinder mission](/mission/members): Briefing for Pathfinder (Member) applicants.
+- [Opportunist mission](/mission/opportunists): Briefing for Opportunist (Volunteer) applicants.
+- [Ambassador mission](/mission/ambassador): Briefing for Ambassador applicants.
+- [Partner mission](/mission/partner): Briefing for Partner / Sponsor applicants.
+
+## Optional
+
+- [Join Pathfinder](/join/members): Application form for Pathfinders.
+- [Join Opportunist](/join/opportunists): Application form for Opportunists.
+- [Join Ambassador](/join/ambassador): Application form for Ambassadors.
+- [Join Partner](/join/partner): Application form for Partners.
