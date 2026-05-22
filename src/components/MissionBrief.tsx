@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import GlassCard from "./GlassCard";
 import HeroButton from "./HeroButton";
-import { ArrowLeft, ArrowRight, Shield, Zap, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, Shield, Zap, Star, Crosshair } from "lucide-react";
 import { useSound } from "@/contexts/SoundContext";
 import { useT } from "@/contexts/LanguageContext";
 
@@ -59,7 +59,7 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
 
         {/* Header */}
         <motion.div
-          className="mb-8"
+          className="mb-4"
           custom={0}
           variants={itemVariants}
           initial="hidden"
@@ -72,6 +72,19 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
             {data.title}
           </h2>
         </motion.div>
+
+        {/* Tagline */}
+        {'tagline' in data && (
+          <motion.p
+            className="mb-8 text-base md:text-lg font-semibold text-primary/90 tracking-wide"
+            custom={0.5}
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {(data as { tagline: string }).tagline}
+          </motion.p>
+        )}
 
         {/* Mission */}
         <motion.div
@@ -91,6 +104,38 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
             {data.mission}
           </p>
         </motion.div>
+
+        {/* What You Do */}
+        {'activities' in data && (
+          <motion.div
+            className="mb-6 p-4 rounded-lg bg-secondary/30 border border-border/50"
+            custom={1.5}
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Crosshair className="w-4 h-4 text-primary" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                {t.mission.whatYouDo}
+              </span>
+            </div>
+            <ul className="space-y-2">
+              {(data as { activities: readonly string[] }).activities.map((item: string, i: number) => (
+                <motion.li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.35 + i * 0.08 }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 flex-shrink-0" />
+                  {item}
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
 
         {/* What You Unlock */}
         <motion.div
@@ -140,6 +185,17 @@ const MissionBrief = ({ role, onAccept, onBack }: MissionBriefProps) => {
             {data.impact}
           </p>
         </motion.div>
+
+        {/* Helper text above CTA */}
+        <motion.p
+          className="text-center text-xs text-muted-foreground/50 mb-3"
+          custom={3.5}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {t.mission.notSureHelper}
+        </motion.p>
 
         {/* CTA */}
         <motion.div
