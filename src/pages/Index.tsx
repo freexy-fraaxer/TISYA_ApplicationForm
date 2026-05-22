@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import HomePage from "@/components/HomePage";
 import SystemTransition from "@/components/SystemTransition";
+import SEO from "@/components/SEO";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
 const PageTransition = ({ children, keyProp }: { children: React.ReactNode; keyProp: string }) => (
@@ -35,6 +36,15 @@ const Index = () => {
 
   return (
     <>
+      <SEO
+        title="Join TİSYA — Pick Your Path in the Alliance"
+        description="TİSYA is a global student-led alliance. Apply as a Pathfinder, Opportunist, Ambassador, or Partner and build with us."
+        path="/"
+        jsonLd={[
+          { "@context": "https://schema.org", "@type": "Organization", name: "TİSYA", url: "https://wearetisya.lovable.app", logo: "https://wearetisya.lovable.app/tisya-logo.png" },
+          { "@context": "https://schema.org", "@type": "WebSite", name: "TİSYA", url: "https://wearetisya.lovable.app" },
+        ]}
+      />
       <SystemTransition isActive={showSystemTransition} onComplete={handleSystemTransitionComplete} />
 
       <AnimatePresence mode="wait">

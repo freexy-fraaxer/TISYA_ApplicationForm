@@ -20,14 +20,15 @@ export const LANGUAGES: LangOption[] = [
   { code: 'bn', native: 'বাংলা', flag: '🇧🇩', dir: 'ltr' },
 ];
 
-const translationLoaders: Record<Language, () => Promise<{ default: Translations }>> = {
-  en: () => import('./translations/en'),
-  tr: () => import('./translations/tr'),
-  ar: () => import('./translations/ar'),
-  de: () => import('./translations/de'),
-  ru: () => import('./translations/ru'),
-  ur: () => import('./translations/ur'),
-  bn: () => import('./translations/bn'),
+type TranslationModule = { default: Translations };
+const translationLoaders: Record<Language, () => Promise<TranslationModule>> = {
+  en: () => import('./translations/en') as unknown as Promise<TranslationModule>,
+  tr: () => import('./translations/tr') as unknown as Promise<TranslationModule>,
+  ar: () => import('./translations/ar') as unknown as Promise<TranslationModule>,
+  de: () => import('./translations/de') as unknown as Promise<TranslationModule>,
+  ru: () => import('./translations/ru') as unknown as Promise<TranslationModule>,
+  ur: () => import('./translations/ur') as unknown as Promise<TranslationModule>,
+  bn: () => import('./translations/bn') as unknown as Promise<TranslationModule>,
 };
 
 const cache: Partial<Record<Language, Translations>> = { en };
