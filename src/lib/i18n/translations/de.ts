@@ -62,10 +62,12 @@ const de = {
     pathfinder: {
       title: "Pfadfinder (Pathfinder)",
       description: "Entdecke Möglichkeiten und navigiere durch das TISYA-Netzwerk.",
+      subLabel: "Mitglied",
     },
     opportunist: {
       title: "Möglichkeitsmacher (Opportunist)",
       description: "Engagiere dich ehrenamtlich, trage bei und verwandle Ideen in echte Wirkung.",
+      subLabel: "Freiwilliger",
     },
     partner: {
       title: "Partner / Sponsor",

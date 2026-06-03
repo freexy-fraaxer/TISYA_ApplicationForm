@@ -62,10 +62,12 @@ const bn = {
     pathfinder: {
       title: "পাথফাইন্ডার (Pathfinder)",
       description: "সুযোগগুলি আবিষ্কার করুন এবং TISYA নেটওয়ার্কে নেভিগেট করুন।",
+      subLabel: "সদস্য",
     },
     opportunist: {
       title: "অপরচুনিস্ট (Opportunist)",
       description: "স্বেচ্ছাসেবক হন, অবদান রাখুন এবং ধারণাগুলোকে বাস্তব প্রভাবে পরিণত করুন।",
+      subLabel: "স্বেচ্ছাসেবক",
     },
     partner: {
       title: "পার্টনার / স্পনসর",

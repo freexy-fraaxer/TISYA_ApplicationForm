@@ -29,6 +29,7 @@ interface Role {
   disabled?: boolean;
   onClick?: () => void;
   hoverSound?: () => void;
+  subLabel?: string;
 }
 
 interface PanelProps {
@@ -39,7 +40,7 @@ interface PanelProps {
 
 /* ---------- MOBILE CARD (vertical stack) ---------- */
 const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
-  const { title, description, image, disabled, onClick, hoverSound } = role;
+  const { title, description, image, disabled, onClick, hoverSound, subLabel } = role;
   const t = useT();
   return (
     <motion.button
@@ -85,16 +86,34 @@ const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-between p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3
-            className="font-extrabold uppercase tracking-[0.05em] leading-tight text-foreground"
-            style={{
-              fontSize: "18px",
-              textShadow:
-                "0 0 12px hsl(var(--primary) / 0.55), 0 2px 8px hsl(220 60% 3% / 0.95)",
-            }}
-          >
-            {title}
-          </h3>
+          <div className="flex flex-col gap-1.5">
+            <h3
+              className="font-extrabold uppercase tracking-[0.05em] leading-tight text-foreground"
+              style={{
+                fontSize: "18px",
+                textShadow:
+                  "0 0 12px hsl(var(--primary) / 0.55), 0 2px 8px hsl(220 60% 3% / 0.95)",
+              }}
+            >
+              {title}
+            </h3>
+            {subLabel && (
+              <div>
+                <span
+                  className="inline-block px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] rounded backdrop-blur-md"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%)",
+                    color: "hsl(var(--foreground) / 0.95)",
+                    border: "1px solid rgba(255, 255, 255, 0.18)",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                    textShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+                  }}
+                >
+                  {subLabel}
+                </span>
+              </div>
+            )}
+          </div>
           {disabled && (
             <span
               className="shrink-0 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] rounded"
@@ -143,7 +162,7 @@ const MobileRoleCard = ({ role, index }: { role: Role; index: number }) => {
 const RolePanel = ({ role, index, total }: PanelProps) => {
   const isMobile = useIsMobile();
   const t = useT();
-  const { title, description, image, disabled, onClick, hoverSound } = role;
+  const { title, description, image, disabled, onClick, hoverSound, subLabel } = role;
 
   const SLANT = isMobile ? 14 : 30;
 
@@ -256,6 +275,27 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
           />
         </div>
 
+        {/* SubLabel / Badge */}
+        {subLabel && (
+          <div
+            className="text-center mt-2.5 flex justify-center"
+            style={{ paddingLeft: `${padLeft}px`, paddingRight: `${padRight}px` }}
+          >
+            <span
+              className="inline-block px-3.5 py-1 text-[9px] md:text-[11px] font-extrabold uppercase tracking-[0.16em] rounded-full backdrop-blur-md transition-all duration-300 group-hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%)",
+                color: "hsl(var(--foreground) / 0.95)",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+                textShadow: "0 1px 4px rgba(0, 0, 0, 0.5)",
+              }}
+            >
+              {subLabel}
+            </span>
+          </div>
+        )}
+
         {/* Centered Locked badge for disabled roles */}
         {disabled && (
           <div
@@ -348,6 +388,7 @@ const RoleSelection = ({
         onSelectMembers();
       },
       hoverSound: playHover,
+      subLabel: t.roles.pathfinder.subLabel,
     },
     {
       key: "opportunist",
@@ -359,6 +400,7 @@ const RoleSelection = ({
         onSelectOpportunists();
       },
       hoverSound: playHover,
+      subLabel: t.roles.opportunist.subLabel,
     },
     {
       key: "partner",

@@ -62,10 +62,12 @@ const ur = {
     pathfinder: {
       title: "راستہ تلاش کرنے والا (Pathfinder)",
       description: "مواقع دریافت کریں اور TISYA نیٹ ورک میں شامل ہوں۔",
+      subLabel: "رکن",
     },
     opportunist: {
       title: "موقع شناس (Opportunist)",
       description: "رضاکار بنیں، حصہ لیں، اور خیالات کو حقیقت میں بدلیں۔",
+      subLabel: "رضاکار",
     },
     partner: {
       title: "پارٹنر / اسپانسر",

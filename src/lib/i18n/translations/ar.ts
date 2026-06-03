@@ -62,10 +62,12 @@ const ar = {
     pathfinder: {
       title: "مستكشف (Pathfinder)",
       description: "استكشف الفرص وتعرف على شبكة TISYA.",
+      subLabel: "عضو",
     },
     opportunist: {
       title: "صانع الفرص (Opportunist)",
       description: "تطوع، ساهم، وحوّل الأفكار إلى تأثير حقيقي.",
+      subLabel: "متطوع",
     },
     partner: {
       title: "شريك / راعي",

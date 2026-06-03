@@ -62,10 +62,12 @@ const ru = {
     pathfinder: {
       title: "Искатель (Pathfinder)",
       description: "Открывай возможности и перемещайся по сети TISYA.",
+      subLabel: "Участник",
     },
     opportunist: {
       title: "Создатель возможностей (Opportunist)",
       description: "Стань волонтером, вноси свой вклад и превращай идеи в реальное влияние.",
+      subLabel: "Волонтер",
     },
     partner: {
       title: "Партнер / Спонсор",

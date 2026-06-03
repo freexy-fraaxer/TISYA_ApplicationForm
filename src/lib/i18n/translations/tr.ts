@@ -62,10 +62,12 @@ const tr = {
     pathfinder: {
       title: "Kaşif (Pathfinder)",
       description: "Fırsatları keşfet ve TİSYA ağında gezin.",
+      subLabel: "Üye",
     },
     opportunist: {
       title: "Fırsatçı (Opportunist)",
       description: "Gönüllü ol, katkıda bulun ve fikirleri gerçek etkiye dönüştür.",
+      subLabel: "Gönüllü",
     },
     partner: {
       title: "Partner / Sponsor",
