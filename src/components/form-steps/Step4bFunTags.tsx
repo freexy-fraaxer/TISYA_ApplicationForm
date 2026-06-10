@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from "react";
-import { FormData } from "../OpportunistForm";
+import { FormData } from "../PioneerForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -37,22 +37,22 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
 
   const getFunTagLabel = (tag: string) => {
     switch (tag) {
-      case "Hidden musician": return t.opportunistForm.step4b.funTags.hiddenMusician;
-      case "Photographer": return t.opportunistForm.step4b.funTags.photographer;
-      case "Gamer": return t.opportunistForm.step4b.funTags.gamer;
-      case "Amateur chef": return t.opportunistForm.step4b.funTags.amateurChef;
-      case "Plant parent": return t.opportunistForm.step4b.funTags.plantParent;
-      case "Writer": return t.opportunistForm.step4b.funTags.writer;
-      case "Speaker": return t.opportunistForm.step4b.funTags.speaker;
-      case "Editor": return t.opportunistForm.step4b.funTags.editor;
-      case "Night owl": return t.opportunistForm.step4b.funTags.nightOwl;
-      case "Early bird": return t.opportunistForm.step4b.funTags.earlyBird;
-      case "Coffee addict": return t.opportunistForm.step4b.funTags.coffeeAddict;
-      case "Bookworm": return t.opportunistForm.step4b.funTags.bookworm;
-      case "Traveler": return t.opportunistForm.step4b.funTags.traveler;
-      case "Fitness enthusiast": return t.opportunistForm.step4b.funTags.fitnessEnthusiast;
-      case "Movie buff": return t.opportunistForm.step4b.funTags.movieBuff;
-      case "Podcast lover": return t.opportunistForm.step4b.funTags.podcastLover;
+      case "Hidden musician": return t.pioneerForm.step4b.funTags.hiddenMusician;
+      case "Photographer": return t.pioneerForm.step4b.funTags.photographer;
+      case "Gamer": return t.pioneerForm.step4b.funTags.gamer;
+      case "Amateur chef": return t.pioneerForm.step4b.funTags.amateurChef;
+      case "Plant parent": return t.pioneerForm.step4b.funTags.plantParent;
+      case "Writer": return t.pioneerForm.step4b.funTags.writer;
+      case "Speaker": return t.pioneerForm.step4b.funTags.speaker;
+      case "Editor": return t.pioneerForm.step4b.funTags.editor;
+      case "Night owl": return t.pioneerForm.step4b.funTags.nightOwl;
+      case "Early bird": return t.pioneerForm.step4b.funTags.earlyBird;
+      case "Coffee addict": return t.pioneerForm.step4b.funTags.coffeeAddict;
+      case "Bookworm": return t.pioneerForm.step4b.funTags.bookworm;
+      case "Traveler": return t.pioneerForm.step4b.funTags.traveler;
+      case "Fitness enthusiast": return t.pioneerForm.step4b.funTags.fitnessEnthusiast;
+      case "Movie buff": return t.pioneerForm.step4b.funTags.movieBuff;
+      case "Podcast lover": return t.pioneerForm.step4b.funTags.podcastLover;
       default: return tag;
     }
   };
@@ -93,10 +93,10 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t.opportunistForm.step4b.title}
+          {t.pioneerForm.step4b.title}
         </h2>
         <p className="text-muted-foreground">
-          {t.opportunistForm.step4b.subtitle}
+          {t.pioneerForm.step4b.subtitle}
         </p>
       </div>
 
@@ -105,13 +105,13 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
         <Label className="text-sm font-medium flex items-center justify-between">
           <span className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-muted-foreground" />
-            {t.opportunistForm.step4b.anyFunTags}
+            {t.pioneerForm.step4b.anyFunTags}
           </span>
           <span className="text-xs text-muted-foreground font-normal">
             {formData.fun_tags.length}/5
           </span>
         </Label>
-        <HelperText>{t.opportunistForm.step4b.funTagsHint}</HelperText>
+        <HelperText>{t.pioneerForm.step4b.funTagsHint}</HelperText>
         <div className="flex flex-wrap gap-2">
           {defaultFunTags.map((tag) => {
             const isSelected = formData.fun_tags.includes(tag);
@@ -138,7 +138,7 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
       {/* Custom Tags Display */}
       {customTags.length > 0 && (
         <div className="space-y-2">
-          <Label className="text-sm font-medium">{t.opportunistForm.step4b.yourCustomTags}</Label>
+          <Label className="text-sm font-medium">{t.pioneerForm.step4b.yourCustomTags}</Label>
           <div className="flex flex-wrap gap-2">
             {customTags.map((tag) => (
               <span
@@ -162,13 +162,13 @@ const Step4bFunTags = ({ formData, updateFormData }: Step4bProps) => {
       {/* Add Custom Tag */}
       <div className="space-y-2">
         <Label htmlFor="custom_tag" className="text-sm font-medium">
-          {t.opportunistForm.step4b.addYourOwn}
+          {t.pioneerForm.step4b.addYourOwn}
         </Label>
-        <HelperText>{t.opportunistForm.step4b.addHint}</HelperText>
+        <HelperText>{t.pioneerForm.step4b.addHint}</HelperText>
         <Input
           id="custom_tag"
           type="text"
-          placeholder={t.opportunistForm.step4b.customPlaceholder}
+          placeholder={t.pioneerForm.step4b.customPlaceholder}
           value={customTagInput}
           onChange={(e) => setCustomTagInput(e.target.value)}
           onKeyDown={handleKeyDown}

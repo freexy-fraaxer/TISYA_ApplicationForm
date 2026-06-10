@@ -7,7 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/contexts/LanguageContext";
 
 import pathfinderBg from "@/assets/role-pathfinder-v3.png";
-import opportunistBg from "@/assets/role-operator-v3.png";
+import pioneerBg from "@/assets/role-operator-v3.png";
 import partnerBg from "@/assets/role-partner-v3.png";
 import internBg from "@/assets/role-intern-v3.png";
 import ambassadorBg from "@/assets/role-ambassador-v3.png";
@@ -15,7 +15,7 @@ import ambassadorBg from "@/assets/role-ambassador-v3.png";
 interface RoleSelectionProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectOpportunists: () => void;
+  onSelectPioneers: () => void;
   onSelectMembers: () => void;
   onSelectAmbassador: () => void;
   onSelectPartner: () => void;
@@ -343,7 +343,7 @@ const RolePanel = ({ role, index, total }: PanelProps) => {
 const RoleSelection = ({
   isOpen,
   onClose,
-  onSelectOpportunists,
+  onSelectPioneers,
   onSelectMembers,
   onSelectAmbassador,
   onSelectPartner,
@@ -355,7 +355,7 @@ const RoleSelection = ({
     playBack,
     playHover,
     playPathfinderSelect,
-    playOpportunistSelect,
+    playPioneerSelect,
     playCountryUnionSelect,
     playInternSelect,
   } = useSound();
@@ -391,16 +391,16 @@ const RoleSelection = ({
       subLabel: t.roles.pathfinder.subLabel,
     },
     {
-      key: "opportunist",
-      title: t.roles.opportunist.title,
-      description: t.roles.opportunist.description,
-      image: opportunistBg,
+      key: "pioneer",
+      title: t.roles.pioneer.title,
+      description: t.roles.pioneer.description,
+      image: pioneerBg,
       onClick: () => {
-        playOpportunistSelect();
-        onSelectOpportunists();
+        playPioneerSelect();
+        onSelectPioneers();
       },
       hoverSound: playHover,
-      subLabel: t.roles.opportunist.subLabel,
+      subLabel: t.roles.pioneer.subLabel,
     },
     {
       key: "partner",

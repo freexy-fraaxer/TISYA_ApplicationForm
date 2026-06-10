@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FormData } from "../OpportunistForm";
+import { FormData } from "../PioneerForm";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
@@ -39,27 +39,27 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
   const lastVisibilityTick = useRef(formData.visibility_preference);
 
   const getSocialEnergyLabel = (value: number): string => {
-    if (value <= 20) return t.opportunistForm.step3.socialEnergy.chargingSolo;
-    if (value <= 40) return t.opportunistForm.step3.socialEnergy.lowKeyObserver;
-    if (value <= 60) return t.opportunistForm.step3.socialEnergy.socialButSelective;
-    if (value <= 80) return t.opportunistForm.step3.socialEnergy.mainCharacterEnergy;
-    return t.opportunistForm.step3.socialEnergy.runsTheRoom;
+    if (value <= 20) return t.pioneerForm.step3.socialEnergy.chargingSolo;
+    if (value <= 40) return t.pioneerForm.step3.socialEnergy.lowKeyObserver;
+    if (value <= 60) return t.pioneerForm.step3.socialEnergy.socialButSelective;
+    if (value <= 80) return t.pioneerForm.step3.socialEnergy.mainCharacterEnergy;
+    return t.pioneerForm.step3.socialEnergy.runsTheRoom;
   };
 
   const getPlanningStyleLabel = (value: number): string => {
-    if (value <= 20) return t.opportunistForm.step3.planningStyle.needsChecklist;
-    if (value <= 40) return t.opportunistForm.step3.planningStyle.plansKinda;
-    if (value <= 60) return t.opportunistForm.step3.planningStyle.vibesAndAdapts;
-    if (value <= 80) return t.opportunistForm.step3.planningStyle.goesWithFlow;
-    return t.opportunistForm.step3.planningStyle.thrivesInChaos;
+    if (value <= 20) return t.pioneerForm.step3.planningStyle.needsChecklist;
+    if (value <= 40) return t.pioneerForm.step3.planningStyle.plansKinda;
+    if (value <= 60) return t.pioneerForm.step3.planningStyle.vibesAndAdapts;
+    if (value <= 80) return t.pioneerForm.step3.planningStyle.goesWithFlow;
+    return t.pioneerForm.step3.planningStyle.thrivesInChaos;
   };
 
   const getVisibilityLabel = (value: number): string => {
-    if (value <= 20) return t.opportunistForm.step3.visibility.silentOpportunist;
-    if (value <= 40) return t.opportunistForm.step3.visibility.supportRoleVibes;
-    if (value <= 60) return t.opportunistForm.step3.visibility.comfortablePresenting;
-    if (value <= 80) return t.opportunistForm.step3.visibility.stageReady;
-    return t.opportunistForm.step3.visibility.onStageMicOn;
+    if (value <= 20) return t.pioneerForm.step3.visibility.silentPioneer;
+    if (value <= 40) return t.pioneerForm.step3.visibility.supportRoleVibes;
+    if (value <= 60) return t.pioneerForm.step3.visibility.comfortablePresenting;
+    if (value <= 80) return t.pioneerForm.step3.visibility.stageReady;
+    return t.pioneerForm.step3.visibility.onStageMicOn;
   };
 
   const toggleSkill = (skill: string) => {
@@ -76,29 +76,29 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
   };
 
   const workPreferences = [
-    { value: "Structured tasks", label: t.opportunistForm.step3.workPreferences.structuredTasks },
-    { value: "Creative freedom", label: t.opportunistForm.step3.workPreferences.creativeFreedom },
-    { value: "Fast-paced work", label: t.opportunistForm.step3.workPreferences.fastPacedWork },
-    { value: "Long-term projects", label: t.opportunistForm.step3.workPreferences.longTermProjects },
+    { value: "Structured tasks", label: t.pioneerForm.step3.workPreferences.structuredTasks },
+    { value: "Creative freedom", label: t.pioneerForm.step3.workPreferences.creativeFreedom },
+    { value: "Fast-paced work", label: t.pioneerForm.step3.workPreferences.fastPacedWork },
+    { value: "Long-term projects", label: t.pioneerForm.step3.workPreferences.longTermProjects },
   ];
 
   const getSkillLabel = (skill: string) => {
     switch (skill) {
-      case "Teamwork": return t.opportunistForm.step3.skills.teamwork;
-      case "Leadership": return t.opportunistForm.step3.skills.leadership;
-      case "Empathy": return t.opportunistForm.step3.skills.empathy;
-      case "Event Planning": return t.opportunistForm.step3.skills.eventPlanning;
-      case "Social Media": return t.opportunistForm.step3.skills.socialMedia;
-      case "Design": return t.opportunistForm.step3.skills.design;
-      case "Video Editing": return t.opportunistForm.step3.skills.videoEditing;
-      case "Writing/Copywriting": return t.opportunistForm.step3.skills.writingCopywriting;
-      case "Public Speaking": return t.opportunistForm.step3.skills.publicSpeaking;
-      case "Research": return t.opportunistForm.step3.skills.research;
-      case "Outreach/Networking": return t.opportunistForm.step3.skills.outreachNetworking;
-      case "Coding/No-Code": return t.opportunistForm.step3.skills.codingNoCode;
-      case "Project Management": return t.opportunistForm.step3.skills.projectManagement;
-      case "Translation/Language Support": return t.opportunistForm.step3.skills.translationLanguage;
-      case "Willing to learn": return t.opportunistForm.step3.skills.willingToLearn;
+      case "Teamwork": return t.pioneerForm.step3.skills.teamwork;
+      case "Leadership": return t.pioneerForm.step3.skills.leadership;
+      case "Empathy": return t.pioneerForm.step3.skills.empathy;
+      case "Event Planning": return t.pioneerForm.step3.skills.eventPlanning;
+      case "Social Media": return t.pioneerForm.step3.skills.socialMedia;
+      case "Design": return t.pioneerForm.step3.skills.design;
+      case "Video Editing": return t.pioneerForm.step3.skills.videoEditing;
+      case "Writing/Copywriting": return t.pioneerForm.step3.skills.writingCopywriting;
+      case "Public Speaking": return t.pioneerForm.step3.skills.publicSpeaking;
+      case "Research": return t.pioneerForm.step3.skills.research;
+      case "Outreach/Networking": return t.pioneerForm.step3.skills.outreachNetworking;
+      case "Coding/No-Code": return t.pioneerForm.step3.skills.codingNoCode;
+      case "Project Management": return t.pioneerForm.step3.skills.projectManagement;
+      case "Translation/Language Support": return t.pioneerForm.step3.skills.translationLanguage;
+      case "Willing to learn": return t.pioneerForm.step3.skills.willingToLearn;
       default: return skill;
     }
   };
@@ -120,22 +120,22 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t.opportunistForm.step3.title}
+          {t.pioneerForm.step3.title}
         </h2>
         <p className="text-muted-foreground">
-          {t.opportunistForm.step3.subtitle}
+          {t.pioneerForm.step3.subtitle}
         </p>
       </div>
 
       {/* Skills */}
       <div className="space-y-3">
         <Label className="text-sm font-medium flex items-center justify-between">
-          <span>{t.opportunistForm.step3.yourSkills} <span className="text-destructive">*</span></span>
+          <span>{t.pioneerForm.step3.yourSkills} <span className="text-destructive">*</span></span>
           <span className="text-xs text-muted-foreground font-normal">
             {formData.skills.length}/5
           </span>
         </Label>
-        <HelperText>{t.opportunistForm.step3.skillsHint}</HelperText>
+        <HelperText>{t.pioneerForm.step3.skillsHint}</HelperText>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill) => {
             const isSelected = formData.skills.includes(skill);
@@ -161,7 +161,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
 
       {/* Personality Sliders with Gen-Z labels */}
       <div className="space-y-6 pt-4">
-        <Label className="text-sm font-medium">{t.opportunistForm.step3.personalityTraits}</Label>
+        <Label className="text-sm font-medium">{t.pioneerForm.step3.personalityTraits}</Label>
 
         {/* Social Energy (Introvert/Extrovert) */}
         <div className="space-y-3">
@@ -174,7 +174,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.introvert}
+              {t.pioneerForm.step3.introvert}
             </motion.span>
             <motion.span
               className="text-muted-foreground transition-all"
@@ -184,7 +184,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.extrovert}
+              {t.pioneerForm.step3.extrovert}
             </motion.span>
           </div>
           <Slider
@@ -219,7 +219,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.planner}
+              {t.pioneerForm.step3.planner}
             </motion.span>
             <motion.span
               className="text-muted-foreground transition-all"
@@ -229,7 +229,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.spontaneous}
+              {t.pioneerForm.step3.spontaneous}
             </motion.span>
           </div>
           <Slider
@@ -264,7 +264,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.behindTheScenes}
+              {t.pioneerForm.step3.behindTheScenes}
             </motion.span>
             <motion.span
               className="text-muted-foreground transition-all"
@@ -274,7 +274,7 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
               }}
               transition={{ duration: 0.2 }}
             >
-              {t.opportunistForm.step3.frontFacing}
+              {t.pioneerForm.step3.frontFacing}
             </motion.span>
           </div>
           <Slider
@@ -301,8 +301,8 @@ const Step3Skills = ({ formData, updateFormData }: Step3Props) => {
 
       {/* Work Preference */}
       <div className="space-y-3 pt-2">
-        <Label className="text-sm font-medium">{t.opportunistForm.step3.workPreference}</Label>
-        <HelperText>{t.opportunistForm.step3.workPreferenceHint}</HelperText>
+        <Label className="text-sm font-medium">{t.pioneerForm.step3.workPreference}</Label>
+        <HelperText>{t.pioneerForm.step3.workPreferenceHint}</HelperText>
         <div className="flex flex-wrap gap-2">
           {workPreferences.map((pref) => (
             <button

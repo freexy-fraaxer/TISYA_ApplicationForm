@@ -38,7 +38,7 @@ const Index = () => {
     <>
       <SEO
         title="Join TİSYA — Pick Your Path in the Alliance"
-        description="TİSYA is a global student-led alliance. Apply as a Pathfinder, Opportunist, Ambassador, or Partner and build with us."
+        description="TİSYA is a global student-led alliance. Apply as a Pathfinder, Pioneer, Ambassador, or Partner and build with us."
         path="/"
         jsonLd={[
           { "@context": "https://schema.org", "@type": "Organization", name: "TİSYA", url: "https://wearetisya.lovable.app", logo: "https://wearetisya.lovable.app/tisya-logo.png" },

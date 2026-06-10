@@ -64,8 +64,8 @@ const de = {
       description: "Entdecke Möglichkeiten und navigiere durch das TISYA-Netzwerk.",
       subLabel: "Mitglied",
     },
-    opportunist: {
-      title: "Möglichkeitsmacher (Opportunist)",
+    pioneer: {
+      title: "Möglichkeitsmacher (Pioneer)",
       description: "Engagiere dich ehrenamtlich, trage bei und verwandle Ideen in echte Wirkung.",
       subLabel: "Freiwilliger",
     },
@@ -111,7 +111,7 @@ const de = {
       ],
       impact: "Jeder Pfadfinder stärkt das Netzwerk — deine Neugierde treibt Entdeckungen voran.",
     },
-    opportunists: {
+    pioneers: {
       title: "Möglichkeitsmacher",
       tagline: "Bauen. Umsetzen. Wirkung erzielen.",
       mission: "Verwandle Ideen in Realität und treibe TİSYAs Projekte und Initiativen voran.",
@@ -258,8 +258,8 @@ const de = {
     },
   },
 
-  // ===== OPPORTUNIST FORM =====
-  opportunistForm: {
+  // ===== PIONEER FORM =====
+  pioneerForm: {
     steps: {
       basics: "Grundlagen",
       impact: "Wirkung",
@@ -374,7 +374,7 @@ const de = {
         thrivesInChaos: "Blüht im Chaos auf",
       },
       visibility: {
-        silentOpportunist: "Stiller Macher",
+        silentPioneer: "Stiller Macher",
         supportRoleVibes: "Unterstützende Rolle",
         comfortablePresenting: "Präsentiert gerne",
         stageReady: "Bühnenreif",
@@ -722,7 +722,7 @@ const de = {
   // ===== COMMITMENT MODAL =====
   commitment: {
     agreeCommitment: "Ich stimme der TISYA {role}-Verpflichtung zu",
-    opportunist: "Als TISYA-Möglichkeitsmacher verpflichte ich mich, beständig präsent zu sein, proaktiv mit meinem Team zu kommunizieren, zugewiesene Aufgaben pünktlich zu erledigen und TISYA in allen Interaktionen mit Integrität zu vertreten.",
+    pioneer: "Als TISYA-Möglichkeitsmacher verpflichte ich mich, beständig präsent zu sein, proaktiv mit meinem Team zu kommunizieren, zugewiesene Aufgaben pünktlich zu erledigen und TISYA in allen Interaktionen mit Integrität zu vertreten.",
     ambassador: "Als TISYA-Botschafter verpflichte ich mich, TISYA in meinem vorgesehenen Rahmen aktiv zu vertreten, mein Netzwerk authentisch einzubinden, regelmäßig über Fortschritte zu berichten und die Werte und die Mission von TISYA aufrechtzuerhalten.",
     countryUnion: "Als TISYA Länderunions-Partnerorganisation verpflichtet sich unsere Organisation zu langfristiger struktureller Zusammenarbeit, transparenter Kommunikation, gemeinsamen Programmbemühungen und gegenseitigem Respekt für die Mission und Richtlinien von TISYA.",
     default: "Als TISYA {role} verpflichte ich mich, die Werte, Verantwortlichkeiten und Erwartungen dieser Rolle zu wahren.",
@@ -745,7 +745,7 @@ const de = {
       ],
       closing: "Mit dem Absenden dieses Formulars bestätige ich, dass ich diese Bedingungen gelesen habe und ihnen zustimme.",
     },
-    opportunist: {
+    pioneer: {
       title: "TISYA Möglichkeitsmacher-Vereinbarung",
       intro: 'Mit dem Absenden dieses Formulars bestätige und akzeptiere ich die folgenden Bedingungen als ehrenamtlicher Mitarbeiter ("Möglichkeitsmacher") bei TISYA:',
       sections: [

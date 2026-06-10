@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { useT } from "@/contexts/LanguageContext";
 
-export type TermsRole = "pathfinder" | "opportunist";
+export type TermsRole = "pathfinder" | "pioneer";
 
 interface TermsAgreementCheckboxProps {
   role: TermsRole;

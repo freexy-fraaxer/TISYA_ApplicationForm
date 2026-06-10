@@ -1,7 +1,7 @@
 /**
  * ================================================================
  *  TISYA Unified Intake System — Google Apps Script
- *  Handles: Pathfinder | Opportunist | Partner | Ambassador
+ *  Handles: Pathfinder | Pioneer | Partner | Ambassador
  *
  *  Deploy as: Web App
  *    • Execute as: Me
@@ -20,7 +20,7 @@
    IMPORTANT: The formType keys here MUST exactly match the `formType`
    value sent by the frontend in submitToAppsScript(formType, fields).
      Pathfinder  → PathfinderForm.tsx sends "Pathfinder"
-     Volunteer   → OpportunistForm.tsx sends "Volunteer"
+     Volunteer   → PioneerForm.tsx sends "Volunteer"
      partner     → PartnerSponsorForm.tsx sends "partner"
      Ambassador  → AmbassadorForm.tsx sends "Ambassador"
 ================================================================ */
@@ -48,9 +48,9 @@ const FORM_CONFIG = {
     ]
   },
 
-  // ── Opportunist (Volunteer) ───────────────────────────────────
+  // ── Pioneer (Volunteer) ───────────────────────────────────
   Volunteer: {
-    tab: 'Opportunists',
+    tab: 'Pioneers',
     prefix: 'OP',
     fields: [
       'full_name',

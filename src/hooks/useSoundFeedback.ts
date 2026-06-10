@@ -199,8 +199,8 @@ export const useSoundFeedback = () => {
     });
   }, []);
 
-  // Opportunist - mechanical/tech beep sequence (building things)
-  const playOpportunistSelect = useCallback(() => {
+  // Pioneer - mechanical/tech beep sequence (building things)
+  const playPioneerSelect = useCallback(() => {
     if (!isEnabledRef.current || !audioContextRef.current) return;
     const ctx = audioContextRef.current;
     const now = ctx.currentTime;
@@ -358,7 +358,7 @@ export const useSoundFeedback = () => {
     playHover,
     playBack,
     playPathfinderSelect,
-    playOpportunistSelect,
+    playPioneerSelect,
     playAmbassadorSelect,
     playCountryUnionSelect,
     playInternSelect,

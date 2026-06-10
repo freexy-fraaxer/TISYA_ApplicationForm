@@ -1,4 +1,4 @@
-import { FormData } from "../OpportunistForm";
+import { FormData } from "../PioneerForm";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -133,26 +133,26 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
 
   const getImpactZoneLabel = (id: string) => {
     switch (id) {
-      case "Events": return t.opportunistForm.step2.impactZones.events.label;
-      case "Media & Design": return t.opportunistForm.step2.impactZones.mediaDesign.label;
-      case "Tech & Digital": return t.opportunistForm.step2.impactZones.techDigital.label;
-      case "Community & Outreach": return t.opportunistForm.step2.impactZones.communityOutreach.label;
-      case "Education & Projects": return t.opportunistForm.step2.impactZones.educationProjects.label;
-      case "Research & Policy": return t.opportunistForm.step2.impactZones.researchPolicy.label;
-      case "Operations & Support": return t.opportunistForm.step2.impactZones.operationsSupport.label;
+      case "Events": return t.pioneerForm.step2.impactZones.events.label;
+      case "Media & Design": return t.pioneerForm.step2.impactZones.mediaDesign.label;
+      case "Tech & Digital": return t.pioneerForm.step2.impactZones.techDigital.label;
+      case "Community & Outreach": return t.pioneerForm.step2.impactZones.communityOutreach.label;
+      case "Education & Projects": return t.pioneerForm.step2.impactZones.educationProjects.label;
+      case "Research & Policy": return t.pioneerForm.step2.impactZones.researchPolicy.label;
+      case "Operations & Support": return t.pioneerForm.step2.impactZones.operationsSupport.label;
       default: return id;
     }
   };
 
   const getImpactZoneDescription = (id: string) => {
     switch (id) {
-      case "Events": return t.opportunistForm.step2.impactZones.events.description;
-      case "Media & Design": return t.opportunistForm.step2.impactZones.mediaDesign.description;
-      case "Tech & Digital": return t.opportunistForm.step2.impactZones.techDigital.description;
-      case "Community & Outreach": return t.opportunistForm.step2.impactZones.communityOutreach.description;
-      case "Education & Projects": return t.opportunistForm.step2.impactZones.educationProjects.description;
-      case "Research & Policy": return t.opportunistForm.step2.impactZones.researchPolicy.description;
-      case "Operations & Support": return t.opportunistForm.step2.impactZones.operationsSupport.description;
+      case "Events": return t.pioneerForm.step2.impactZones.events.description;
+      case "Media & Design": return t.pioneerForm.step2.impactZones.mediaDesign.description;
+      case "Tech & Digital": return t.pioneerForm.step2.impactZones.techDigital.description;
+      case "Community & Outreach": return t.pioneerForm.step2.impactZones.communityOutreach.description;
+      case "Education & Projects": return t.pioneerForm.step2.impactZones.educationProjects.description;
+      case "Research & Policy": return t.pioneerForm.step2.impactZones.researchPolicy.description;
+      case "Operations & Support": return t.pioneerForm.step2.impactZones.operationsSupport.description;
       default: return "";
     }
   };
@@ -201,10 +201,10 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t.opportunistForm.step2.title}
+          {t.pioneerForm.step2.title}
         </h2>
         <p className="text-muted-foreground">
-          {t.opportunistForm.step2.subtitle}
+          {t.pioneerForm.step2.subtitle}
         </p>
       </div>
 
@@ -212,15 +212,15 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
           <Star className="w-4 h-4 text-primary" />
-          {t.opportunistForm.step2.selectPrimary} <span className="text-destructive">*</span>
+          {t.pioneerForm.step2.selectPrimary} <span className="text-destructive">*</span>
         </Label>
-        <HelperText>{t.opportunistForm.step2.primaryHint}</HelperText>
+        <HelperText>{t.pioneerForm.step2.primaryHint}</HelperText>
         <Select
           value={formData.primary_impact_zone}
           onValueChange={setPrimaryZone}
         >
           <SelectTrigger className="bg-secondary/50 border-border">
-            <SelectValue placeholder={t.opportunistForm.step2.selectPrimaryPlaceholder} />
+            <SelectValue placeholder={t.pioneerForm.step2.selectPrimaryPlaceholder} />
           </SelectTrigger>
           <SelectContent className="bg-card border-border">
             {impactZones.map((zone) => (
@@ -233,15 +233,15 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       </div>
 
       <p className="text-xs text-center text-primary/60 italic">
-        {t.opportunistForm.step2.matchHelp}
+        {t.pioneerForm.step2.matchHelp}
       </p>
 
       {/* Other Impact Zones */}
       <div className="space-y-3">
         <Label className="text-sm font-medium">
-          {t.opportunistForm.step2.otherAreas}
+          {t.pioneerForm.step2.otherAreas}
         </Label>
-        <HelperText>{t.opportunistForm.step2.otherAreasHint}</HelperText>
+        <HelperText>{t.pioneerForm.step2.otherAreasHint}</HelperText>
         <div className="space-y-3">
           {impactZones.map((zone, index) => {
             const isPrimary = formData.primary_impact_zone === zone.id;
@@ -302,7 +302,7 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
                       transition={{ duration: 0.2 }}
                     >
                       <Label className="text-xs font-medium text-muted-foreground">
-                        {t.opportunistForm.step2.whatSpecifically}
+                        {t.pioneerForm.step2.whatSpecifically}
                       </Label>
                       <div className="flex flex-wrap gap-2">
                         {zone.subOptions.map((option) => (
@@ -331,9 +331,9 @@ const Step2ImpactZones = ({ formData, updateFormData }: Step2Props) => {
       {/* Open to other roles */}
       <div className="space-y-3 pt-2">
         <Label className="text-sm font-medium">
-          {t.opportunistForm.step2.openToOtherRoles}
+          {t.pioneerForm.step2.openToOtherRoles}
         </Label>
-        <HelperText>{t.opportunistForm.step2.openToRolesHint}</HelperText>
+        <HelperText>{t.pioneerForm.step2.openToRolesHint}</HelperText>
         <div className="flex gap-2">
           {[{ value: "Yes", label: t.common.yes }, { value: "Maybe", label: t.common.maybe }, { value: "No", label: t.common.no }].map((opt) => (
             <button

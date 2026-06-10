@@ -87,7 +87,7 @@ const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScree
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Path: Opportunist
+          Path: Pioneer
         </motion.p>
 
         <motion.p
@@ -96,7 +96,7 @@ const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScree
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
         >
-          Thank you for your interest in becoming an Opportunist. We appreciate your willingness to contribute to the Alliance.
+          Thank you for your interest in becoming an Pioneer. We appreciate your willingness to contribute to the Alliance.
         </motion.p>
 
         {/* Application ID */}
