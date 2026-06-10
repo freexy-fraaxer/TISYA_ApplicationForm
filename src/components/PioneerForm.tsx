@@ -16,7 +16,7 @@ import Step3Skills from "./form-steps/Step3Skills";
 import Step4Schedule from "./form-steps/Step4Schedule";
 import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
-import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
+import PioneerSuccessScreen from "./shared/PioneerSuccessScreen";
 
 import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
@@ -262,7 +262,7 @@ const PioneerForm = ({ onBack }: { onBack: () => void }) => {
   };
 
   if (success) {
-    return <VolunteerSuccessScreen applicationId={appId} onBack={onBack} />;
+    return <PioneerSuccessScreen applicationId={appId} onBack={onBack} />;
   }
 
   const renderStep = () => {

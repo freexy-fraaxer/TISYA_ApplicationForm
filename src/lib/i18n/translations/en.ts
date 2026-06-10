@@ -704,7 +704,7 @@ const en = {
       title: "Welcome to TISYA",
       subtitle: "You are now part of The Alliance",
       path: "Path: Pioneer",
-      message: "Thank you for your interest in becoming an Pioneer. We appreciate your willingness to contribute to the Alliance.",
+      message: "Thank you for your interest in becoming a Pioneer. We appreciate your willingness to contribute to the Alliance.",
       applicationId: "Application ID",
       reviewTimeline: "We usually review applications within 3–5 working days.",
     },

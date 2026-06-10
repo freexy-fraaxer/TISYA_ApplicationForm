@@ -13,7 +13,7 @@ const isJoinRole = (v: string | undefined): v is JoinRole =>
   v === "pioneers" || v === "members" || v === "ambassador" || v === "partner";
 
 const JOIN_META: Record<JoinRole, { title: string; description: string }> = {
-  pioneers: { title: "Apply as Pioneer — TİSYA", description: "Apply as an Pioneer (Volunteer) and bring your skills to the TİSYA Alliance." },
+  pioneers: { title: "Apply as Pioneer — TİSYA", description: "Apply as a Pioneer (Volunteer) and bring your skills to the TİSYA Alliance." },
   members: { title: "Apply as Pathfinder — TİSYA", description: "Apply as a Pathfinder (Member) and join the core of the TİSYA Alliance." },
   ambassador: { title: "Apply as Ambassador — TİSYA", description: "Apply to represent TİSYA in your country, campus, or community." },
   partner: { title: "Apply as Partner — TİSYA", description: "Apply to partner with or sponsor the TİSYA Alliance." },
