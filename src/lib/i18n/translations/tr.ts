@@ -64,8 +64,8 @@ const tr = {
       description: "Fırsatları keşfet ve TİSYA ağında gezin.",
       subLabel: "Üye",
     },
-    opportunist: {
-      title: "Fırsatçı (Opportunist)",
+    pioneer: {
+      title: "Fırsatçı (Pioneer)",
       description: "Gönüllü ol, katkıda bulun ve fikirleri gerçek etkiye dönüştür.",
       subLabel: "Gönüllü",
     },
@@ -111,7 +111,7 @@ const tr = {
       ],
       impact: "Her Kaşif ağı güçlendirir — merakın keşfi yönlendirir.",
     },
-    opportunists: {
+    pioneers: {
       title: "Fırsatçı",
       tagline: "İnşa et. Uygula. Etki yarat.",
       mission: "Fikirleri gerçeğe dönüştür ve TİSYA'nın projelerine ve girişimlerine güç ver.",
@@ -258,8 +258,8 @@ const tr = {
     },
   },
 
-  // ===== OPPORTUNIST FORM =====
-  opportunistForm: {
+  // ===== PIONEER FORM =====
+  pioneerForm: {
     steps: {
       basics: "Temeller",
       impact: "Etki",
@@ -374,7 +374,7 @@ const tr = {
         thrivesInChaos: "Kaosta serpilir",
       },
       visibility: {
-        silentOpportunist: "Sessiz fırsatçı",
+        silentPioneer: "Sessiz fırsatçı",
         supportRoleVibes: "Destek rolü hissi",
         comfortablePresenting: "Sunum yaparken rahat",
         stageReady: "Sahneye hazır",
@@ -722,7 +722,7 @@ const tr = {
   // ===== COMMITMENT MODAL =====
   commitment: {
     agreeCommitment: "TİSYA {role} Taahhüdünü kabul ediyorum",
-    opportunist: "Bir TİSYA Fırsatçısı olarak, sürekli katılım sağlamayı, ekibimle proaktif iletişim kurmayı, atanan görevleri zamanında tamamlamayı ve tüm etkileşimlerde TİSYA'yı dürüstlükle temsil etmeyi taahhüt ediyorum.",
+    pioneer: "Bir TİSYA Fırsatçısı olarak, sürekli katılım sağlamayı, ekibimle proaktif iletişim kurmayı, atanan görevleri zamanında tamamlamayı ve tüm etkileşimlerde TİSYA'yı dürüstlükle temsil etmeyi taahhüt ediyorum.",
     ambassador: "Bir TİSYA Elçisi olarak, TİSYA'yı belirlenen kapsamda aktif olarak temsil etmeyi, ağımla gerçekçi bir şekilde etkileşim kurmayı, ilerlemeyi düzenli olarak raporlamayı ve TİSYA'nın değerlerini ve misyonunu desteklemeyi taahhüt ediyorum.",
     countryUnion: "Bir TİSYA Ülke Birliği iştiraki olarak, kuruluşumuz uzun vadeli yapısal işbirliği, şeffaf iletişim, ortak programlama çabaları ve TİSYA'nın misyonuna ve kurallarına karşılıklı saygı taahhüt eder.",
     default: "Bir TİSYA {role} olarak, bu rolün değerlerini, sorumluluklarını ve beklentilerini desteklemeyi taahhüt ediyorum.",
@@ -745,7 +745,7 @@ const tr = {
       ],
       closing: "Bu formu göndererek, bu şartları okuduğumu ve kabul ettiğimi onaylıyorum.",
     },
-    opportunist: {
+    pioneer: {
       title: "TİSYA Fırsatçı Sözleşmesi",
       intro: 'Bu formu göndererek, TİSYA ile gönüllü ("Fırsatçı") olarak aşağıdaki şartları kabul ve beyan ediyorum:',
       sections: [

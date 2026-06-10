@@ -16,7 +16,7 @@ import Step3Skills from "./form-steps/Step3Skills";
 import Step4Schedule from "./form-steps/Step4Schedule";
 import Step4bFunTags from "./form-steps/Step4bFunTags";
 import Step5Review from "./form-steps/Step5Review";
-import VolunteerSuccessScreen from "./shared/VolunteerSuccessScreen";
+import PioneerSuccessScreen from "./shared/PioneerSuccessScreen";
 
 import { validateEmail, validatePhone } from "@/lib/validation";
 import { submitToAppsScript } from "@/lib/submitForm";
@@ -134,7 +134,7 @@ const initialFormData: FormData = {
    COMPONENT
 ========================= */
 
-const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
+const PioneerForm = ({ onBack }: { onBack: () => void }) => {
   const { playPulse, playBack } = useSound();
   const { triggerPulse } = useBackgroundEffects();
   const [step, setStep] = useState(1);
@@ -262,7 +262,7 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   };
 
   if (success) {
-    return <VolunteerSuccessScreen applicationId={appId} onBack={onBack} />;
+    return <PioneerSuccessScreen applicationId={appId} onBack={onBack} />;
   }
 
   const renderStep = () => {
@@ -308,13 +308,13 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
         </p>
 
         <FormProgressBar currentStep={step} totalSteps={7} steps={[
-          { label: t.opportunistForm.steps.basics },
-          { label: t.opportunistForm.steps.impact },
-          { label: t.opportunistForm.steps.languages },
-          { label: t.opportunistForm.steps.skills },
-          { label: t.opportunistForm.steps.schedule },
-          { label: t.opportunistForm.steps.fun },
-          { label: t.opportunistForm.steps.review },
+          { label: t.pioneerForm.steps.basics },
+          { label: t.pioneerForm.steps.impact },
+          { label: t.pioneerForm.steps.languages },
+          { label: t.pioneerForm.steps.skills },
+          { label: t.pioneerForm.steps.schedule },
+          { label: t.pioneerForm.steps.fun },
+          { label: t.pioneerForm.steps.review },
         ]} />
 
         <AnimatePresence mode="wait">
@@ -363,4 +363,4 @@ const OpportunistForm = ({ onBack }: { onBack: () => void }) => {
   );
 };
 
-export default OpportunistForm;
+export default PioneerForm;

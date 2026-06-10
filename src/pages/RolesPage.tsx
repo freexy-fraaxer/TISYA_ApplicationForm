@@ -5,7 +5,7 @@ import RoleSelection from "@/components/RoleSelection";
 import SEO from "@/components/SEO";
 import { useBackgroundEffects } from "@/contexts/BackgroundEffectsContext";
 
-type MissionRole = "opportunists" | "members" | "ambassador" | "partner";
+type MissionRole = "pioneers" | "members" | "ambassador" | "partner";
 
 const RolesPage = () => {
   const navigate = useNavigate();
@@ -34,13 +34,13 @@ const RolesPage = () => {
     >
       <SEO
         title="Choose Your Path — TİSYA Roles"
-        description="Pick a path in TİSYA: Pathfinder, Opportunist, Ambassador, or Partner. Find the role that fits your impact."
+        description="Pick a path in TİSYA: Pathfinder, Pioneer, Ambassador, or Partner. Find the role that fits your impact."
         path="/roles"
       />
       <RoleSelection
         isOpen={true}
         onClose={handleClose}
-        onSelectOpportunists={() => handleSelectRole("opportunists")}
+        onSelectPioneers={() => handleSelectRole("pioneers")}
         onSelectMembers={() => handleSelectRole("members")}
         onSelectAmbassador={() => handleSelectRole("ambassador")}
         onSelectPartner={() => handleSelectRole("partner")}

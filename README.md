@@ -11,7 +11,7 @@ TİSYA (Türkiye International Student Youth Alliance) is a student-led initiati
 | Role | Description |
 |---|---|
 | **Pathfinder** | Discover opportunities, connect with peers, and navigate the TISYA network at your own pace. |
-| **Opportunist** | Volunteer, contribute, and turn ideas into real impact as part of TISYA's programs and initiatives. |
+| **Pioneer** | Volunteer, contribute, and turn ideas into real impact as part of TISYA's programs and initiatives. |
 | **Partner / Sponsor** | Collaborate with TISYA as an organization or sponsor to support impactful student initiatives. |
 | **Ambassador** | Represent TISYA across your campus, city, or country *(coming soon)*. |
 | **Intern** | Gain valuable experience and assist key projects *(coming soon)*. |
@@ -57,7 +57,7 @@ npm run dev
 src/
 ├── assets/            # Images, logos, role backgrounds
 ├── components/
-│   ├── form-steps/    # Opportunist form step components
+│   ├── form-steps/    # Pioneer form step components
 │   ├── member-form-steps/  # Pathfinder form step components
 │   ├── shared/        # Shared components (progress bar, success screens, modals)
 │   └── ui/            # shadcn/ui primitives

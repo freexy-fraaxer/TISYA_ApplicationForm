@@ -8,12 +8,12 @@ import SocialLinks from "./SocialLinks";
 import { useSound } from "@/contexts/SoundContext";
 import Confetti from "./Confetti";
 
-interface VolunteerSuccessScreenProps {
+interface PioneerSuccessScreenProps {
   applicationId: string;
   onBack: () => void;
 }
 
-const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScreenProps) => {
+const PioneerSuccessScreen = ({ applicationId, onBack }: PioneerSuccessScreenProps) => {
   const { playCelebration, playBack } = useSound();
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -87,7 +87,7 @@ const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScree
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Path: Opportunist
+          Path: Pioneer
         </motion.p>
 
         <motion.p
@@ -96,7 +96,7 @@ const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScree
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
         >
-          Thank you for your interest in becoming an Opportunist. We appreciate your willingness to contribute to the Alliance.
+          Thank you for your interest in becoming a Pioneer. We appreciate your willingness to contribute to the Alliance.
         </motion.p>
 
         {/* Application ID */}
@@ -152,4 +152,4 @@ const VolunteerSuccessScreen = ({ applicationId, onBack }: VolunteerSuccessScree
   );
 };
 
-export default VolunteerSuccessScreen;
+export default PioneerSuccessScreen;

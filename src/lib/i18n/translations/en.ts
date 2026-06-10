@@ -64,8 +64,8 @@ const en = {
       description: "Discover opportunities and navigate the TISYA network.",
       subLabel: "Member",
     },
-    opportunist: {
-      title: "Opportunist",
+    pioneer: {
+      title: "Pioneer",
       description: "Volunteer, contribute, and turn ideas into real impact.",
       subLabel: "Volunteer",
     },
@@ -111,8 +111,8 @@ const en = {
       ],
       impact: "Every Pathfinder strengthens the network — your curiosity drives discovery.",
     },
-    opportunists: {
-      title: "Opportunist",
+    pioneers: {
+      title: "Pioneer",
       tagline: "Build. Execute. Create impact.",
       mission: "Turn ideas into reality and help power TİSYA's projects and initiatives.",
       activities: [
@@ -128,7 +128,7 @@ const en = {
         "Collaboration with a global team",
         "Access to leadership and skill-building tracks",
       ],
-      impact: "Opportunists turn vision into reality — you build what others imagine.",
+      impact: "Pioneers turn vision into reality — you build what others imagine.",
     },
     ambassador: {
       title: "Ambassador",
@@ -258,8 +258,8 @@ const en = {
     },
   },
 
-  // ===== OPPORTUNIST FORM =====
-  opportunistForm: {
+  // ===== PIONEER FORM =====
+  pioneerForm: {
     steps: {
       basics: "Basics",
       impact: "Impact",
@@ -374,7 +374,7 @@ const en = {
         thrivesInChaos: "Thrives in chaos",
       },
       visibility: {
-        silentOpportunist: "Silent opportunist",
+        silentPioneer: "Silent pioneer",
         supportRoleVibes: "Support role vibes",
         comfortablePresenting: "Comfortable presenting",
         stageReady: "Stage-ready",
@@ -703,8 +703,8 @@ const en = {
     volunteer: {
       title: "Welcome to TISYA",
       subtitle: "You are now part of The Alliance",
-      path: "Path: Opportunist",
-      message: "Thank you for your interest in becoming an Opportunist. We appreciate your willingness to contribute to the Alliance.",
+      path: "Path: Pioneer",
+      message: "Thank you for your interest in becoming a Pioneer. We appreciate your willingness to contribute to the Alliance.",
       applicationId: "Application ID",
       reviewTimeline: "We usually review applications within 3–5 working days.",
     },
@@ -722,7 +722,7 @@ const en = {
   // ===== COMMITMENT MODAL =====
   commitment: {
     agreeCommitment: "I agree to the TİSYA {role} Commitment",
-    opportunist: "As a TİSYA Opportunist, I commit to showing up consistently, communicating proactively with my team, completing assigned tasks on time, and representing TİSYA with integrity in all interactions.",
+    pioneer: "As a TİSYA Pioneer, I commit to showing up consistently, communicating proactively with my team, completing assigned tasks on time, and representing TİSYA with integrity in all interactions.",
     ambassador: "As a TİSYA Ambassador, I commit to actively representing TİSYA in my designated scope, engaging my network authentically, reporting progress regularly, and upholding the values and mission of TİSYA.",
     countryUnion: "As a TİSYA Country Union affiliate, our organization commits to long-term structural collaboration, transparent communication, shared programming efforts, and mutual respect for TİSYA's mission and guidelines.",
     default: "As a TİSYA {role}, I commit to upholding the values, responsibilities, and expectations of this role.",
@@ -745,9 +745,9 @@ const en = {
       ],
       closing: "By submitting this form, I confirm that I have read and agreed to these terms.",
     },
-    opportunist: {
-      title: "TISYA Opportunist Agreement",
-      intro: 'By submitting this form, I acknowledge and agree to the following terms as a volunteer (\u201COpportunist\u201D) with TISYA:',
+    pioneer: {
+      title: "TISYA Pioneer Agreement",
+      intro: 'By submitting this form, I acknowledge and agree to the following terms as a volunteer (\u201CPioneer\u201D) with TISYA:',
       sections: [
         { heading: "Purpose & Intent", body: "I am joining TISYA to contribute, learn, and be part of initiatives that turn ideas into real impact. I understand that this role is built on initiative, collaboration, and shared growth." },
         { heading: "1. Commitment & Participation", body: "I agree to actively contribute to assigned tasks, events, or initiatives to the best of my ability and remain engaged throughout my involvement." },

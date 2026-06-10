@@ -1,4 +1,4 @@
-import { FormData } from "../OpportunistForm";
+import { FormData } from "../PioneerForm";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -86,7 +86,7 @@ const Step2bLanguages = ({ formData, updateFormData }: Props) => {
 
       {/* Section Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">{t.opportunistForm.steps.languages}</h2>
+        <h2 className="text-2xl font-bold text-foreground">{t.pioneerForm.steps.languages}</h2>
       </div>
 
       {/* Primary Language */}
